@@ -7,7 +7,7 @@ const source = await readFile(new URL("../synchronized-stems.ts", import.meta.ur
 const code = ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.ES2020 },
 }).outputText;
-const { startSynchronizedStems, loadStaticStems } = await import(
+const { startSynchronizedStems, loadStaticStems, StemTransport } = await import(
   `data:text/javascript;base64,${Buffer.from(code).toString("base64")}`
 );
 
@@ -25,6 +25,8 @@ function fakeContext(failSecondStart = false) {
   };
   return {
     nodes, sources, destination: {},
+    state: "running",
+    resume: async () => {},
     get currentTime() { return 10 + clockReads++ / 100; },
     createGain: node,
     createBufferSource() {
@@ -40,14 +42,14 @@ function fakeContext(failSecondStart = false) {
     },
   };
 }
-const buffers = [{ length: 48000 }, { length: 48000 }];
+const buffers = [{ length: 48000, duration: 1 }, { length: 48000, duration: 1 }];
 
 test("common clock/offset, gain routing, cleanup, and fresh sources on replay", () => {
   const context = fakeContext();
   const first = startSynchronizedStems(context, buffers);
   assert.equal(first.startAt, 10.05);
   for (const source of context.sources) {
-    assert.deepEqual(source.started, [10.05, 0]);
+    assert.deepEqual(source.started, [10.05, 0, 1]);
     assert.equal(source.destination.destination.destination, context.destination);
   }
   assert.notEqual(context.sources[0].destination, context.sources[1].destination);
@@ -75,4 +77,71 @@ test("missing asset reports its URL and HTTP status", async () => {
     globalThis.fetch = async () => ({ ok: false, status: 404 });
     await assert.rejects(loadStaticStems({}, ["/audio/drums.mp3"]), /drums.mp3: HTTP 404/);
   } finally { globalThis.fetch = originalFetch; }
+});
+
+function transportFixture() {
+  const context = fakeContext();
+  let clock = 0;
+  Object.defineProperty(context, "currentTime", { get: () => clock });
+  const transport = new StemTransport(context, [{ length: 480000, duration: 10 }, { length: 480000, duration: 10 }]);
+  return { context, transport, at: value => { clock = value; } };
+}
+
+test("pause freezes time; resume and playing seek schedule fresh synchronized sources", async () => {
+  const { context, transport, at } = transportFixture();
+  await transport.play();
+  assert.equal(transport.currentTime, 0); // During the 50ms scheduling lead.
+  at(2.05);
+  transport.pause();
+  assert.ok(Math.abs(transport.currentTime - 2) < 1e-9);
+  at(5);
+  assert.ok(Math.abs(transport.currentTime - 2) < 1e-9);
+  await transport.play();
+  assert.deepEqual(context.sources[2].started, context.sources[3].started);
+  assert.ok(Math.abs(context.sources[2].started[1] - 2) < 1e-9);
+  await transport.seek(7);
+  assert.equal(transport.currentTime, 7);
+  assert.deepEqual(context.sources[4].started, [5.05, 7, 3]);
+  assert.deepEqual(context.sources[5].started, [5.05, 7, 3]);
+  assert.ok(context.sources.slice(0, 4).every(source => source.stopped));
+});
+
+test("paused seek stays silent, boundaries clamp, natural end can replay", async () => {
+  const { context, transport, at } = transportFixture();
+  await transport.seek(-5);
+  assert.equal(transport.currentTime, 0);
+  await transport.seek(999);
+  assert.equal(transport.currentTime, 10);
+  assert.equal(context.sources.length, 0);
+  await assert.rejects(transport.seek(NaN), /finite/);
+  await transport.play();
+  assert.equal(context.sources[0].started[1], 0);
+  at(20);
+  assert.equal(transport.currentTime, 10);
+  context.sources[0].onended(); context.sources[1].onended();
+  assert.equal(transport.isPlaying, false);
+  assert.equal(transport.currentTime, 10);
+  await transport.play();
+  assert.equal(context.sources[2].started[1], 0);
+  await transport.seek(10);
+  assert.equal(transport.isPlaying, false);
+  transport.stop();
+  assert.equal(transport.currentTime, 0);
+});
+
+test("rapid Play is idempotent; Pause cancels pending resume; disposal blocks restart", async () => {
+  const { context, transport } = transportFixture();
+  let resolveResume;
+  context.resume = () => new Promise(resolve => { resolveResume = resolve; });
+  const first = transport.play();
+  await transport.play();
+  transport.pause();
+  resolveResume(); await first;
+  assert.equal(context.sources.length, 0);
+  context.resume = async () => {};
+  await transport.play(); await transport.play();
+  assert.equal(context.sources.length, 2);
+  transport.dispose();
+  assert.ok(context.nodes.every(node => node.disconnected));
+  await assert.rejects(transport.play(), /disposed/);
 });

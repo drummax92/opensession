@@ -1,4 +1,4 @@
-# Milestone 1: two synchronized stems
+# Milestone 2: synchronized transport
 
 Run from the repository root on `feature/audio-integration`:
 
@@ -29,34 +29,42 @@ the test never silently substitutes generated audio.
 
 ## Browser acceptance procedure
 
-1. Click **Verify sample alignment offline**. Expect PASS: both channel-isolated
-   impulses start at sample 2400 and repeat at sample 14400, with identical output
-   in both channels. This uses the real browser OfflineAudioContext and the same
-   scheduling primitive as playback; it does not prove export alignment.
-2. Optional: load synthetic pulses, then Play. Hear one centered pulse each second
-   for eight seconds, with no left/right flam. These are diagnostic tones only.
-3. Click **Load Drums + Bass**. Both decoded durations should be about 41.35s.
-   A duration mismatch greater than 50ms fails visibly; matching duration alone
-   does not establish that the exports retained the correct leading silence.
-4. Click **Play from zero**. Hear both parts in their original musical alignment.
-   Compare against REAPER, including near the end. No accumulated drift.
-5. Click Stop midway and Play again. Both restart from zero. Also click Play
-   while already playing: there must be no duplicate overlapping playback.
-6. Let playback end naturally. Play again; both must play on the second run.
-7. Check the browser console for uncaught errors. Remove one file and reload;
-   expect a named HTTP 404 error and disabled Play, rather than partial playback.
+1. Click **Verify sample alignment offline**. Expect PASS for offsets zero and
+   0.250 seconds. Both stereo-isolated test buffers must align at the sample level.
+2. Click **Load Drums + Bass** (or explicitly select synthetic diagnostic pulses).
+3. Click **Play / Resume**. Time should increase smoothly; both stems stay aligned.
+4. Around 5 seconds click **Pause**. Audio and the time readout must stop. Wait
+   several seconds, then Play / Resume: both continue from the paused position.
+5. While playing, move the slider to around 20 seconds. On release, both tracks
+   must jump together and continue. The 50ms scheduling gap is intentional.
+6. Pause, move the slider to 10 seconds. Stay silent until Play / Resume is clicked;
+   then both stems start at 10 seconds.
+7. Click Play repeatedly: no doubled audio or restarts. Stop resets time to zero.
+8. Seek to the right edge: stop at duration, with no error. Play restarts at zero.
+9. Let playback finish naturally, then play a second time. Verify no console errors.
+10. Missing files must produce a visible named error with transport controls disabled.
 
-Milestone 1 is accepted only after the real stems pass this browser procedure.
-Node tests check scheduling and cleanup with a fake clock, not audible output.
-Pause/resume, seek, React state, six-track playback, A/B, and import come later.
+Node tests use an advancing fake clock to cover pause/resume/seek, clamping,
+replay, duplicate Play, cancellation of pending resume, and graph cleanup.
+Browser offline checks use native Web Audio; real listening checks are still
+required. The user confirmed Milestone 1 real Drums + Bass playback and repeat
+runs. Milestone 2 awaits the above user acceptance procedure.
 
 ## Code entry points
 
 `../synchronized-stems.ts` exports `loadStaticStems(context, urls)` and
-`startSynchronizedStems(context, buffers)`. The latter returns `{ startAt, stop }`.
+`startSynchronizedStems(context, buffers, offset?, duration?, onEnded?)`. The latter returns `{ startAt, stop }`.
 The caller owns one AudioContext and resumes it from a user gesture. All buffers
 are ready before creating sources. Every source passes through its own GainNode
 and one shared master GainNode. Gains stay at unity in this proof; volume/pan
 metadata semantics will be resolved with the exporter during integration.
 
 No manifest types are introduced or changed.
+
+`StemTransport(context, buffers)` adds `play()`, `pause()`, `seek(seconds)`,
+`stop()`, `dispose()`, and read-only `isPlaying`, `currentTime`, `duration`.
+`play` and `seek` return promises; callers handle errors. The proof page reads
+currentTime via requestAnimationFrame. Duration currently comes from the longest
+buffer; canonical project duration will be connected during session integration.
+The caller owns the AudioContext; disposing a transport does not close it.
+No hook, plugin A/B, import, or teammate UI changes are included in this milestone.

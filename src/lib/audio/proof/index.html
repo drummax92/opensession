@@ -7,25 +7,38 @@
   body { font: 17px system-ui; max-width: 850px; margin: 48px auto; padding: 20px; }
   button { padding: 12px; margin: 6px; } pre { white-space: pre-wrap; }
 </style>
-<h1>Milestone 1: two synchronized stems</h1>
+<h1>Milestone 2: playback transport</h1>
 <p>Local engineering test. Start at low headphone volume.</p>
 <button id="real">Load Drums + Bass</button>
 <button id="synthetic">Load synthetic pulses (not demo audio)</button>
-<button id="play" disabled>Play from zero</button>
+<button id="play" disabled>Play / Resume</button>
+<button id="pause" disabled>Pause</button>
 <button id="stop" disabled>Stop</button>
 <button id="verify">Verify sample alignment offline</button>
+<p><output id="time">0.000 / 0.000 s</output></p>
+<input id="seek" aria-label="Seek position" type="range" min="0" max="0" step="0.01" value="0" disabled style="width:100%">
 <pre id="status" role="status">Load both stems before playing.</pre>
 <script type="module">
-  import { loadStaticStems, startSynchronizedStems } from '/engine.js';
+  import { loadStaticStems, startSynchronizedStems, StemTransport } from '/engine.js';
   const $ = (id) => document.getElementById(id);
-  let context, buffers, playback;
+  let context, transport, loading = false, dragging = false;
   const log = (message) => { $('status').textContent = message; };
   async function unlock() {
     context ??= new AudioContext();
     await context.resume();
     if (context.state !== 'running') throw new Error('Audio context not running. Click again.');
   }
-  function stop() { playback?.stop(); playback = undefined; }
+  function refresh() {
+    const ready = !!transport && !loading;
+    for (const id of ['play', 'pause', 'stop', 'seek']) $(id).disabled = !ready;
+    const current = transport?.currentTime ?? 0;
+    const duration = transport?.duration ?? 0;
+    $('time').textContent = `${current.toFixed(3)} / ${duration.toFixed(3)} s — ${transport?.isPlaying ? 'Playing' : 'Paused / stopped'}`;
+    $('seek').max = String(duration);
+    if (!dragging) $('seek').value = String(current);
+  }
+  function animate() { refresh(); requestAnimationFrame(animate); }
+  requestAnimationFrame(animate);
   function pulses(ctx, channel) {
     const buffer = ctx.createBuffer(2, ctx.sampleRate * 8, ctx.sampleRate);
     const data = buffer.getChannelData(channel);
@@ -38,8 +51,10 @@
     return buffer;
   }
   async function load(synthetic) {
-    $('real').disabled = $('synthetic').disabled = $('play').disabled = true;
-    stop(); buffers = undefined;
+    loading = true;
+    $('real').disabled = $('synthetic').disabled = true;
+    transport?.dispose(); transport = undefined;
+    refresh();
     log('Loading both buffers…');
     try {
       await unlock();
@@ -50,26 +65,28 @@
       if (Math.abs(durations[0] - durations[1]) > 0.05) {
         throw new Error(`Stem lengths differ: ${durations.join(', ')}s. Export the same time range.`);
       }
-      buffers = loaded;
+      transport = new StemTransport(context, loaded);
       log(`${synthetic ? 'SYNTHETIC TEST ONLY' : 'Drums + Bass'} ready. Durations: ${durations.map(d => d.toFixed(4)).join(', ')}s.`);
-      $('play').disabled = false;
+      refresh();
     } catch (error) { log(error.message); }
-    finally { $('real').disabled = $('synthetic').disabled = false; }
+    finally { loading = false; $('real').disabled = $('synthetic').disabled = false; refresh(); }
   }
   $('real').onclick = () => load(false);
   $('synthetic').onclick = () => load(true);
   $('play').onclick = async () => {
-    $('play').disabled = true;
-    try {
-      await unlock();
-      stop();
-      playback = startSynchronizedStems(context, buffers);
-      $('stop').disabled = false;
-      log(`Both sources scheduled at ${playback.startAt.toFixed(6)}s, offset 0. Play again restarts BOTH with fresh sources.`);
-    } catch (error) { log(error.message); }
-    finally { $('play').disabled = !buffers; }
+    try { await transport?.play(); } catch (error) { log(error.message); }
+    refresh();
   };
-  $('stop').onclick = () => { stop(); log('Stopped. Play starts both from zero.'); };
+  $('pause').onclick = () => { transport?.pause(); refresh(); };
+  $('stop').onclick = () => { transport?.stop(); refresh(); };
+  $('seek').oninput = () => { dragging = true; };
+  $('seek').onchange = async () => {
+    const seconds = Number($('seek').value);
+    dragging = false;
+    try { await transport?.seek(seconds); } catch (error) { log(error.message); }
+    refresh();
+  };
+  $('seek').onblur = () => { dragging = false; };
   $('verify').onclick = async () => {
     $('verify').disabled = true;
     try {
@@ -86,10 +103,18 @@
       const first = left.findIndex(value => Math.abs(value) > 0.01);
       const matches = left.every((value, index) => value === right[index]);
       if (!matches || first !== 2400 || left[14400] !== 0.25) throw new Error('FAIL: rendered samples differ or start time is wrong.');
-      log('PASS: native Web Audio rendered both stems at sample 2400 (50ms), aligned again at sample 14400. Left/right output is sample-identical. Real stem listening check still required.');
+      const seekContext = new OfflineAudioContext(2, 48000, 48000);
+      startSynchronizedStems(seekContext, pair, 0.25, 0.25);
+      const seekRendered = await seekContext.startRendering();
+      const seekLeft = seekRendered.getChannelData(0), seekRight = seekRendered.getChannelData(1);
+      if (seekLeft.findIndex(value => Math.abs(value) > 0.01) !== 2400 ||
+          !seekLeft.every((value, index) => value === seekRight[index])) {
+        throw new Error('FAIL: non-zero offset is not sample-aligned.');
+      }
+      log('PASS: native Web Audio sample alignment at offset 0 and offset 0.250s. Both stems start at sample 2400 (50ms). Real transport listening check still required.');
     } catch (error) { log(error.message); }
     finally { $('verify').disabled = false; }
   };
-  window.addEventListener('pagehide', () => { stop(); void context?.close(); });
+  window.addEventListener('pagehide', () => { transport?.dispose(); void context?.close(); });
 </script>
 </html>
