@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import BackgroundLayer from "@/components/preferences/BackgroundLayer";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,11 +29,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {/* Apply saved theme + text size before first paint (no flash). */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var p=JSON.parse(localStorage.getItem("opensession:prefs")||"{}");var d=document.documentElement;d.dataset.theme=p.theme||"dark";d.dataset.font=p.fontSize||"default";}catch(e){}`,
+            __html: `try{var p=JSON.parse(localStorage.getItem("opensession:prefs")||"{}");var d=document.documentElement;d.dataset.theme=p.theme||"dark";d.dataset.font=p.fontSize||"default";d.dataset.bg=localStorage.getItem("opensession:background")?"on":"off";}catch(e){}`,
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <BackgroundLayer />
+        {children}
+      </body>
     </html>
   );
 }

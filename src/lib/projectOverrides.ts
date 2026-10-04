@@ -2,6 +2,7 @@
 import { useCallback, useMemo, useSyncExternalStore } from "react";
 import type { OpenSessionProject } from "@/types/session";
 import type { TagColor } from "@/components/explore/tagColors";
+import { notifyStored } from "@/components/storage";
 
 /**
  * Local, per-browser edits to a project's display details.
@@ -20,7 +21,8 @@ export interface ProjectOverrides {
   coverDataUrl?: string;
 }
 
-const key = (id: string) => `opensession:overrides:${id}`;
+export const overridesKey = (id: string) => `opensession:overrides:${id}`;
+const key = overridesKey;
 const listeners = new Set<() => void>();
 
 function subscribe(cb: () => void) {
@@ -61,6 +63,7 @@ export function useProjectOverrides(project: OpenSessionProject) {
         return false;
       }
       listeners.forEach((l) => l());
+      notifyStored();
       return true;
     },
     [project.id],
@@ -71,6 +74,7 @@ export function useProjectOverrides(project: OpenSessionProject) {
       localStorage.removeItem(key(project.id));
     } catch {}
     listeners.forEach((l) => l());
+    notifyStored();
   }, [project.id]);
 
   const merged = {

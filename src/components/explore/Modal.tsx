@@ -1,5 +1,6 @@
 "use client";
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 
 interface Props {
   title: string;
@@ -17,7 +18,8 @@ export default function Modal({ title, subtitle, onClose, children, footer, wide
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  return (
+  // Rendered into <body> so cards' hover effects can't affect its position.
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
       onMouseDown={(e) => e.target === e.currentTarget && onClose()}
@@ -45,6 +47,7 @@ export default function Modal({ title, subtitle, onClose, children, footer, wide
         <div className="space-y-5 overflow-y-auto px-5 py-4">{children}</div>
         {footer && <div className="border-t border-[var(--os-border)] px-5 py-3">{footer}</div>}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

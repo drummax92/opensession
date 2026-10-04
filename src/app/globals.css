@@ -30,10 +30,30 @@
   color-scheme: light;
 }
 
-/* Text size preference: everything sized in rem scales with this. */
-:root { font-size: 16px; }
-:root[data-font="small"] { font-size: 14px; }
-:root[data-font="large"] { font-size: 18px; }
+/* Background image mode: surfaces become see-through so the picture shows. */
+:root[data-bg="on"] body { background: transparent; }
+:root[data-bg="on"]:not([data-theme="light"]) {
+  --os-bg: rgb(13 17 23 / 0.6);
+  --os-panel: rgb(22 27 34 / 0.78);
+  --os-selected: rgb(28 33 40 / 0.85);
+  --os-subtle: rgb(33 38 45 / 0.88);
+}
+:root[data-bg="on"][data-theme="light"] {
+  --os-bg: rgb(255 255 255 / 0.6);
+  --os-panel: rgb(246 248 250 / 0.8);
+  --os-selected: rgb(234 238 242 / 0.85);
+  --os-subtle: rgb(239 242 245 / 0.9);
+}
+
+/* Fluid sizing: the whole UI is in rem, so it scales with the screen width
+   (about 13px on small laptops up to 17px on big monitors), times the
+   Text size preference. */
+:root {
+  --os-font-scale: 1;
+  font-size: calc(clamp(13px, 0.45vw + 9px, 17px) * var(--os-font-scale));
+}
+:root[data-font="small"] { --os-font-scale: 0.875; }
+:root[data-font="large"] { --os-font-scale: 1.125; }
 
 @theme inline {
   --font-sans: var(--font-geist-sans);

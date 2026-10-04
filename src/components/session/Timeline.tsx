@@ -27,7 +27,7 @@ export default function Timeline({
   const ticks = Array.from({ length: Math.floor(duration / step) + 1 }, (_, i) => i * step);
 
   return (
-    <div className="relative min-w-[560px]">
+    <div className="relative min-w-[35rem]">
       {/* ruler — click to seek */}
       <div
         className={`relative ${RULER_H} cursor-pointer border-b border-[var(--os-border)] bg-[var(--os-panel)]`}

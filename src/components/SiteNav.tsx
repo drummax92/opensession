@@ -4,10 +4,11 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Logo from "./Logo";
 import PreferencesDialog from "./preferences/PreferencesDialog";
-import { CompassIcon, GearIcon, UploadIcon } from "./session/Icons";
+import { CompassIcon, FolderIcon, GearIcon, UploadIcon } from "./session/Icons";
 
 const TABS = [
   { href: "/", label: "Explore", Icon: CompassIcon, active: (p: string) => p === "/" },
+  { href: "/my-sessions", label: "My sessions", Icon: FolderIcon, active: (p: string) => p.startsWith("/my-sessions") },
   { href: "/upload", label: "Upload", Icon: UploadIcon, active: (p: string) => p.startsWith("/upload") },
 ];
 

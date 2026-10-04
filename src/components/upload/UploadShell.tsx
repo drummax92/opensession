@@ -4,6 +4,10 @@ import { useRef, useState } from "react";
 interface Props {
   /** Technical lead wires the real import here (parse session.json, resolve audio, open viewer). */
   onImport?: (files: File[]) => void | Promise<void>;
+  /** Called whenever the picked files change. */
+  onFilesChange?: (files: File[]) => void;
+  /** Hide the "Open session" button (when used inside another flow). */
+  showOpenButton?: boolean;
 }
 
 const relPath = (f: File) =>
@@ -12,7 +16,7 @@ const relPath = (f: File) =>
 const btn =
   "rounded-md border border-[var(--os-border)] bg-[var(--os-subtle)] px-3 py-1.5 text-sm text-[var(--os-text)] transition hover:border-[var(--os-muted)] focus-visible:outline-2 focus-visible:outline-[#2f81f7]";
 
-export default function UploadShell({ onImport }: Props) {
+export default function UploadShell({ onImport, onFilesChange, showOpenButton = true }: Props) {
   const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
   const folderRef = useRef<HTMLInputElement>(null);
@@ -22,7 +26,11 @@ export default function UploadShell({ onImport }: Props) {
   const audio = files.filter((f) => f.name.toLowerCase().endsWith(".mp3"));
   const ready = !!manifest;
 
-  const pick = (list: FileList | null) => setFiles(list ? Array.from(list) : []);
+  const pick = (list: FileList | null) => {
+    const next = list ? Array.from(list) : [];
+    setFiles(next);
+    onFilesChange?.(next);
+  };
 
   const open = async () => {
     if (!onImport) return;
@@ -85,6 +93,7 @@ export default function UploadShell({ onImport }: Props) {
         </div>
       )}
 
+      {showOpenButton && (
       <div className="flex items-center gap-3">
         <button
           type="button"
@@ -98,6 +107,7 @@ export default function UploadShell({ onImport }: Props) {
           <span className="text-xs text-[var(--os-muted)]">Import isn’t connected yet.</span>
         )}
       </div>
+      )}
     </div>
   );
 }

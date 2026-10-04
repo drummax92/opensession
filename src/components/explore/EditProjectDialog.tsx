@@ -1,11 +1,13 @@
 "use client";
 import { useState, type ReactNode } from "react";
 import type { ProjectOverrides } from "@/lib/projectOverrides";
+import { GlobeIcon, LockIcon } from "@/components/session/Icons";
+import type { Visibility } from "./drafts";
 import Modal from "./Modal";
 import { setupChipClass } from "./setup";
 import { TAG_COLORS, TAG_COLOR_KEYS, tagChipClass, type TagColor } from "./tagColors";
 
-export type EditResult = ProjectOverrides & { title?: string };
+export type EditResult = ProjectOverrides & { title?: string; visibility?: Visibility };
 
 interface Props {
   title: string;
@@ -13,6 +15,8 @@ interface Props {
   heading?: string;
   /** Show a name field (used for new/draft projects). */
   editTitle?: boolean;
+  /** If given, shows a Public / Private choice. */
+  visibility?: Visibility;
   detectedSetup: string[];
   initial: {
     title?: string;
@@ -62,6 +66,7 @@ export default function EditProjectDialog({
   title,
   heading,
   editTitle = false,
+  visibility,
   detectedSetup,
   initial,
   canReset,
@@ -72,6 +77,7 @@ export default function EditProjectDialog({
   onClose,
 }: Props) {
   const [name, setName] = useState(initial.title ?? title);
+  const [vis, setVis] = useState<Visibility | undefined>(visibility);
   const [description, setDescription] = useState(initial.description);
   const [tags, setTags] = useState(initial.genres);
   const [colors, setColors] = useState(initial.tagColors);
@@ -86,8 +92,9 @@ export default function EditProjectDialog({
 
   const snapshot = (o: object) => JSON.stringify(o);
   const dirty =
-    snapshot({ name, description, tags, colors, setup, hidden, names, cover }) !==
+    snapshot({ vis, name, description, tags, colors, setup, hidden, names, cover }) !==
     snapshot({
+      vis: visibility,
       name: initial.title ?? title,
       description: initial.description,
       tags: initial.genres,
@@ -135,6 +142,7 @@ export default function EditProjectDialog({
     );
     const ok = onSave({
       ...(editTitle ? { title: name.trim() || "Untitled project" } : {}),
+      ...(vis ? { visibility: vis } : {}),
       description: description.trim(),
       genres: tags,
       tagColors: keptColors,
@@ -230,6 +238,34 @@ export default function EditProjectDialog({
             className={input}
           />
         </label>
+      )}
+
+      {vis && (
+        <div className="space-y-1.5">
+          <span className={label}>Visibility</span>
+          <div role="radiogroup" aria-label="Visibility" className="flex rounded-md border border-[var(--os-border)] p-0.5">
+            {(["public", "private"] as const).map((v) => (
+              <button
+                key={v}
+                type="button"
+                role="radio"
+                aria-checked={vis === v}
+                onClick={() => setVis(v)}
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded px-3 py-1.5 text-sm transition [&>svg]:h-3.5 [&>svg]:w-3.5 ${
+                  vis === v
+                    ? "bg-[var(--os-subtle)] font-medium text-[var(--os-text)]"
+                    : "text-[var(--os-muted)] hover:text-[var(--os-text)]"
+                }`}
+              >
+                {v === "public" ? <GlobeIcon /> : <LockIcon />}
+                {v === "public" ? "Public" : "Private"}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-[var(--os-faint)]">
+            {vis === "public" ? "Shown on Explore and in My sessions." : "Only shown in My sessions."}
+          </p>
+        </div>
       )}
 
       <label className="block space-y-1.5">
