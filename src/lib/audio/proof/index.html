@@ -9,7 +9,7 @@
   td, th { padding: 6px 14px; text-align: left; }
   button { padding: 12px; margin: 6px; } pre { white-space: pre-wrap; }
 </style>
-<h1>Milestone 4: Mute / Solo</h1>
+<h1>Milestone 5–7: plugin A/B</h1>
 <p>Local engineering test. Start at low headphone volume.</p>
 <button id="real">Load all 6 stems</button>
 <button id="synthetic">Load synthetic pulses (not demo audio)</button>
@@ -19,7 +19,7 @@
 <button id="verify">Verify sample alignment offline</button>
 <p><output id="time">0.000 / 0.000 s</output></p>
 <input id="seek" aria-label="Seek position" type="range" min="0" max="0" step="0.01" value="0" disabled style="width:100%">
-<table><thead><tr><th>Track</th><th>Mute</th><th>Solo</th><th>Routing</th></tr></thead><tbody id="tracks"></tbody></table>
+<table><thead><tr><th>Track</th><th>Mute</th><th>Solo</th><th>Routing</th><th>Plugin A/B</th></tr></thead><tbody id="tracks"></tbody></table>
 <pre id="status" role="status">Load all six stems before playing.</pre>
 <script type="module">
   import { loadStaticStems, startSynchronizedStems, StemTransport } from '/engine.js';
@@ -27,6 +27,13 @@
   const $ = (id) => document.getElementById(id);
   let context, transport, loading = false, dragging = false;
   const log = (message) => { $('status').textContent = message; };
+  const auditionSpecs = [
+    ['lead-guitar', 'vintageverb', 'VintageVerb'],
+    ['lead-guitar', 'rabea', 'Rabea'],
+    ['rhythm-guitar-l', 'rabea', 'Rabea'],
+    ['rhythm-guitar-r', 'rabea', 'Rabea'],
+  ];
+  let availableAuditions = new Set();
   let trackRows = [];
   function renderTracks(ids, labels) {
     $('tracks').replaceChildren();
@@ -45,7 +52,14 @@
         cell.append(button); row.append(cell); return button;
       });
       const state = document.createElement('td'); row.append(state); $('tracks').append(row);
-      return { id, buttons, state };
+      const fxCell = document.createElement('td');
+      const fx = auditionSpecs.filter(([track]) => track === id).map(([, plugin, label]) => {
+        const button = document.createElement('button');
+        button.onclick = () => { try { transport?.togglePluginBypass(id, plugin); refresh(); } catch (error) { log(error.message); } };
+        fxCell.append(button); return { button, plugin, label };
+      });
+      row.append(fxCell);
+      return { id, buttons, state, fx };
     });
   }
   async function unlock() {
@@ -62,8 +76,15 @@
     $('seek').max = String(duration);
     if (!dragging) $('seek').value = String(current);
     const muted = transport?.mutedTrackIds ?? new Set(), soloed = transport?.soloTrackIds ?? new Set();
-    for (const { id, buttons, state } of trackRows) {
+    for (const { id, buttons, state, fx } of trackRows) {
       buttons.forEach(button => { button.disabled = !ready; });
+      for (const { button, plugin, label } of fx) {
+        const available = availableAuditions.has(`${id}/${plugin}`);
+        const bypassed = transport?.bypassedPluginByTrack.get(id) === plugin;
+        button.disabled = !ready || !available;
+        button.textContent = `${label}: ${available ? bypassed ? 'OFF' : 'ON' : 'unavailable'}`;
+        button.setAttribute('aria-pressed', String(bypassed));
+      }
       buttons[0].setAttribute('aria-pressed', String(muted.has(id)));
       buttons[1].setAttribute('aria-pressed', String(soloed.has(id)));
       state.textContent = muted.has(id) ? 'Muted' : soloed.size && !soloed.has(id) ? 'Excluded by Solo' : 'Enabled';
@@ -87,6 +108,7 @@
     $('real').disabled = $('synthetic').disabled = true;
     transport?.dispose(); transport = undefined;
     renderTracks([], []);
+    availableAuditions = new Set();
     refresh();
     log(synthetic ? 'Loading test pulses…' : 'Loading and decoding all 6 stems…');
     try {
@@ -100,8 +122,18 @@
       }
       const ids = synthetic ? ['test-left', 'test-right'] : stemNames;
       transport = new StemTransport(context, loaded, ids);
+      const warnings = [];
+      if (!synthetic) {
+        for (const [track, plugin] of auditionSpecs) {
+          try {
+            const [buffer] = await loadStaticStems(context, [`/demo/stormhacks/audio/auditions/${track}__without-${plugin}.mp3`]);
+            transport.registerAudition(track, plugin, buffer);
+            availableAuditions.add(`${track}/${plugin}`);
+          } catch (error) { warnings.push(error.message); }
+        }
+      }
       renderTracks(ids, synthetic ? labels : ['Drums', 'Bass', 'Lead Guitar', 'Rhythm Guitar L', 'Rhythm Guitar R', 'Vocals']);
-      log(`${synthetic ? 'SYNTHETIC TEST ONLY' : 'All 6 stems'} ready.\n${details}`);
+      log(`${synthetic ? 'SYNTHETIC TEST ONLY' : 'All 6 stems'} ready.\n${details}\n${synthetic ? '' : `A/B ready: ${availableAuditions.size}/4`}\n${warnings.join('\n')}`);
       refresh();
     } catch (error) { log(error.message); }
     finally { loading = false; $('real').disabled = $('synthetic').disabled = false; refresh(); }

@@ -94,3 +94,34 @@ States persist through transport actions; loading a different set resets them.
 `toggleSolo(trackId)`, `mutedTrackIds`, and `soloTrackIds` (defensive snapshots).
 During integration, pass canonical manifest track IDs in the same order as buffers.
 No session schema changes. The proof uses filename stems as temporary test IDs.
+
+## Milestones 5–7: plugin A/B
+
+The user confirmed Mute/Solo works. Four optional audition files are served from
+`public/demo/stormhacks/audio/auditions/`, with canonical names in PROJECT_CONTRACT.
+The normal six stems load first; each audition is decoded and checked against
+its normal stem duration (50ms tolerance). A failed audition disables only its
+button and displays the error. Loading shows `A/B ready: 4/4` when all succeed.
+
+Test Lead Guitar VintageVerb first, then Lead Rabea, then Rhythm L/R Rabea:
+
+1. Solo Lead, Play, click VintageVerb ON: it becomes OFF and the reverb disappears.
+2. Click it again: ON restores the full processed stem at the current position.
+3. While VintageVerb is OFF, click Rabea: Rabea becomes OFF, VintageVerb returns ON.
+4. Remove Solo, switch FX around 27 seconds: drums/bass/vocals/rhythm continue
+   uninterrupted. The project clock does not reset or pause.
+5. Toggle rapidly; Pause/Resume, seek and Stop/Play. Selection and gain states persist.
+6. Solo each Rhythm track and toggle Rabea. Only the selected track changes.
+7. Complete two runs; check browser console. Report clicks or timing artifacts.
+
+`registerAudition(trackId, pluginId, buffer)` registers decoded assets, while
+`togglePluginBypass(trackId, pluginId)` selects exactly one alternate per track.
+`bypassedPluginByTrack` returns a defensive Map snapshot. Manifest IDs will be
+passed by the integration layer; the proof uses temporary filename/plugin IDs.
+No canonical schema edits. The spare all-FX-off stem is not loaded.
+
+A/B retains the track GainNode and replaces only its BufferSource. It schedules
+10ms ahead (or at the pending transport start), includes that lead time in the
+project offset, and stops the previous source at exactly the same clock time.
+Retired sources disconnect on end or when the transport is stopped. No crossfade
+is applied; listen for switching clicks during acceptance.

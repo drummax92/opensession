@@ -37,8 +37,10 @@ export function startSynchronizedStems(
   const master = context.createGain();
   master.connect(context.destination);
   const voices: { source: AudioBufferSourceNode; gain: GainNode; index: number }[] = [];
+  const retiring = new Set<AudioBufferSourceNode>();
   let stopped = false;
   let remaining = playable.length;
+  const active = new Set(playable.map(({ index }) => index));
 
   const stop = () => {
     if (stopped) return;
@@ -50,6 +52,12 @@ export function startSynchronizedStems(
       source.disconnect();
       gain.disconnect();
     }
+    for (const source of retiring) {
+      source.onended = null;
+      try { source.stop(); } catch { /* Already ended. */ }
+      source.disconnect();
+    }
+    retiring.clear();
     master.disconnect();
   };
 
@@ -65,6 +73,7 @@ export function startSynchronizedStems(
       source.onended = () => {
         source.disconnect();
         gain.disconnect();
+        active.delete(index);
         if (--remaining === 0) { stop(); onEnded?.(); }
       };
     }
@@ -73,6 +82,30 @@ export function startSynchronizedStems(
     for (const { source } of voices) source.start(startAt, offset, Math.min(duration, source.buffer!.duration - offset));
     return {
       startAt, stop,
+      replaceBuffer(index: number, buffer: AudioBuffer) {
+        if (stopped) return;
+        const voice = voices.find(voice => voice.index === index);
+        if (!voice || !active.has(index)) return;
+        const switchAt = Math.max(startAt, context.currentTime + 0.01);
+        const projectOffset = offset + (switchAt - startAt);
+        const length = Math.min(offset + duration, buffer.duration) - projectOffset;
+        if (length <= 0) return; // At the end, only remember the selection for replay.
+        const replacement = context.createBufferSource();
+        replacement.buffer = buffer;
+        replacement.connect(voice.gain);
+        try { replacement.start(switchAt, projectOffset, length); }
+        catch (error) { replacement.disconnect(); throw error; }
+        const previous = voice.source;
+        replacement.onended = () => {
+          replacement.disconnect(); voice.gain.disconnect();
+          active.delete(index);
+          if (--remaining === 0) { stop(); onEnded?.(); }
+        };
+        previous.onended = () => { previous.disconnect(); retiring.delete(previous); };
+        retiring.add(previous);
+        previous.stop(switchAt);
+        voice.source = replacement;
+      },
       setTrackGain(index: number, value: number) {
         if (stopped) return;
         const voice = voices.find(voice => voice.index === index);
@@ -101,6 +134,8 @@ export class StemTransport {
   private readonly trackIds: readonly string[];
   private readonly muted = new Set<string>();
   private readonly soloed = new Set<string>();
+  private readonly auditions = new Map<string, Map<string, AudioBuffer>>();
+  private readonly bypassed = new Map<string, string>();
 
   constructor(context: AudioContext, buffers: readonly AudioBuffer[], trackIds = buffers.map((_, index) => String(index))) {
     if (!buffers.length || buffers.some(buffer => !Number.isFinite(buffer.duration) || buffer.duration <= 0)) {
@@ -117,6 +152,37 @@ export class StemTransport {
 
   get mutedTrackIds(): ReadonlySet<string> { return new Set(this.muted); }
   get soloTrackIds(): ReadonlySet<string> { return new Set(this.soloed); }
+
+  get bypassedPluginByTrack(): ReadonlyMap<string, string> { return new Map(this.bypassed); }
+
+  registerAudition(trackId: string, pluginId: string, buffer: AudioBuffer): void {
+    if (this.disposed) throw new Error("Transport has been disposed.");
+    const index = this.trackIds.indexOf(trackId);
+    if (index < 0) throw new Error(`Unknown track: ${trackId}`);
+    if (!buffer.length || !Number.isFinite(buffer.duration) || Math.abs(buffer.duration - this.buffers[index].duration) > 0.05) {
+      throw new Error(`Audition duration mismatch: ${trackId} / ${pluginId}`);
+    }
+    let plugins = this.auditions.get(trackId);
+    if (!plugins) { plugins = new Map(); this.auditions.set(trackId, plugins); }
+    plugins.set(pluginId, buffer);
+  }
+
+  togglePluginBypass(trackId: string, pluginId: string): void {
+    if (this.disposed) throw new Error("Transport has been disposed.");
+    const alternate = this.auditions.get(trackId)?.get(pluginId);
+    if (!alternate) throw new Error(`Audition unavailable: ${trackId} / ${pluginId}`);
+    const restore = this.bypassed.get(trackId) === pluginId;
+    const index = this.trackIds.indexOf(trackId);
+    this.playback?.replaceBuffer(index, restore ? this.buffers[index] : alternate);
+    if (restore) this.bypassed.delete(trackId); else this.bypassed.set(trackId, pluginId);
+  }
+
+  private selectedBuffers(): AudioBuffer[] {
+    return this.trackIds.map((id, index) => {
+      const plugin = this.bypassed.get(id);
+      return (plugin ? this.auditions.get(id)?.get(plugin) : undefined) ?? this.buffers[index];
+    });
+  }
 
   private level(trackId: string): number {
     return !this.muted.has(trackId) && (this.soloed.size === 0 || this.soloed.has(trackId)) ? 1 : 0;
@@ -149,7 +215,7 @@ export class StemTransport {
       if (this.context.state !== "running") throw new Error("Audio context is not running. Click Play again.");
       if (this.offset >= this.duration) this.offset = 0;
       this.playback = startSynchronizedStems(
-        this.context, this.buffers, this.offset, this.duration - this.offset,
+        this.context, this.selectedBuffers(), this.offset, this.duration - this.offset,
         () => {
           if (revision !== this.revision) return;
           this.playback = undefined;

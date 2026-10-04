@@ -5,7 +5,7 @@ import ts from "typescript";
 
 const source = await readFile(new URL("../synchronized-stems.ts", import.meta.url), "utf8");
 const code = ts.transpileModule(source, {
-  compilerOptions: { module: ts.ModuleKind.ES2020 },
+  compilerOptions: { module: ts.ModuleKind.ES2020, target: ts.ScriptTarget.ES2020 },
 }).outputText;
 const { startSynchronizedStems, loadStaticStems, StemTransport } = await import(
   `data:text/javascript;base64,${Buffer.from(code).toString("base64")}`
@@ -187,4 +187,69 @@ test("mute and solo survive pause, seek, stop and replay", async () => {
   transport.stop(); await transport.play();
   assert.deepEqual(context.sources.slice(-2).map(source => source.destination.gain.value), [0, 1]);
   assert.deepEqual([...transport.soloTrackIds], ['1']);
+});
+
+test('A/B changes only selected source at the shared clock position and preserves gain', async () => {
+  const { context, transport, at } = transportFixture();
+  const alternate = { length: 480000, duration: 10 };
+  transport.registerAudition('1', 'verb', alternate);
+  transport.toggleMute('1');
+  await transport.play();
+  at(3.05);
+  const before = transport.currentTime;
+  transport.togglePluginBypass('1', 'verb');
+  assert.equal(context.sources.length, 3);
+  assert.ok(!context.sources[0].stopped);
+  assert.ok(context.sources[1].stopped);
+  const replacement = context.sources[2];
+  assert.equal(replacement.buffer, alternate);
+  assert.ok(Math.abs(replacement.started[0] - 3.06) < 1e-9);
+  assert.ok(Math.abs(replacement.started[1] - 3.01) < 1e-9);
+  assert.equal(replacement.destination.gain.value, 0);
+  assert.equal(transport.currentTime, before);
+  transport.stop();
+  assert.ok(context.sources.every(source => source.stopped));
+  assert.ok(context.nodes.every(node => node.disconnected));
+});
+
+test('one bypass per track; selection survives seek/resume and rapid switches clean up', async () => {
+  const { context, transport } = transportFixture();
+  const verb = { length: 480000, duration: 10 }, amp = { length: 480000, duration: 10 };
+  transport.registerAudition('1', 'verb', verb);
+  transport.registerAudition('1', 'amp', amp);
+  transport.togglePluginBypass('1', 'verb');
+  transport.togglePluginBypass('1', 'amp');
+  assert.equal(transport.bypassedPluginByTrack.get('1'), 'amp');
+  await transport.play();
+  assert.equal(context.sources[1].buffer, amp);
+  transport.togglePluginBypass('1', 'verb');
+  transport.togglePluginBypass('1', 'amp');
+  transport.pause();
+  assert.ok(context.nodes.every(node => node.disconnected));
+  await transport.seek(5); await transport.play();
+  assert.equal(context.sources.at(-1).buffer, amp);
+  transport.togglePluginBypass('1', 'amp');
+  assert.equal(transport.bypassedPluginByTrack.size, 0);
+  assert.notEqual(context.sources.at(-1).buffer, amp);
+  transport.dispose();
+  assert.ok(context.nodes.every(node => node.disconnected));
+  assert.throws(() => transport.togglePluginBypass('1', 'amp'), /disposed/);
+});
+
+test('invalid audition does not alter playback; replacement ends naturally once', async () => {
+  const { context, transport, at } = transportFixture();
+  assert.throws(() => transport.registerAudition('1', 'bad', {length: 1, duration: 2}), /mismatch/);
+  assert.throws(() => transport.togglePluginBypass('1', 'missing'), /unavailable/);
+  transport.registerAudition('1', 'verb', {length: 480000, duration: 10});
+  await transport.play(); at(2);
+  transport.togglePluginBypass('1', 'verb');
+  context.sources[1].onended(); // Retired source must not finish the transport.
+  assert.equal(transport.isPlaying, true);
+  context.sources[0].onended();
+  context.sources[2].onended();
+  assert.equal(transport.isPlaying, false);
+  assert.equal(transport.currentTime, 10);
+  await transport.play();
+  assert.equal(transport.isPlaying, true);
+  transport.dispose();
 });
