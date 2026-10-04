@@ -48,6 +48,19 @@ local aliases = {
   ["rhythm guitar r"]="rhythm-guitar-r", ["storm rh r"]="rhythm-guitar-r",
   ["vocals"]="vocals", ["storm voc"]="vocals"
 }
+-- Preserve known demo filenames; arbitrary/duplicate names are equally supported.
+local function allocate_stem(name, index, seen)
+  local normalized=name:lower():match("^%s*(.-)%s*$")
+  local base=aliases[normalized] or ("track-" .. (index+1))
+  local stem=base
+  local suffix=1
+  while seen[stem] do
+    stem=base .. "-track-" .. (index+1) .. "-" .. suffix
+    suffix=suffix+1
+  end
+  seen[stem]=true
+  return stem
+end
 local warnings, plans, jobs = {}, {}, {}
 local stats = {items=0, fx=0, parameters=0, normal=0, auditions=0, dry=0}
 local function warn(s) warnings[#warnings + 1] = s end
@@ -127,22 +140,40 @@ local function read_plugins(track, stem, folder)
     if not reaper.TrackFX_GetEnabled(track,index) then warn(name .. " is currently bypassed; state preserved.") end
     local lower=name:lower()
     local target
-    if (stem=="lead-guitar" or stem=="rhythm-guitar-l" or stem=="rhythm-guitar-r") and lower:find("rabea",1,true) then target="rabea" end
-    if stem=="lead-guitar" and lower:find("vintageverb",1,true) then target="vintageverb" end
+    if lower:find("rabea",1,true) then target="rabea" end
+    if lower:find("vintageverb",1,true) then target="vintageverb" end
     if target then
-      if targets[target] then warn("Duplicate audition target " .. target .. " on " .. stem .. "; manual review required.")
-      else
-        targets[target]=true
-        local path="audio/auditions/" .. stem .. "__without-" .. target .. ".mp3"
-        plans[#plans+1]=path .. " | " .. stem .. " | bypass ONLY FX slot " .. (index+1) .. ": " .. name
-        jobs[#jobs+1]={track=track,fx=index,path=path,plugin=plugin}
-      end
+      -- Repeated instances each get their own render and real plugin GUID.
+      local suffix=targets[target] and ("-fx-" .. (index+1)) or ""
+      targets[target]=true
+      local path="audio/auditions/" .. stem .. "__without-" .. target .. suffix .. ".mp3"
+      plans[#plans+1]=path .. " | " .. stem .. " | bypass ONLY FX slot " .. (index+1) .. ": " .. name
+      jobs[#jobs+1]={track=track,fx=index,path=path,plugin=plugin}
     end
     plugins[#plugins+1]=plugin; stats.fx=stats.fx+1
   end
-  if stem=="lead-guitar" and not targets.vintageverb then warn("Lead Guitar VintageVerb audition target not found.") end
-  if (stem=="lead-guitar" or stem=="rhythm-guitar-l" or stem=="rhythm-guitar-r") and not targets.rabea then warn(stem .. ": Rabea audition target not found.") end
   return plugins
+end
+local function plan_combinations(track,stem,entry)
+  local rabea,vintageverb
+  local ambiguous=false
+  for index,plugin in ipairs(entry.plugins) do
+    local lower=plugin.name:lower()
+    if lower:find("rabea",1,true) then
+      if rabea then ambiguous=true end
+      rabea={index=index-1,id=plugin.id}
+    end
+    if lower:find("vintageverb",1,true) then
+      if vintageverb then ambiguous=true end
+      vintageverb={index=index-1,id=plugin.id}
+    end
+  end
+  if rabea and vintageverb and not ambiguous then
+    local path="audio/auditions/" .. stem .. "__without-rabea-and-vintageverb.mp3"
+    jobs[#jobs+1]={track=track,path=path,dry=true,entry=entry,
+      indices={rabea.index,vintageverb.index},pluginIds={rabea.id,vintageverb.id}}
+    plans[#plans+1]=path .. " | " .. stem .. " | bypass ONLY Rabea and VintageVerb together"
+  elseif rabea and vintageverb then warn(stem .. ": combined variant omitted because repeated FX make the pair ambiguous; single bypasses remain available.") end
 end
 -- Restore every targeted enabled state even if the render callback fails.
 local function with_bypassed_fx(track, indices, callback)
@@ -344,14 +375,8 @@ local function main()
     local track=assert(reaper.GetTrack(project,index))
     local ok,name=reaper.GetSetMediaTrackInfo_String(track,"P_NAME","",false)
     assert(ok,"Cannot read track name")
-    local normalized=name:lower():match("^%s*(.-)%s*$")
-    local stem=aliases[normalized]
-    if not stem then
-      stem="track-" .. (index+1)
-      warn("Unrecognized demo track " .. name .. "; using " .. stem .. ".mp3")
-    end
-    assert(not seen[stem],"Ambiguous duplicate track role: " .. stem .. ". Give rhythm tracks distinct L/R names.")
-    seen[stem]=true
+    local stem=allocate_stem(name,index,seen)
+    if name:match("^%s*$") then name="Track " .. (index+1) end
     local entry={id=reaper.GetTrackGUID(track),name=name,
       volumeLinear=reaper.GetMediaTrackInfo_Value(track,"D_VOL"),pan=reaper.GetMediaTrackInfo_Value(track,"D_PAN"),
       muted=reaper.GetMediaTrackInfo_Value(track,"B_MUTE")~=0,solo=reaper.GetMediaTrackInfo_Value(track,"I_SOLO")~=0,
@@ -360,34 +385,11 @@ local function main()
     if entry.volumeLinear>0 then entry.volumeDb=20*math.log(entry.volumeLinear,10) end
     entry.plugins=read_plugins(track,stem,folder)
     normal_jobs[#normal_jobs+1]={track=track,path=entry.stemPath}
-    if stem=="lead-guitar" then
-      local rabea,vintageverb
-      local ambiguous=false
-      for index,plugin in ipairs(entry.plugins) do
-        local lower=plugin.name:lower()
-        if lower:find("rabea",1,true) then
-          if rabea then ambiguous=true end
-          rabea={index=index-1,id=plugin.id}
-        end
-        if lower:find("vintageverb",1,true) then
-          if vintageverb then ambiguous=true end
-          vintageverb={index=index-1,id=plugin.id}
-        end
-      end
-      if rabea and vintageverb and not ambiguous then
-        local path="audio/auditions/lead-guitar__without-rabea-and-vintageverb.mp3"
-        jobs[#jobs+1]={track=track,path=path,dry=true,entry=entry,
-          indices={rabea.index,vintageverb.index},pluginIds={rabea.id,vintageverb.id}}
-        plans[#plans+1]=path .. " | lead-guitar | bypass ONLY Rabea and VintageVerb together"
-      else warn("Combined lead variant omitted: need exactly one Rabea and one VintageVerb.") end
-    end
+    plan_combinations(track,stem,entry)
     for _,item in ipairs(entry.items) do
       if item.start<0 then warn(name .. ": item starts before zero.") end
     end
     manifest.tracks[#manifest.tracks+1]=entry
-  end
-  for _,role in ipairs({"drums","bass","lead-guitar","rhythm-guitar-l","rhythm-guitar-r","vocals"}) do
-    if not seen[role] then warn("Missing expected demo role: " .. role) end
   end
   write(folder .. "/session.json",encode(manifest) .. "\n")
   local audio_ok,rendered=pcall(render_audio,project,folder,manifest.duration,normal_jobs)
@@ -399,8 +401,8 @@ local function main()
     .. "\nTracks: " .. #manifest.tracks .. "\nItems: " .. stats.items .. "\nFX: " .. stats.fx
     .. "\nParameters: " .. stats.parameters .. "\nNormal audio files present: " .. stats.normal
     .. "\nAudition audio files present: " .. stats.auditions
-    .. "\nDry lead audio files generated: " .. stats.dry
-    .. "\nCombined lead path: audio/auditions/lead-guitar__without-rabea-and-vintageverb.mp3; linked in track.bypassVariants after successful rendering"
+    .. "\nCombined FX audio files generated: " .. stats.dry
+    .. "\nCombined paths: see render plan; linked in track.bypassVariants only after successful rendering"
     .. "\nAudio generated by this run: " .. rendered
     .. "\nOnly the target track is unmuted/selected per job; render controls read back before rendering."
     .. "\nNew MP3 files decoded and duration checked (0.15 second encoder tolerance)."
@@ -413,7 +415,7 @@ local function main()
   write(folder .. "/EXPORT_REPORT.txt",report)
   reaper.ShowMessageBox("OpenSession metadata exported\nTracks: " .. #manifest.tracks
     .. " | Items: " .. stats.items .. " | FX: " .. stats.fx .. " | Parameters: " .. stats.parameters
-    .. "\nAudio present: " .. stats.normal .. " normal, " .. stats.auditions .. " auditions, " .. stats.dry .. " dry lead"
+    .. "\nAudio present: " .. stats.normal .. " normal, " .. stats.auditions .. " auditions, " .. stats.dry .. " combined FX"
     .. "\nAudio rendered: " .. rendered .. " | Warnings: " .. #warnings
     .. "\n\n" .. folder .. "\n\nSee EXPORT_REPORT.txt for details.","OpenSession exporter",0)
 end
