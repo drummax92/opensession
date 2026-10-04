@@ -18,7 +18,7 @@ function initialState(project: OpenSessionProject) {
 }
 
 /** Keep project identity stable. One mounted player owns one AudioContext. */
-export function useSessionPlayer(project: OpenSessionProject, baseUrl = "/demo/stormhacks") {
+export function useSessionPlayer(project: OpenSessionProject, baseUrl = "/demo/stormhacks", audioFiles?: ReadonlyMap<string, File>) {
   const [state, setState] = useState(() => initialState(project));
   const active = useRef<{ project: OpenSessionProject; transport: StemTransport } | null>(null);
 
@@ -34,7 +34,7 @@ export function useSessionPlayer(project: OpenSessionProject, baseUrl = "/demo/s
       setState(initialState(project));
       try {
         context = new AudioContext();
-        const loaded = await loadSessionAudio(context, project, baseUrl, abort.signal);
+        const loaded = await loadSessionAudio(context, project, baseUrl, abort.signal, audioFiles);
         transport = loaded.transport;
         if (abort.signal.aborted) { transport.dispose(); return; }
         active.current = { project, transport };
@@ -62,7 +62,7 @@ export function useSessionPlayer(project: OpenSessionProject, baseUrl = "/demo/s
       transport?.dispose();
       if (context && context.state !== "closed") void context.close().catch(() => {});
     };
-  }, [project, baseUrl]);
+  }, [project, baseUrl, audioFiles]);
 
   const run = useCallback((action: (transport: StemTransport) => void | Promise<void>) => {
     const player = active.current;

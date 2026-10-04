@@ -312,3 +312,17 @@ test('optional audition failure keeps normal playback; abort and invalid paths a
     assert.throws(() => stemUrl('/demo/stormhacks', 'C:\\recording.mp3'), /Invalid/);
   } finally { globalThis.fetch = original; }
 });
+
+test('local package audio decodes selected Files without any network fallback', async () => {
+  const original=globalThis.fetch;
+  try {
+    globalThis.fetch=async()=>{throw new Error('Unexpected network access');};
+    const project=manifestFixture(), context=fakeContext();
+    context.decodeAudioData=async()=>({length:480000,duration:10});
+    const files=new Map(['audio/drums.mp3','audio/lead.mp3','audio/auditions/lead-dry.mp3'].map(path=>[path,new File(['test'],path)]));
+    const loaded=await loadSessionAudio(context,project,'/unused',undefined,files);
+    assert.equal(loaded.warnings.length,0);assert.ok(loaded.availablePluginIdsByTrack.get('{LEAD}').has('{VERB}'));
+    loaded.transport.dispose();files.delete('audio/drums.mp3');
+    await assert.rejects(loadSessionAudio(context,project,'/unused',undefined,files),/Missing local audio/);
+  } finally {globalThis.fetch=original;}
+});

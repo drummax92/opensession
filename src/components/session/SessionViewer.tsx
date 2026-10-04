@@ -11,11 +11,12 @@ import { useSessionPlayer } from "@/hooks/useSessionPlayer";
 
 interface Props {
   project: OpenSessionProject;
+  audioFiles?: ReadonlyMap<string, File>;
 
 }
 
-export default function SessionViewer({ project }: Props) {
-  const p = useSessionPlayer(project);
+export default function SessionViewer({ project, audioFiles }: Props) {
+  const p = useSessionPlayer(project, "/demo/stormhacks", audioFiles);
   const [selection, setSelection] = useState<Selection>(null);
   const muted = p.mutedTrackIds, solo = p.soloTrackIds, bypass = p.bypassedPluginByTrack;
   const toggleMute = p.toggleMute, toggleSolo = p.toggleSolo, toggleBypass = p.togglePluginBypass;

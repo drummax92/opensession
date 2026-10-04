@@ -15,6 +15,7 @@ export async function loadSessionAudio(
   project: OpenSessionProject,
   baseUrl = "/demo/stormhacks",
   signal?: AbortSignal,
+  audioFiles?: ReadonlyMap<string, File>,
 ) {
   if (project.schemaVersion !== "0.1" || !project.tracks.length ||
       !Number.isFinite(project.duration) || project.duration <= 0) {
@@ -26,8 +27,22 @@ export async function loadSessionAudio(
     const pluginIds = track.plugins.map(plugin => plugin.id);
     if (new Set(pluginIds).size !== pluginIds.length) throw new Error(`Duplicate FX IDs: ${track.name}`);
   }
+  const decode = async (path: string): Promise<AudioBuffer> => {
+    signal?.throwIfAborted();
+    if (!audioFiles) return (await loadStaticStems(context, [stemUrl(baseUrl, path)], signal))[0];
+    const file = audioFiles.get(path);
+    if (!file) throw new Error(`Missing local audio: ${path}`);
+    try {
+      const bytes = await file.arrayBuffer();
+      signal?.throwIfAborted();
+      return await context.decodeAudioData(bytes);
+    } catch (error) {
+      signal?.throwIfAborted();
+      throw new Error(`Cannot decode ${path}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  };
   signal?.throwIfAborted();
-  const buffers = await loadStaticStems(context, project.tracks.map(track => stemUrl(baseUrl, track.stemPath)), signal);
+  const buffers = await Promise.all(project.tracks.map(track => decode(track.stemPath)));
   signal?.throwIfAborted();
   buffers.forEach((buffer, index) => {
     // REAPER exporter permits MP3 encoder padding. Use manifest duration for the clock.
@@ -48,7 +63,7 @@ export async function loadSessionAudio(
       for (const plugin of track.plugins) {
         if (!plugin.bypassStemPath) continue;
         try {
-          const [buffer] = await loadStaticStems(context, [stemUrl(baseUrl, plugin.bypassStemPath)], signal);
+          const buffer = await decode(plugin.bypassStemPath);
           signal?.throwIfAborted();
           transport.registerAudition(track.id, plugin.id, buffer);
           available.add(plugin.id);

@@ -15,6 +15,7 @@ const btn =
 export default function UploadShell({ onImport }: Props) {
   const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const folderRef = useRef<HTMLInputElement>(null);
   const filesRef = useRef<HTMLInputElement>(null);
 
@@ -22,13 +23,22 @@ export default function UploadShell({ onImport }: Props) {
   const audio = files.filter((f) => f.name.toLowerCase().endsWith(".mp3"));
   const ready = !!manifest;
 
-  const pick = (list: FileList | null) => setFiles(list ? Array.from(list) : []);
+  const pick = (list: FileList | null, replace: boolean) => {
+    if (!list) return;
+    const added = Array.from(list);
+    setError(null);
+    setFiles(previous => replace ? added : [...previous, ...added.filter(file =>
+      !previous.some(old => relPath(old) === relPath(file) && old.size === file.size && old.lastModified === file.lastModified))]);
+  };
 
   const open = async () => {
     if (!onImport) return;
     setBusy(true);
+    setError(null);
     try {
       await onImport(files);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : String(error));
     } finally {
       setBusy(false);
     }
@@ -43,18 +53,20 @@ export default function UploadShell({ onImport }: Props) {
           <code className="font-mono"> session.json</code> and the audio files together.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
-          <button type="button" className={btn} onClick={() => folderRef.current?.click()}>
+          <button type="button" disabled={busy} className={btn} onClick={() => folderRef.current?.click()}>
             Choose folder
           </button>
-          <button type="button" className={btn} onClick={() => filesRef.current?.click()}>
-            Choose files
+          <button type="button" disabled={busy} className={btn} onClick={() => filesRef.current?.click()}>
+            Add files
           </button>
+          <button type="button" disabled={busy} className={btn} onClick={() => { setFiles([]); setError(null); }}>Clear selection</button>
         </div>
+        <p className="mt-3 text-xs text-[var(--os-muted)]">Unzip ZIP files first. Add files can be used repeatedly to select session.json, audio, and auditions from different folders. Files stay on this device.</p>
         <input
           ref={folderRef}
           type="file"
           className="hidden"
-          onChange={(e) => pick(e.target.files)}
+          onChange={(e) => { pick(e.target.files, true); e.target.value = ""; }}
           {...({ webkitdirectory: "", directory: "" } as Record<string, string>)}
         />
         <input
@@ -62,7 +74,7 @@ export default function UploadShell({ onImport }: Props) {
           type="file"
           multiple
           className="hidden"
-          onChange={(e) => pick(e.target.files)}
+          onChange={(e) => { pick(e.target.files, false); e.target.value = ""; }}
         />
       </div>
 
@@ -85,6 +97,7 @@ export default function UploadShell({ onImport }: Props) {
         </div>
       )}
 
+      {error && <p role="alert" className="text-sm text-red-400">{error}</p>}
       <div className="flex items-center gap-3">
         <button
           type="button"
