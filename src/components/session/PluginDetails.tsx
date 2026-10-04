@@ -33,13 +33,13 @@ export default function PluginDetails({ plugin, bypassed, onToggleBypass }: Prop
           onClick={onToggleBypass}
           className={`flex w-full items-center justify-between rounded-md border px-3 py-2 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-[#2f81f7] ${
             bypassed
-              ? "border-[#30363d] bg-[#161b22] text-[#8b949e]"
+             ? "border-[#d29922] bg-[#d29922]/10 text-[#d29922]"
               : "border-[#3fb950] bg-[#3fb950]/15 text-[#3fb950]"
           }`}
         >
           <span className="flex items-center gap-2">
             <PowerIcon />
-            {bypassed ? "Bypassed — hearing without this effect" : "Effect on"}
+            {bypassed ? "Bypassed" : "Effect on"}
           </span>
           <span className="text-xs">A/B</span>
         </button>
