@@ -69,3 +69,11 @@ adds canonical plugin GUIDs automatically. Copy its resulting MP3 into the bundl
 demo auditions folder as well; the demo manifest already declares that path.
 The current accepted package duration is 40 seconds, superseding the earlier
 package review above. Browser acceptance is required for the extra render.
+
+## Per-track playback volume
+
+`trackVolumeById` is a record of linear playback multipliers (default 1).
+`setTrackVolume(trackId, value)` clamps finite values to 0–2. These are additional
+listener controls, not a reapplication of exported volumeLinear. Mute/Solo gate
+the multiplier; seek/resume and A/B retain it. UI percentages reset to 100 on click.
+Values last for the mounted session and reset on reload/project replacement.

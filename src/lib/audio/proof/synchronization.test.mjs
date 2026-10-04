@@ -376,3 +376,28 @@ test('local loader registers combined renders and degrades safely if absent or w
   loaded.transport.dispose();
  }
 });
+
+test('track volume is independent, smoothed without restarting, and survives mute/solo, A/B, seek/resume', async () => {
+ const {transport,context}=transportFixture();
+ assert.equal(transport.trackVolumeById.get('1'),1);
+ transport.setTrackVolume('1',0.4); await transport.play();
+ const gain=context.sources[1].destination;
+ assert.equal(gain.gain.value,0.4);
+ const count=context.sources.length;
+ transport.setTrackVolume('1',1.5);
+ assert.equal(gain.gain.value,1.5);assert.equal(context.sources.length,count);
+ transport.toggleMute('1');transport.setTrackVolume('1',0.7);assert.equal(gain.gain.value,0);
+ transport.toggleMute('1');assert.equal(gain.gain.value,0.7);
+ transport.toggleSolo('0');assert.equal(gain.gain.value,0);
+ transport.toggleSolo('0');assert.equal(gain.gain.value,0.7);
+ transport.registerAudition('1','verb',{length:480000,duration:10});
+ transport.togglePluginBypass('1','verb');assert.equal(context.sources.at(-1).destination,gain);
+ assert.equal(gain.gain.value,0.7);
+ await transport.seek(5);transport.pause();await transport.play();
+ assert.equal(context.sources.at(-1).destination.gain.value,0.7);
+ transport.setTrackVolume('1',0);assert.equal(context.sources.at(-1).destination.gain.value,0);
+ transport.setTrackVolume('1',5);assert.equal(transport.trackVolumeById.get('1'),2);
+ assert.throws(()=>transport.setTrackVolume('1',NaN),/Invalid/);
+ assert.throws(()=>transport.setTrackVolume('unknown',1),/Unknown/);
+ transport.dispose();assert.throws(()=>transport.setTrackVolume('1',1),/disposed/);
+});

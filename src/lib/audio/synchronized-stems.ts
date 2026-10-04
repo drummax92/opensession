@@ -133,6 +133,7 @@ export class StemTransport {
   private readonly buffers: readonly AudioBuffer[];
 
   private readonly trackIds: readonly string[];
+  private readonly volumes = new Map<string, number>();
   private readonly muted = new Set<string>();
   private readonly soloed = new Set<string>();
   private readonly auditions = new Map<string, Map<string, AudioBuffer>>();
@@ -207,8 +208,21 @@ export class StemTransport {
     });
   }
 
+  get trackVolumeById(): ReadonlyMap<string, number> {
+    return new Map(this.trackIds.map(id => [id, this.volumes.get(id) ?? 1]));
+  }
+
+  setTrackVolume(trackId: string, value: number): void {
+    if (this.disposed) throw new Error("Transport has been disposed.");
+    const index = this.trackIds.indexOf(trackId);
+    if (index < 0) throw new Error(`Unknown track: ${trackId}`);
+    if (!Number.isFinite(value)) throw new Error("Invalid track volume");
+    this.volumes.set(trackId, Math.max(0, Math.min(2, value)));
+    this.playback?.setTrackGain(index, this.level(trackId));
+  }
+
   private level(trackId: string): number {
-    return !this.muted.has(trackId) && (this.soloed.size === 0 || this.soloed.has(trackId)) ? 1 : 0;
+    return !this.muted.has(trackId) && (this.soloed.size === 0 || this.soloed.has(trackId)) ? (this.volumes.get(trackId) ?? 1) : 0;
   }
 
   private toggle(trackId: string, set: Set<string>): void {

@@ -1,7 +1,7 @@
 "use client";
 import type { OpenSessionTrack } from "@/types/session";
 import { HeadphonesIcon, SpeakerOffIcon } from "./Icons";
-import { formatDb, formatPan, trackColor } from "./format";
+import { trackColor } from "./format";
 
 interface Props {
   track: OpenSessionTrack;
@@ -11,6 +11,8 @@ interface Props {
   disabled?: boolean;
   muted: boolean;
   solo: boolean;
+  volume: number;
+  onVolumeChange: (value: number) => void;
   onSelect: () => void;
   onToggleMute: () => void;
   onToggleSolo: () => void;
@@ -27,6 +29,8 @@ export default function TrackRow({
   disabled = false,
   muted,
   solo,
+  volume,
+  onVolumeChange,
   onSelect,
   onToggleMute,
   onToggleSolo,
@@ -43,6 +47,7 @@ export default function TrackRow({
       aria-pressed={selected}
       onClick={onSelect}
       onKeyDown={(e) => {
+        if (e.target !== e.currentTarget) return;
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           onSelect();
@@ -60,8 +65,20 @@ export default function TrackRow({
       />
       <div className={`min-w-0 flex-1 ${audible ? "" : "opacity-50"}`}>
         <div className="truncate text-sm font-medium text-[var(--os-text)]">{track.name}</div>
-        <div className="font-mono text-[0.6875rem] tabular-nums text-[var(--os-muted)]">
-          {formatDb(track)} · pan {formatPan(track.pan)}
+        <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
+          <input
+            type="range" min={0} max={200} step={1}
+            value={Math.round(volume * 100)} disabled={disabled}
+            aria-label={`Volume ${track.name}`} aria-valuetext={`${Math.round(volume * 100)} percent`}
+            title="Playback volume: 100% is the exported mix"
+            onChange={e => onVolumeChange(Number(e.target.value) / 100)}
+            className="h-4 min-w-0 flex-1 cursor-pointer accent-[#2f81f7] disabled:opacity-40"
+          />
+          <button type="button" disabled={disabled} onClick={() => onVolumeChange(1)}
+            aria-label={`Reset volume ${track.name} to 100 percent`} title="Reset to 100%"
+            className="w-10 shrink-0 text-right font-mono text-[0.625rem] text-[var(--os-muted)] hover:text-[var(--os-text)]">
+            {Math.round(volume * 100)}%
+          </button>
         </div>
       </div>
       <button

@@ -12,6 +12,7 @@ function initialState(project: OpenSessionProject) {
     error: null as string | null, warnings: [] as string[],
     mutedTrackIds: new Set(project.tracks.filter(track => track.muted).map(track => track.id)),
     soloTrackIds: new Set(project.tracks.filter(track => track.solo).map(track => track.id)),
+    trackVolumeById: Object.fromEntries(project.tracks.map(track => [track.id, 1])),
     bypassedPluginByTrack: {} as Record<string, string | null>,
     bypassedPluginIdsByTrack: {} as Record<string, readonly string[]>,
     availablePluginIdsByTrack: new Map<string, Set<string>>(),
@@ -72,6 +73,7 @@ export function useSessionPlayer(project: OpenSessionProject, baseUrl = "/demo/s
       if (active.current !== player) return;
       const t = player.transport;
       setState(previous => ({ ...previous, currentTime: t.currentTime, isPlaying: t.isPlaying,
+        trackVolumeById: Object.fromEntries(t.trackVolumeById),
         mutedTrackIds: new Set(t.mutedTrackIds), soloTrackIds: new Set(t.soloTrackIds),
         bypassedPluginByTrack: Object.fromEntries(t.bypassedPluginByTrack),
         bypassedPluginIdsByTrack: Object.fromEntries(t.bypassedPluginIdsByTrack), error: null }));
@@ -93,6 +95,7 @@ export function useSessionPlayer(project: OpenSessionProject, baseUrl = "/demo/s
     pause: useCallback(() => run(t => t.pause()), [run]),
     togglePlay: useCallback(() => run(t => t.togglePlay()), [run]),
     seek: useCallback((seconds: number) => run(t => t.seek(seconds)), [run]),
+    setTrackVolume: useCallback((id: string, value: number) => run(t => t.setTrackVolume(id, value)), [run]),
     toggleMute: useCallback((id: string) => run(t => t.toggleMute(id)), [run]),
     toggleSolo: useCallback((id: string) => run(t => t.toggleSolo(id)), [run]),
     togglePluginBypass: useCallback((track: string, plugin: string) => run(t => t.togglePluginBypass(track, plugin)), [run]),

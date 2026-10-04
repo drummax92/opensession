@@ -51,7 +51,7 @@ export default function SessionViewer({ project, audioFiles }: Props) {
       />
 
       <div className="flex min-h-0 flex-1">
-        <aside className="w-64 shrink-0 border-r border-[var(--os-border)]">
+        <aside className="w-80 shrink-0 border-r border-[var(--os-border)]">
           <div className={`${RULER_H} border-b border-[var(--os-border)] bg-[var(--os-panel)] px-3 text-xs leading-8 text-[var(--os-muted)]`}>
             Tracks
           </div>
@@ -65,6 +65,8 @@ export default function SessionViewer({ project, audioFiles }: Props) {
               disabled={!p.isReady}
               muted={muted.has(t.id)}
               solo={solo.has(t.id)}
+              volume={p.trackVolumeById[t.id] ?? 1}
+              onVolumeChange={value => p.setTrackVolume(t.id, value)}
               onSelect={() => setSelection({ trackId: t.id, pluginId: null })}
               onToggleMute={() => toggleMute(t.id)}
               onToggleSolo={() => toggleSolo(t.id)}
