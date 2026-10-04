@@ -83,8 +83,7 @@ export function useSessionPlayer(project: OpenSessionProject, baseUrl = "/demo/s
       if (active.current !== player) return;
       const t = player.transport;
       setState(previous => ({ ...previous, currentTime: t.currentTime, isPlaying: t.isPlaying,
-        waveformsByTrack: {} as Record<string, { peaks: readonly number[]; duration: number }>,
-    trackVolumeById: Object.fromEntries(t.trackVolumeById),
+        trackVolumeById: Object.fromEntries(t.trackVolumeById),
         mutedTrackIds: new Set(t.mutedTrackIds), soloTrackIds: new Set(t.soloTrackIds),
         bypassedPluginByTrack: Object.fromEntries(t.bypassedPluginByTrack),
         bypassedPluginIdsByTrack: Object.fromEntries(t.bypassedPluginIdsByTrack), error: null }));
