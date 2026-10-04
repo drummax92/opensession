@@ -29,7 +29,7 @@ export default function ProjectCard({ project }: { project: OpenSessionProject }
             <EyeIcon />
           </button>
         }
-        footer={<LikeShare id={project.id} title={project.title} />}
+        footer={<LikeShare id={project.id} title={project.title} href={projectHref(project)} />}
       />
       {preview && (
         <ProjectDetailsDialog

@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { OpenSessionProject } from "@/types/session";
 import Logo from "@/components/Logo";
-import { GlobeIcon, HeartIcon, LockIcon, ShareIcon } from "@/components/session/Icons";
+import { GlobeIcon, HeartIcon, LockIcon, MessageIcon, RepeatIcon, ShareIcon } from "@/components/session/Icons";
 import MiniTimeline from "./MiniTimeline";
 import type { Visibility } from "./drafts";
-import { useLikes } from "./likes";
+import CommentsDialog from "./CommentsDialog";
+import { useEngagement } from "./engagement";
 import { setupChipClass } from "./setup";
 import { tagChipClass, type TagColor } from "./tagColors";
 
@@ -53,10 +54,28 @@ export function VisibilityBadge({ visibility, onToggle }: { visibility: Visibili
   );
 }
 
-/** Heart with count + share (share is visual only for now). */
-export function LikeShare({ id, title }: { id: string; title: string }) {
-  const { liked, toggleLike } = useLikes();
+const engageBtn =
+  "inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-sm tabular-nums transition hover:bg-[var(--os-subtle)]";
+
+/** Like · Comment · Repost · Share, with counts. Share copies a link. */
+export function LikeShare({ id, title, href = "/explore" }: { id: string; title: string; href?: string }) {
+  const { countsFor, liked, reposted, toggleLike, toggleRepost, addShare } = useEngagement();
+  const [commentsOpen, setCommentsOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const n = countsFor(id);
   const isLiked = liked.includes(id);
+  const isReposted = reposted.includes(id);
+  const idle = "text-[var(--os-muted)] hover:text-[var(--os-text)]";
+
+  const share = async () => {
+    try {
+      await navigator.clipboard.writeText(new URL(href, window.location.origin).toString());
+    } catch {}
+    addShare(id);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   return (
     <>
       <button
@@ -64,22 +83,44 @@ export function LikeShare({ id, title }: { id: string; title: string }) {
         onClick={() => toggleLike(id)}
         aria-pressed={isLiked}
         aria-label={`${isLiked ? "Unlike" : "Like"} ${title}`}
-        className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-sm transition hover:bg-[var(--os-subtle)] ${
-          isLiked ? "text-[#f85149]" : "text-[var(--os-muted)] hover:text-[var(--os-text)]"
-        }`}
+        title="Like"
+        className={`${engageBtn} ${isLiked ? "text-[#f85149]" : idle}`}
       >
         <HeartIcon filled={isLiked} />
-        <span className="tabular-nums">{isLiked ? 1 : 0}</span>
+        {n.likes}
       </button>
       <button
         type="button"
+        onClick={() => setCommentsOpen(true)}
+        aria-label={`Comments on ${title}`}
+        title="Comments"
+        className={`${engageBtn} ${idle}`}
+      >
+        <MessageIcon />
+        {n.comments}
+      </button>
+      <button
+        type="button"
+        onClick={() => toggleRepost(id)}
+        aria-pressed={isReposted}
+        aria-label={`${isReposted ? "Undo repost of" : "Repost"} ${title}`}
+        title="Repost"
+        className={`${engageBtn} ${isReposted ? "text-[#3fb950]" : idle}`}
+      >
+        <RepeatIcon />
+        {n.reposts}
+      </button>
+      <button
+        type="button"
+        onClick={share}
         aria-label={`Share ${title}`}
-        title="Share (coming soon)"
-        className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-sm text-[var(--os-muted)] transition hover:bg-[var(--os-subtle)] hover:text-[var(--os-text)]"
+        title={copied ? "Link copied" : "Copy link"}
+        className={`${engageBtn} ml-auto ${copied ? "text-[#2f81f7]" : idle}`}
       >
         <ShareIcon />
-        Share
+        {copied ? "Copied" : n.shares}
       </button>
+      {commentsOpen && <CommentsDialog id={id} title={title} onClose={() => setCommentsOpen(false)} />}
     </>
   );
 }

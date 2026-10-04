@@ -103,3 +103,42 @@ export const LockIcon = () => (
     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
   </svg>
 );
+export const MessageIcon = () => (
+  <svg {...base}>
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  </svg>
+);
+export const RepeatIcon = () => (
+  <svg {...base}>
+    <path d="m17 2 4 4-4 4" />
+    <path d="M3 11v-1a4 4 0 0 1 4-4h14" />
+    <path d="m7 22-4-4 4-4" />
+    <path d="M21 13v1a4 4 0 0 1-4 4H3" />
+  </svg>
+);
+export const HomeIcon = () => (
+  <svg {...base}>
+    <path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" />
+  </svg>
+);
+export const ChevronLeftIcon = () => (
+  <svg {...base}>
+    <path d="m15 18-6-6 6-6" />
+  </svg>
+);
+export const ChevronRightIcon = () => (
+  <svg {...base}>
+    <path d="m9 18 6-6-6-6" />
+  </svg>
+);
+export const SpeakerOffIcon = () => (
+  <svg {...base}>
+    <path d="M11 5 6 9H2v6h4l5 4z" />
+    <path d="m22 9-6 6M16 9l6 6" />
+  </svg>
+);
+export const HeadphonesIcon = () => (
+  <svg {...base}>
+    <path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3" />
+  </svg>
+);
