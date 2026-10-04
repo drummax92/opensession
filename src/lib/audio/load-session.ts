@@ -51,6 +51,7 @@ export async function loadSessionAudio(
     }
   });
   const transport = new StemTransport(context, buffers, ids, project.duration);
+  const waveformBuffersByTrack = new Map(ids.map((id, i) => [id, new Map([["[]", buffers[i]]])]));
   const warnings: string[] = [];
   const availablePluginIdsByTrack = new Map<string, Set<string>>();
   try {
@@ -68,6 +69,7 @@ export async function loadSessionAudio(
           signal?.throwIfAborted();
           transport.registerAudition(track.id, plugin.id, buffer);
           available.add(plugin.id);
+          waveformBuffersByTrack.get(track.id)!.set(JSON.stringify([plugin.id]), buffer);
         } catch (error) {
           signal?.throwIfAborted();
           warnings.push(`${track.name} / ${plugin.name}: ${error instanceof Error ? error.message : String(error)}`);
@@ -79,6 +81,7 @@ export async function loadSessionAudio(
           const buffer = await decode(variant.stemPath);
           signal?.throwIfAborted();
           transport.registerBypassVariant(track.id, variant.bypassedPluginIds, buffer);
+          waveformBuffersByTrack.get(track.id)!.set(JSON.stringify([...variant.bypassedPluginIds].sort()), buffer);
         } catch (error) {
           signal?.throwIfAborted();
           warnings.push(`${track.name} / FX combination: ${error instanceof Error ? error.message : String(error)}`);
@@ -86,7 +89,7 @@ export async function loadSessionAudio(
       }
     }
     signal?.throwIfAborted();
-    return { transport, warnings, availablePluginIdsByTrack, normalBuffers: buffers };
+    return { transport, warnings, availablePluginIdsByTrack, normalBuffers: buffers, waveformBuffersByTrack };
   } catch (error) {
     transport.dispose();
     throw error;

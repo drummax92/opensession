@@ -11,6 +11,7 @@ interface Props {
   selectedTrackId: string | null;
   isAudible: (trackId: string) => boolean;
   currentTime: number;
+  trackVolumeById: Record<string, number>;
   waveformsByTrack: Record<string, { peaks: readonly number[]; duration: number }>;
   onSelectTrack: (trackId: string) => void;
   onSeek: (t: number) => void;
@@ -21,6 +22,7 @@ export default function Timeline({
   selectedTrackId,
   isAudible,
   currentTime,
+  trackVolumeById,
   waveformsByTrack,
   onSelectTrack,
   onSeek,
@@ -87,6 +89,7 @@ export default function Timeline({
                   {item.name ?? track.name}
                 </span>
                 {waveformsByTrack[track.id] && <ClipWaveform
+                  gain={audible ? (trackVolumeById[track.id] ?? 1) : 0}
                   peaks={waveformsByTrack[track.id].peaks}
                   stemDuration={waveformsByTrack[track.id].duration}
                   start={item.start} length={item.length}

@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { OpenSessionProject } from "../types/session";
 import { loadSessionAudio } from "../lib/audio/load-session";
-import { buildWaveform } from "../lib/audio/waveform";
+import { buildWaveform, selectWaveforms, type WaveformBank } from "../lib/audio/waveform";
 import type { StemTransport } from "../lib/audio/synchronized-stems";
 
 function initialState(project: OpenSessionProject) {
@@ -13,6 +13,7 @@ function initialState(project: OpenSessionProject) {
     error: null as string | null, warnings: [] as string[],
     mutedTrackIds: new Set(project.tracks.filter(track => track.muted).map(track => track.id)),
     soloTrackIds: new Set(project.tracks.filter(track => track.solo).map(track => track.id)),
+    waveformVariantsByTrack: {} as WaveformBank,
     waveformsByTrack: {} as Record<string, { peaks: readonly number[]; duration: number }>,
     trackVolumeById: Object.fromEntries(project.tracks.map(track => [track.id, 1])),
     bypassedPluginByTrack: {} as Record<string, string | null>,
@@ -41,17 +42,19 @@ export function useSessionPlayer(project: OpenSessionProject, baseUrl = "/demo/s
         const loaded = await loadSessionAudio(context, project, baseUrl, abort.signal, audioFiles);
         transport = loaded.transport;
         if (abort.signal.aborted) { transport.dispose(); return; }
-        const waveformsByTrack: Record<string, { peaks: readonly number[]; duration: number }> = {};
-        for (let i = 0; i < project.tracks.length; i++) {
-          // Yield between tracks so long imported packages do not freeze the page.
-          await new Promise(resolve => setTimeout(resolve, 0));
-          if (abort.signal.aborted) return;
-          const buffer = loaded.normalBuffers[i];
-          waveformsByTrack[project.tracks[i].id] = { peaks: buildWaveform(buffer), duration: buffer.duration };
+        const waveformVariantsByTrack: WaveformBank = {};
+        for (const [id, variants] of loaded.waveformBuffersByTrack) {
+          waveformVariantsByTrack[id] = {};
+          for (const [key, buffer] of variants) {
+            await new Promise(resolve => setTimeout(resolve, 0));
+            if (abort.signal.aborted) return;
+            waveformVariantsByTrack[id][key] = { peaks: buildWaveform(buffer), duration: buffer.duration };
+          }
         }
+        const waveformsByTrack = selectWaveforms(waveformVariantsByTrack, {});
         active.current = { project, transport };
         setState(previous => ({ ...previous, isLoading: false, isReady: true,
-          waveformsByTrack, warnings: loaded.warnings, availablePluginIdsByTrack: loaded.availablePluginIdsByTrack }));
+          waveformVariantsByTrack, waveformsByTrack, warnings: loaded.warnings, availablePluginIdsByTrack: loaded.availablePluginIdsByTrack }));
         const tick = () => {
           if (abort.signal.aborted || !transport) return;
           const currentTime = transport.currentTime, isPlaying = transport.isPlaying;
@@ -99,8 +102,12 @@ export function useSessionPlayer(project: OpenSessionProject, baseUrl = "/demo/s
     } catch (error) { fail(error); }
   }, [project]);
 
+  const selectedWaveforms = useMemo(() => selectWaveforms(state.waveformVariantsByTrack, state.bypassedPluginIdsByTrack),
+    [state.waveformVariantsByTrack, state.bypassedPluginIdsByTrack]);
+
   return {
     ...(state.project === project ? state : initialState(project)),
+    waveformsByTrack: state.project === project ? selectedWaveforms : {},
     play: useCallback(() => run(t => t.play()), [run]),
     pause: useCallback(() => run(t => t.pause()), [run]),
     togglePlay: useCallback(() => run(t => t.togglePlay()), [run]),

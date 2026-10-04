@@ -80,9 +80,12 @@ Values last for the mounted session and reset on reload/project replacement.
 
 ## Rendered-stem waveforms
 
-`waveformsByTrack` contains 2048 peak bins and decoded duration per normal stem.
+`waveformsByTrack` contains 2048 peak bins and decoded duration per successfully loaded stem variant.
 Both channels contribute by maximum absolute sample, preserving opposite-polarity
 stereo signals and brief transients. Computed once per load; memoized clip SVGs
 crop by project time. Display-only amplitude scaling improves quiet-detail visibility.
 These show the rendered track mix in an item's time range, not isolated source-file
-samples (overlapping items share that mix). Volume/A-B do not recompute the waveform.
+samples (overlapping items share that mix). A/B selects a cached waveform by the exact bypassed plugin ID set. Volume scales
+the SVG height on a shared full-scale reference; mute/solo silence renders flat.
+No decoding or PCM scanning occurs during these interactions. The square-root
+display curve reveals quiet detail; values above full scale are visually capped.

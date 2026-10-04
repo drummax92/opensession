@@ -14,3 +14,14 @@ export function buildWaveform(buffer: AudioBuffer, bins = 2048): readonly number
   }
   return peaks;
 }
+
+export interface Waveform { peaks: readonly number[]; duration: number }
+export type WaveformBank = Record<string, Record<string, Waveform>>;
+export function selectWaveforms(bank: WaveformBank, bypass: Record<string, readonly string[]>): Record<string, Waveform> {
+  return Object.fromEntries(Object.entries(bank).map(([id, variants]) =>
+    [id, variants[JSON.stringify([...(bypass[id] ?? [])].sort())] ?? variants["[]"]]));
+}
+/** Common full-scale reference across stems; square root is a display-only contrast curve. */
+export function waveformHeight(peak: number, gain: number): number {
+  return Math.sqrt(Math.min(1, Math.max(0, peak * gain))) * 12;
+}

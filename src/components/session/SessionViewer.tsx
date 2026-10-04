@@ -76,6 +76,7 @@ export default function SessionViewer({ project, audioFiles }: Props) {
 
         <main className="min-w-0 flex-1 overflow-x-auto">
           <Timeline
+            trackVolumeById={p.trackVolumeById}
             waveformsByTrack={p.waveformsByTrack}
             project={project}
             selectedTrackId={selection?.trackId ?? null}

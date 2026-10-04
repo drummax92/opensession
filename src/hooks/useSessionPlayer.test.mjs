@@ -18,9 +18,9 @@ test('player action state updates preserve loaded waveform data', async () => {
     toggleMute(id){this.mutedTrackIds.add(id);},toggleSolo(id){this.soloTrackIds.add(id);},
     togglePluginBypass(id,plugin){this.bypassedPluginIdsByTrack.set(id,[plugin]);}};
   const react={useState:init=>{state={...init(),isLoading:false,isReady:true,waveformsByTrack:waveforms};return [state,fn=>{state=fn(state);}];},
-    useRef:()=>({current:{project,transport}}),useEffect:()=>{},useCallback:fn=>fn};
+    useRef:()=>({current:{project,transport}}),useEffect:()=>{},useMemo:fn=>fn(),useCallback:fn=>fn};
   const exports={};
-  vm.runInNewContext(code,{exports,require:name=>name==='react'?react:{}});
+  vm.runInNewContext(code,{exports,require:name=>name==='react'?react:{selectWaveforms:()=>waveforms}});
   const player=exports.useSessionPlayer(project);
   const actions=[()=>player.play(),()=>player.pause(),()=>player.togglePlay(),()=>player.seek(12),
     ()=>player.setTrackVolume('lead',0.4),()=>player.toggleMute('lead'),()=>player.toggleSolo('lead'),()=>player.togglePluginBypass('lead','verb')];
