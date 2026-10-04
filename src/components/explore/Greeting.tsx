@@ -10,7 +10,7 @@ export default function Greeting() {
   const name = prefs.name.trim();
 
   return (
-    <div className="mb-8">
+    <div>
       <h1 className="text-3xl font-semibold tracking-tight text-[var(--os-text)]">
         {name ? `Hello, ${name}!` : "Hello!"}
       </h1>

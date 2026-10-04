@@ -1,5 +1,6 @@
 "use client";
 import type { OpenSessionTrack } from "@/types/session";
+import { HeadphonesIcon, SpeakerOffIcon } from "./Icons";
 import { formatDb, formatPan, trackColor } from "./format";
 
 interface Props {
@@ -16,7 +17,7 @@ interface Props {
 }
 
 const btn =
-  "h-6 w-6 rounded text-[0.6875rem] font-bold leading-none border transition focus-visible:outline-2 focus-visible:outline-[#2f81f7]";
+  "flex h-10 w-11 shrink-0 flex-col items-center justify-center gap-0.5 rounded-md border text-[0.625rem] font-semibold leading-none transition [&>svg]:h-3.5 [&>svg]:w-3.5 focus-visible:outline-2 focus-visible:outline-[#2f81f7]";
 
 export default function TrackRow({
   track,
@@ -66,30 +67,34 @@ export default function TrackRow({
       <button
         type="button"
         disabled={disabled}
-        aria-label={`Mute ${track.name}`}
+        aria-label={muted ? `Unmute ${track.name}` : `Mute ${track.name}`}
         aria-pressed={muted}
+        title={muted ? "Unmute this track" : "Mute: silence this track"}
         onClick={stop(onToggleMute)}
         className={`${btn} ${
           muted
-            ? "border-[#d29922] bg-[#d29922] text-[var(--os-bg)]"
-            : "border-[var(--os-border)] text-[var(--os-muted)] hover:border-[var(--os-muted)]"
+            ? "border-[#d29922] bg-[#d29922] text-[#0d1117]"
+            : "border-[var(--os-border)] text-[var(--os-muted)] hover:border-[var(--os-muted)] hover:text-[var(--os-text)]"
         }`}
       >
-        M
+        <SpeakerOffIcon />
+        <span>Mute</span>
       </button>
       <button
         type="button"
         disabled={disabled}
-        aria-label={`Solo ${track.name}`}
+        aria-label={solo ? `Unsolo ${track.name}` : `Solo ${track.name}`}
         aria-pressed={solo}
+        title={solo ? "Stop soloing" : "Solo: hear only this track"}
         onClick={stop(onToggleSolo)}
         className={`${btn} ${
           solo
-            ? "border-[#3fb950] bg-[#3fb950] text-[var(--os-bg)]"
-            : "border-[var(--os-border)] text-[var(--os-muted)] hover:border-[var(--os-muted)]"
+            ? "border-[#3fb950] bg-[#3fb950] text-[#0d1117]"
+            : "border-[var(--os-border)] text-[var(--os-muted)] hover:border-[var(--os-muted)] hover:text-[var(--os-text)]"
         }`}
       >
-        S
+        <HeadphonesIcon />
+        <span>Solo</span>
       </button>
     </div>
   );

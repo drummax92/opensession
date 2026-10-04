@@ -4,6 +4,10 @@ import { useRef, useState } from "react";
 interface Props {
   /** Technical lead wires the real import here (parse session.json, resolve audio, open viewer). */
   onImport?: (files: File[]) => void | Promise<void>;
+  /** Called whenever the picked files change. */
+  onFilesChange?: (files: File[]) => void;
+  /** Hide the "Open session" button (when used inside another flow). */
+  showOpenButton?: boolean;
 }
 
 const relPath = (f: File) =>
@@ -12,7 +16,7 @@ const relPath = (f: File) =>
 const btn =
   "rounded-md border border-[var(--os-border)] bg-[var(--os-subtle)] px-3 py-1.5 text-sm text-[var(--os-text)] transition hover:border-[var(--os-muted)] focus-visible:outline-2 focus-visible:outline-[#2f81f7]";
 
-export default function UploadShell({ onImport }: Props) {
+export default function UploadShell({ onImport, onFilesChange, showOpenButton = true }: Props) {
   const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,8 +31,10 @@ export default function UploadShell({ onImport }: Props) {
     if (!list) return;
     const added = Array.from(list);
     setError(null);
-    setFiles(previous => replace ? added : [...previous, ...added.filter(file =>
-      !previous.some(old => relPath(old) === relPath(file) && old.size === file.size && old.lastModified === file.lastModified))]);
+    const next = replace ? added : [...files, ...added.filter(file =>
+      !files.some(old => relPath(old) === relPath(file) && old.size === file.size && old.lastModified === file.lastModified))];
+    setFiles(next);
+    onFilesChange?.(next);
   };
 
   const open = async () => {
@@ -59,7 +65,7 @@ export default function UploadShell({ onImport }: Props) {
           <button type="button" disabled={busy} className={btn} onClick={() => filesRef.current?.click()}>
             Add files
           </button>
-          <button type="button" disabled={busy} className={btn} onClick={() => { setFiles([]); setError(null); }}>Clear selection</button>
+          <button type="button" disabled={busy} className={btn} onClick={() => { setFiles([]); onFilesChange?.([]); setError(null); }}>Clear selection</button>
         </div>
         <p className="mt-3 text-xs text-[var(--os-muted)]">Unzip ZIP files first. Add files can be used repeatedly to select session.json, audio, and auditions from different folders. Files stay on this device.</p>
         <input
@@ -98,6 +104,7 @@ export default function UploadShell({ onImport }: Props) {
       )}
 
       {error && <p role="alert" className="text-sm text-red-400">{error}</p>}
+      {showOpenButton && (
       <div className="flex items-center gap-3">
         <button
           type="button"
@@ -111,6 +118,7 @@ export default function UploadShell({ onImport }: Props) {
           <span className="text-xs text-[var(--os-muted)]">Import isn’t connected yet.</span>
         )}
       </div>
+      )}
     </div>
   );
 }

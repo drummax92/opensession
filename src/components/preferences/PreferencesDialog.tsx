@@ -1,6 +1,8 @@
 "use client";
+import { useState } from "react";
 import Modal from "@/components/explore/Modal";
-import { usePreferences, type FontSize, type Theme } from "./usePreferences";
+import { downscaleImage } from "@/components/images";
+import { useBackground, usePreferences, type FontSize, type Theme } from "./usePreferences";
 
 function Segmented<T extends string>({
   label,
@@ -40,6 +42,18 @@ function Segmented<T extends string>({
 
 export default function PreferencesDialog({ onClose }: { onClose: () => void }) {
   const { prefs, update } = usePreferences();
+  const { background, setBackground } = useBackground();
+  const [bgError, setBgError] = useState<string | null>(null);
+
+  const pickBackground = async (file: File | undefined) => {
+    if (!file) return;
+    setBgError(null);
+    try {
+      if (!setBackground(await downscaleImage(file, 1920))) setBgError("That image is too large. Try a smaller one.");
+    } catch {
+      setBgError("That image couldn’t be read. Try a JPG or PNG.");
+    }
+  };
 
   return (
     <Modal
@@ -88,6 +102,47 @@ export default function PreferencesDialog({ onClose }: { onClose: () => void }) 
           { value: "large", label: "Large" },
         ]}
       />
+
+      <div className="space-y-2">
+        <span className="text-xs font-semibold text-[var(--os-muted)]">Background</span>
+        <div className="flex items-center gap-3">
+          {background ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={background} alt="" className="h-14 w-24 rounded border border-[var(--os-border)] object-cover" />
+          ) : (
+            <div className="flex h-14 w-24 items-center justify-center rounded border border-dashed border-[var(--os-border)] text-[0.625rem] text-[var(--os-faint)]">
+              None
+            </div>
+          )}
+          <label className="cursor-pointer rounded-md border border-[var(--os-border)] bg-[var(--os-subtle)] px-3 py-1.5 text-sm text-[var(--os-text)] transition hover:border-[var(--os-muted)]">
+            Choose image
+            <input type="file" accept="image/*" className="hidden" onChange={(e) => pickBackground(e.target.files?.[0])} />
+          </label>
+          {background && (
+            <button type="button" onClick={() => setBackground(null)} className="text-xs text-[#f85149] hover:underline">
+              Remove
+            </button>
+          )}
+        </div>
+        {background && (
+          <label className="block space-y-1">
+            <span className="flex justify-between text-xs text-[var(--os-muted)]">
+              <span>Blur</span>
+              <span className="font-mono tabular-nums">{prefs.blur}px</span>
+            </span>
+            <input
+              type="range"
+              min={0}
+              max={30}
+              step={1}
+              value={prefs.blur}
+              onChange={(e) => update({ blur: Number(e.target.value) })}
+              className="w-full cursor-pointer accent-[#2f81f7]"
+            />
+          </label>
+        )}
+        {bgError && <p className="text-xs text-[#f85149]">{bgError}</p>}
+      </div>
     </Modal>
   );
 }
