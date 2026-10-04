@@ -1,4 +1,4 @@
-# Milestone 3: six synchronized stems
+# Milestone 4: Mute / Solo
 
 Run from the repository root on `feature/audio-integration`:
 
@@ -74,3 +74,23 @@ currentTime via requestAnimationFrame. Duration currently comes from the longest
 buffer; canonical project duration will be connected during session integration.
 The caller owns the AudioContext; disposing a transport does not close it.
 No hook, plugin A/B, import, or teammate UI changes are included in this milestone.
+
+## Milestone 4 acceptance
+
+The user confirmed all six real stems and transport work (Milestone 3).
+Load all six stems. Track buttons display their state via aria-pressed.
+
+1. Play and Solo Lead Guitar: only Lead is enabled; project time keeps advancing.
+2. Also Solo Drums: hear Lead + Drums. Remove Lead Solo: only Drums remains.
+3. Mute the soloed Drums: silence. Remove Drums Solo: all non-muted tracks return.
+4. Remove Drums Mute: full mix returns.
+5. With no Solo active, Mute Vocals and unmute: only Vocals changes.
+6. Solo Lead, pause/resume, seek, Stop/Play: Solo persists and synchronization holds.
+7. Turn Solo off: full mix returns at the current position, with no restart.
+
+Mute/Solo change only GainNodes, with a 5ms time constant to reduce clicks.
+States persist through transport actions; loading a different set resets them.
+`StemTransport(context, buffers, trackIds?)` now exposes `toggleMute(trackId)`,
+`toggleSolo(trackId)`, `mutedTrackIds`, and `soloTrackIds` (defensive snapshots).
+During integration, pass canonical manifest track IDs in the same order as buffers.
+No session schema changes. The proof uses filename stems as temporary test IDs.

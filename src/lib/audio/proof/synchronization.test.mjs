@@ -28,7 +28,7 @@ function fakeContext(failSecondStart = false) {
     state: "running",
     resume: async () => {},
     get currentTime() { return 10 + clockReads++ / 100; },
-    createGain: node,
+    createGain: () => Object.assign(node(), { gain: { value: 1, setTargetAtTime(value) { this.value = value; } } }),
     createBufferSource() {
       const result = Object.assign(node(), {
         start(...args) {
@@ -144,4 +144,47 @@ test("rapid Play is idempotent; Pause cancels pending resume; disposal blocks re
   transport.dispose();
   assert.ok(context.nodes.every(node => node.disconnected));
   await assert.rejects(transport.play(), /disposed/);
+});
+
+
+test("mute/solo truth table, multiple solos, and no source restarts", async () => {
+  const context = fakeContext();
+  const transport = new StemTransport(context, buffers, ['drums', 'lead']);
+  await transport.play();
+  const levels = () => context.sources.map(source => source.destination.gain.value);
+  transport.toggleMute('drums');
+  assert.deepEqual(levels(), [0, 1]);
+  transport.toggleSolo('drums');
+  assert.deepEqual(levels(), [0, 0]); // Mute wins over Solo.
+  transport.toggleMute('drums');
+  assert.deepEqual(levels(), [1, 0]);
+  transport.toggleSolo('lead');
+  assert.deepEqual(levels(), [1, 1]);
+  transport.toggleSolo('drums');
+  assert.deepEqual(levels(), [0, 1]);
+  transport.toggleSolo('lead');
+  assert.deepEqual(levels(), [1, 1]);
+  assert.equal(context.sources.length, 2);
+  assert.ok(context.sources.every(source => !source.stopped));
+  assert.throws(() => transport.toggleMute('missing'), /Unknown track/);
+  transport.mutedTrackIds.add('lead'); // External snapshot cannot mutate engine state.
+  assert.equal(transport.mutedTrackIds.size, 0);
+});
+
+test("mute and solo survive pause, seek, stop and replay", async () => {
+  const { context, transport } = transportFixture();
+  transport.toggleSolo('1');
+  await transport.play();
+  assert.deepEqual(context.sources.map(source => source.destination.gain.value), [0, 1]);
+  transport.pause();
+  transport.toggleMute('1');
+  await transport.seek(4);
+  await transport.play();
+  assert.deepEqual(context.sources.slice(-2).map(source => source.destination.gain.value), [0, 0]);
+  transport.toggleMute('1');
+  await transport.seek(6);
+  assert.deepEqual(context.sources.slice(-2).map(source => source.destination.gain.value), [0, 1]);
+  transport.stop(); await transport.play();
+  assert.deepEqual(context.sources.slice(-2).map(source => source.destination.gain.value), [0, 1]);
+  assert.deepEqual([...transport.soloTrackIds], ['1']);
 });

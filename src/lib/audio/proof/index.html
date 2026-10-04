@@ -5,9 +5,11 @@
 <title>OpenSession — six-stem synchronization proof</title>
 <style>
   body { font: 17px system-ui; max-width: 850px; margin: 48px auto; padding: 20px; }
+  button[aria-pressed="true"] { background: #175aab; color: white; }
+  td, th { padding: 6px 14px; text-align: left; }
   button { padding: 12px; margin: 6px; } pre { white-space: pre-wrap; }
 </style>
-<h1>Milestone 3: six synchronized stems</h1>
+<h1>Milestone 4: Mute / Solo</h1>
 <p>Local engineering test. Start at low headphone volume.</p>
 <button id="real">Load all 6 stems</button>
 <button id="synthetic">Load synthetic pulses (not demo audio)</button>
@@ -17,6 +19,7 @@
 <button id="verify">Verify sample alignment offline</button>
 <p><output id="time">0.000 / 0.000 s</output></p>
 <input id="seek" aria-label="Seek position" type="range" min="0" max="0" step="0.01" value="0" disabled style="width:100%">
+<table><thead><tr><th>Track</th><th>Mute</th><th>Solo</th><th>Routing</th></tr></thead><tbody id="tracks"></tbody></table>
 <pre id="status" role="status">Load all six stems before playing.</pre>
 <script type="module">
   import { loadStaticStems, startSynchronizedStems, StemTransport } from '/engine.js';
@@ -24,6 +27,27 @@
   const $ = (id) => document.getElementById(id);
   let context, transport, loading = false, dragging = false;
   const log = (message) => { $('status').textContent = message; };
+  let trackRows = [];
+  function renderTracks(ids, labels) {
+    $('tracks').replaceChildren();
+    trackRows = ids.map((id, index) => {
+      const row = document.createElement('tr');
+      const name = document.createElement('td'); name.textContent = labels[index]; row.append(name);
+      const buttons = ['Mute', 'Solo'].map(action => {
+        const cell = document.createElement('td'), button = document.createElement('button');
+        button.textContent = action; button.setAttribute('aria-label', `${action} ${labels[index]}`);
+        button.onclick = () => {
+          try {
+            if (action === 'Mute') transport?.toggleMute(id); else transport?.toggleSolo(id);
+            refresh();
+          } catch (error) { log(error.message); }
+        };
+        cell.append(button); row.append(cell); return button;
+      });
+      const state = document.createElement('td'); row.append(state); $('tracks').append(row);
+      return { id, buttons, state };
+    });
+  }
   async function unlock() {
     context ??= new AudioContext();
     await context.resume();
@@ -37,6 +61,13 @@
     $('time').textContent = `${current.toFixed(3)} / ${duration.toFixed(3)} s — ${transport?.isPlaying ? 'Playing' : 'Paused / stopped'}`;
     $('seek').max = String(duration);
     if (!dragging) $('seek').value = String(current);
+    const muted = transport?.mutedTrackIds ?? new Set(), soloed = transport?.soloTrackIds ?? new Set();
+    for (const { id, buttons, state } of trackRows) {
+      buttons.forEach(button => { button.disabled = !ready; });
+      buttons[0].setAttribute('aria-pressed', String(muted.has(id)));
+      buttons[1].setAttribute('aria-pressed', String(soloed.has(id)));
+      state.textContent = muted.has(id) ? 'Muted' : soloed.size && !soloed.has(id) ? 'Excluded by Solo' : 'Enabled';
+    }
   }
   function animate() { refresh(); requestAnimationFrame(animate); }
   requestAnimationFrame(animate);
@@ -55,6 +86,7 @@
     loading = true;
     $('real').disabled = $('synthetic').disabled = true;
     transport?.dispose(); transport = undefined;
+    renderTracks([], []);
     refresh();
     log(synthetic ? 'Loading test pulses…' : 'Loading and decoding all 6 stems…');
     try {
@@ -66,7 +98,9 @@
       if (Math.max(...durations) - Math.min(...durations) > 0.05) {
         throw new Error(`Stem lengths differ by more than 50ms. Export the same time range.\n${details}`);
       }
-      transport = new StemTransport(context, loaded);
+      const ids = synthetic ? ['test-left', 'test-right'] : stemNames;
+      transport = new StemTransport(context, loaded, ids);
+      renderTracks(ids, synthetic ? labels : ['Drums', 'Bass', 'Lead Guitar', 'Rhythm Guitar L', 'Rhythm Guitar R', 'Vocals']);
       log(`${synthetic ? 'SYNTHETIC TEST ONLY' : 'All 6 stems'} ready.\n${details}`);
       refresh();
     } catch (error) { log(error.message); }

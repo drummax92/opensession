@@ -21,6 +21,7 @@ export function startSynchronizedStems(
   offset = 0,
   duration = Math.max(...buffers.map(buffer => buffer.duration)) - offset,
   onEnded?: () => void,
+  levels: readonly number[] = buffers.map(() => 1),
 ) {
   if (buffers.length === 0 || buffers.some((buffer) => buffer.length === 0)) {
     throw new Error("Load non-empty stems before starting playback.");
@@ -29,12 +30,13 @@ export function startSynchronizedStems(
   if (!Number.isFinite(offset) || offset < 0 || !Number.isFinite(duration) || duration <= 0) {
     throw new Error("Invalid playback range.");
   }
-  const playable = buffers.filter(buffer => buffer.duration > offset);
+  const playable = buffers.map((buffer, index) => ({ buffer, index }))
+    .filter(({ buffer }) => buffer.duration > offset);
   if (!playable.length) throw new Error("Playback offset is past every stem.");
 
   const master = context.createGain();
   master.connect(context.destination);
-  const voices: { source: AudioBufferSourceNode; gain: GainNode }[] = [];
+  const voices: { source: AudioBufferSourceNode; gain: GainNode; index: number }[] = [];
   let stopped = false;
   let remaining = playable.length;
 
@@ -52,10 +54,11 @@ export function startSynchronizedStems(
   };
 
   try {
-    for (const buffer of playable) {
+    for (const { buffer, index } of playable) {
       const source = context.createBufferSource();
       const gain = context.createGain();
-      voices.push({ source, gain });
+      voices.push({ source, gain, index });
+      gain.gain.value = levels[index] ?? 1;
       source.buffer = buffer;
       source.connect(gain);
       gain.connect(master);
@@ -68,7 +71,15 @@ export function startSynchronizedStems(
     // Build every voice BEFORE reading the clock. No awaits between starts.
     const startAt = context.currentTime + 0.05;
     for (const { source } of voices) source.start(startAt, offset, Math.min(duration, source.buffer!.duration - offset));
-    return { startAt, stop };
+    return {
+      startAt, stop,
+      setTrackGain(index: number, value: number) {
+        if (stopped) return;
+        const voice = voices.find(voice => voice.index === index);
+        // A short gain smoothing avoids clicks, without replacing any sources.
+        voice?.gain.gain.setTargetAtTime(value, context.currentTime, 0.005);
+      },
+    };
   } catch (error) {
     stop();
     throw error;
@@ -87,14 +98,39 @@ export class StemTransport {
   private readonly context: AudioContext;
   private readonly buffers: readonly AudioBuffer[];
 
-  constructor(context: AudioContext, buffers: readonly AudioBuffer[]) {
+  private readonly trackIds: readonly string[];
+  private readonly muted = new Set<string>();
+  private readonly soloed = new Set<string>();
+
+  constructor(context: AudioContext, buffers: readonly AudioBuffer[], trackIds = buffers.map((_, index) => String(index))) {
     if (!buffers.length || buffers.some(buffer => !Number.isFinite(buffer.duration) || buffer.duration <= 0)) {
       throw new Error("Load non-empty stems before creating the transport.");
     }
+    if (trackIds.length !== buffers.length || new Set(trackIds).size !== trackIds.length) {
+      throw new Error("Track IDs must be unique and match the buffer count.");
+    }
+    this.trackIds = [...trackIds];
     this.context = context;
     this.buffers = [...buffers];
     this.duration = Math.max(...buffers.map(buffer => buffer.duration));
   }
+
+  get mutedTrackIds(): ReadonlySet<string> { return new Set(this.muted); }
+  get soloTrackIds(): ReadonlySet<string> { return new Set(this.soloed); }
+
+  private level(trackId: string): number {
+    return !this.muted.has(trackId) && (this.soloed.size === 0 || this.soloed.has(trackId)) ? 1 : 0;
+  }
+
+  private toggle(trackId: string, set: Set<string>): void {
+    if (this.disposed) throw new Error("Transport has been disposed.");
+    if (!this.trackIds.includes(trackId)) throw new Error(`Unknown track: ${trackId}`);
+    if (set.has(trackId)) set.delete(trackId); else set.add(trackId);
+    this.trackIds.forEach((id, index) => this.playback?.setTrackGain(index, this.level(id)));
+  }
+
+  toggleMute(trackId: string): void { this.toggle(trackId, this.muted); }
+  toggleSolo(trackId: string): void { this.toggle(trackId, this.soloed); }
 
   get isPlaying() { return !!this.playback; }
   get currentTime() {
@@ -119,6 +155,7 @@ export class StemTransport {
           this.playback = undefined;
           this.offset = this.duration;
         },
+        this.trackIds.map(id => this.level(id)),
       );
       this.startedAt = this.playback.startAt;
     } finally {
