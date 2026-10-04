@@ -1,0 +1,3837 @@
+{
+  "bpm": 120,
+  "daw": {
+    "name": "REAPER",
+    "version": "7.48/x64"
+  },
+  "duration": 40,
+  "genres": [],
+  "id": "stormhacks-demo",
+  "owner": "OpenSession",
+  "schemaVersion": "0.1",
+  "slug": "stormhacks-demo",
+  "title": "StormHacks Demo",
+  "tracks": [
+    {
+      "id": "{E28F106F-52A6-4541-BBF4-EA18F7AA9638}",
+      "items": [
+        {
+          "id": "{E6790A8C-34C4-4411-9BF7-6E7C6A92C7DA}",
+          "length": 25,
+          "name": "storm bass.mp3",
+          "sourceFile": "C:\\Users\\mishk\\Downloads\\storm bass.mp3",
+          "start": 11
+        }
+      ],
+      "muted": false,
+      "name": "storm bass",
+      "pan": 0,
+      "plugins": [],
+      "solo": false,
+      "stemPath": "audio/bass.mp3",
+      "volumeDb": 0,
+      "volumeLinear": 1
+    },
+    {
+      "id": "{6A7041DC-743E-43D0-914B-88264693C701}",
+      "items": [
+        {
+          "id": "{341527FE-0CDB-4061-95D9-00CB0BCF0935}",
+          "length": 35,
+          "name": "storm drums.mp3",
+          "sourceFile": "C:\\Users\\mishk\\Downloads\\storm drums.mp3",
+          "start": 0
+        }
+      ],
+      "muted": false,
+      "name": "storm drums",
+      "pan": 0,
+      "plugins": [],
+      "solo": false,
+      "stemPath": "audio/drums.mp3",
+      "volumeDb": -0.56655728604113376,
+      "volumeLinear": 0.93685447523010001
+    },
+    {
+      "id": "{7AC251B2-AC8E-4F26-BA55-081F84BCF7A8}",
+      "items": [
+        {
+          "id": "{134CE164-16FD-44E2-B6E2-C52585E5D227}",
+          "length": 38,
+          "name": "storm lead.mp3",
+          "sourceFile": "C:\\Users\\mishk\\Downloads\\storm lead.mp3",
+          "start": 0
+        }
+      ],
+      "muted": false,
+      "name": "storm lead",
+      "pan": 0,
+      "plugins": [
+        {
+          "bypassStemPath": "audio/auditions/lead-guitar__without-rabea.mp3",
+          "id": "{22B06590-9551-497A-9488-71102F8F1D9C}",
+          "name": "VST: Archetype Rabea X (Neural DSP)",
+          "parameters": [
+            {
+              "displayValue": "0.0 dB",
+              "index": 0,
+              "name": "Input Gain",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "-1.5 dB",
+              "index": 1,
+              "name": "Output Gain",
+              "normalizedValue": 0.46955540776252747
+            },
+            {
+              "displayValue": "Off",
+              "index": 2,
+              "name": "Gate Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "-96.0 dB",
+              "index": 3,
+              "name": "Gate Threshold",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0 st",
+              "index": 4,
+              "name": "Transpose",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Off",
+              "index": 5,
+              "name": "Doubler Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "3.00 ms",
+              "index": 6,
+              "name": "Doubler Spread",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 7,
+              "name": "Active Synth Section",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "100 %",
+              "index": 8,
+              "name": "Synth Mix",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "50 %",
+              "index": 9,
+              "name": "Synth Sensitivity",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "On",
+              "index": 10,
+              "name": "Synth Env Retrigger",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "440",
+              "index": 11,
+              "name": "Synth Tuning",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Post",
+              "index": 12,
+              "name": "Synth Pre Post",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "-75.2 dB",
+              "index": 13,
+              "name": "Synth Gate",
+              "normalizedValue": 0.059500027447938919
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 14,
+              "name": "Synth Output",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "0 ms",
+              "index": 15,
+              "name": "Synth Glide",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 16,
+              "name": "Synth Arp Enabled",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "C",
+              "index": 17,
+              "name": "Synth Arp Root",
+              "normalizedValue": 0.083333335816860199
+            },
+            {
+              "displayValue": "Minor",
+              "index": 18,
+              "name": "Synth Arp Mode",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "UP",
+              "index": 19,
+              "name": "Synth Arp Pattern",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0",
+              "index": 20,
+              "name": "Synth Arp Octave",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "On",
+              "index": 21,
+              "name": "Synth Arp Note 2",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Off",
+              "index": 22,
+              "name": "Synth Arp Note 3",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 23,
+              "name": "Synth Arp Note 4",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "On",
+              "index": 24,
+              "name": "Synth Arp Note 5",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Off",
+              "index": 25,
+              "name": "Synth Arp Note 6",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 26,
+              "name": "Synth Arp Note 7",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 27,
+              "name": "Synth Arp Note 8",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "1/8T",
+              "index": 28,
+              "name": "Synth Arp Sync Rate",
+              "normalizedValue": 0.60000002384185791
+            },
+            {
+              "displayValue": "Sync",
+              "index": 29,
+              "name": "Synth Arp Sync Mode",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0.20 Hz",
+              "index": 30,
+              "name": "Synth Arp Free Rate",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "A 1 ms",
+              "index": 31,
+              "name": "Synth Amplifier Decay/Attack",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "100 %",
+              "index": 32,
+              "name": "Synth Amplifier Sustain",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "On",
+              "index": 33,
+              "name": "Synth Osc 1 Enable",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "SAWTOOTH",
+              "index": 34,
+              "name": "Synth Osc 1 Waveform",
+              "normalizedValue": 0.3333333432674408
+            },
+            {
+              "displayValue": "-12",
+              "index": 35,
+              "name": "Synth Osc 1 Semitones",
+              "normalizedValue": 0.25
+            },
+            {
+              "displayValue": "+5.9 dB",
+              "index": 36,
+              "name": "Synth Osc 1 Level",
+              "normalizedValue": 0.89833337068557739
+            },
+            {
+              "displayValue": "0 %",
+              "index": 37,
+              "name": "Synth Osc 1 Detune",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "On",
+              "index": 38,
+              "name": "Synth Osc 2 Enable",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "SINE",
+              "index": 39,
+              "name": "Synth Osc 2 Waveform",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "19",
+              "index": 40,
+              "name": "Synth Osc 2 Semitones",
+              "normalizedValue": 0.89583331346511841
+            },
+            {
+              "displayValue": "-2.5 dB",
+              "index": 41,
+              "name": "Synth Osc 2 Level",
+              "normalizedValue": 0.75833332538604736
+            },
+            {
+              "displayValue": "0 %",
+              "index": 42,
+              "name": "Synth Osc 2 Detune",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Off",
+              "index": 43,
+              "name": "Synth Osc 1 Unison Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 44,
+              "name": "Synth Osc 2 Unison Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "4",
+              "index": 45,
+              "name": "Synth Osc Unisons",
+              "normalizedValue": 0.75
+            },
+            {
+              "displayValue": "100 %",
+              "index": 46,
+              "name": "Synth Osc Unison Width",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "4 %",
+              "index": 47,
+              "name": "Synth Osc Unison Detune",
+              "normalizedValue": 0.14495591819286346
+            },
+            {
+              "displayValue": "On",
+              "index": 48,
+              "name": "Synth Filter Enable",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "12.3 kHz",
+              "index": 49,
+              "name": "Synth Filter Cutoff",
+              "normalizedValue": 0.86455553770065308
+            },
+            {
+              "displayValue": "79 %",
+              "index": 50,
+              "name": "Synth Filter Resonance",
+              "normalizedValue": 0.79000002145767212
+            },
+            {
+              "displayValue": "6 dB",
+              "index": 51,
+              "name": "Synth Filter Mode",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "-76 %",
+              "index": 52,
+              "name": "Synth Filter Env Amount",
+              "normalizedValue": 0.12000000476837158
+            },
+            {
+              "displayValue": "A 1 ms",
+              "index": 53,
+              "name": "Synth Filter Decay/Attack",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "0 %",
+              "index": 54,
+              "name": "Synth Filter Drive",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 55,
+              "name": "Active Pre FX Section",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "56 %",
+              "index": 56,
+              "name": "Twin Blade Dual Compressor Dry",
+              "normalizedValue": 0.56400001049041748
+            },
+            {
+              "displayValue": "31 %",
+              "index": 57,
+              "name": "Twin Blade Dual Compressor In",
+              "normalizedValue": 0.31099998950958252
+            },
+            {
+              "displayValue": "27 %",
+              "index": 58,
+              "name": "Twin Blade Dual Compressor Out",
+              "normalizedValue": 0.2720000147819519
+            },
+            {
+              "displayValue": "37 %",
+              "index": 59,
+              "name": "Twin Blade Dual Compressor Att/R",
+              "normalizedValue": 0.36599999666213989
+            },
+            {
+              "displayValue": "41 %",
+              "index": 60,
+              "name": "Twin Blade Dual Compressor Thru",
+              "normalizedValue": 0.41299998760223389
+            },
+            {
+              "displayValue": "55 %",
+              "index": 61,
+              "name": "Twin Blade Dual Compressor Att/R",
+              "normalizedValue": 0.55000001192092896
+            },
+            {
+              "displayValue": "On",
+              "index": 62,
+              "name": "Twin Blade Dual Compressor Activ",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Modern",
+              "index": 63,
+              "name": "Chaos Bed Octaver Mode",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "91 %",
+              "index": 64,
+              "name": "Chaos Bed Octaver Direct Level",
+              "normalizedValue": 0.9100000262260437
+            },
+            {
+              "displayValue": "81 %",
+              "index": 65,
+              "name": "Chaos Bed Octaver Oct Up",
+              "normalizedValue": 0.81199997663497925
+            },
+            {
+              "displayValue": "49 %",
+              "index": 66,
+              "name": "Chaos Bed Octaver Oct Down",
+              "normalizedValue": 0.49099999666213989
+            },
+            {
+              "displayValue": "Off",
+              "index": 67,
+              "name": "Chaos Bed Octaver Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "39 %",
+              "index": 68,
+              "name": "Colossus Fuzz Fuzz",
+              "normalizedValue": 0.38600000739097595
+            },
+            {
+              "displayValue": "41 %",
+              "index": 69,
+              "name": "Colossus Fuzz Level",
+              "normalizedValue": 0.40900000929832458
+            },
+            {
+              "displayValue": "Modern",
+              "index": 70,
+              "name": "Colossus Fuzz Mode",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "64 %",
+              "index": 71,
+              "name": "Colossus Fuzz Bass",
+              "normalizedValue": 0.64200001955032349
+            },
+            {
+              "displayValue": "50 %",
+              "index": 72,
+              "name": "Colossus Fuzz Treble",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Off",
+              "index": 73,
+              "name": "Colossus Fuzz Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "30 %",
+              "index": 74,
+              "name": "Paragon Overdrive Drive",
+              "normalizedValue": 0.29800000786781311
+            },
+            {
+              "displayValue": "73 %",
+              "index": 75,
+              "name": "Paragon Overdrive Level",
+              "normalizedValue": 0.72699999809265137
+            },
+            {
+              "displayValue": "Modern",
+              "index": 76,
+              "name": "Paragon Overdrive Mode",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "48 %",
+              "index": 77,
+              "name": "Paragon Overdrive Bass",
+              "normalizedValue": 0.48399999737739563
+            },
+            {
+              "displayValue": "58 %",
+              "index": 78,
+              "name": "Paragon Overdrive Treble",
+              "normalizedValue": 0.58099997043609619
+            },
+            {
+              "displayValue": "Off",
+              "index": 79,
+              "name": "Paragon Overdrive Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 80,
+              "name": "Active Amp Section",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "On",
+              "index": 81,
+              "name": "Amp/Cab Linked",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Crunch",
+              "index": 82,
+              "name": "Amp Type",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Off",
+              "index": 83,
+              "name": "Clean Amp Mid Boost",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 84,
+              "name": "Clean Amp Treble Boost",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "75 %",
+              "index": 85,
+              "name": "Clean Amp Volume",
+              "normalizedValue": 0.75
+            },
+            {
+              "displayValue": "47 %",
+              "index": 86,
+              "name": "Clean Amp Bass",
+              "normalizedValue": 0.46700000762939453
+            },
+            {
+              "displayValue": "50 %",
+              "index": 87,
+              "name": "Clean Amp Middle",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "48 %",
+              "index": 88,
+              "name": "Clean Amp Treble",
+              "normalizedValue": 0.47699999809265137
+            },
+            {
+              "displayValue": "51 %",
+              "index": 89,
+              "name": "Clean Amp Output",
+              "normalizedValue": 0.50764501094818115
+            },
+            {
+              "displayValue": "On",
+              "index": 90,
+              "name": "Crunch Amp Mid Boost",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "On",
+              "index": 91,
+              "name": "Crunch Amp Treble Boost",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "62 %",
+              "index": 92,
+              "name": "Crunch Amp Gain",
+              "normalizedValue": 0.62199997901916504
+            },
+            {
+              "displayValue": "30 %",
+              "index": 93,
+              "name": "Crunch Amp Bass",
+              "normalizedValue": 0.30000001192092896
+            },
+            {
+              "displayValue": "50 %",
+              "index": 94,
+              "name": "Crunch Amp Middle",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "65 %",
+              "index": 95,
+              "name": "Crunch Amp Treble",
+              "normalizedValue": 0.64999997615814209
+            },
+            {
+              "displayValue": "65 %",
+              "index": 96,
+              "name": "Crunch Amp Master",
+              "normalizedValue": 0.64999997615814209
+            },
+            {
+              "displayValue": "57 %",
+              "index": 97,
+              "name": "Crunch Amp Depth",
+              "normalizedValue": 0.56999999284744263
+            },
+            {
+              "displayValue": "56 %",
+              "index": 98,
+              "name": "Crunch Amp Output",
+              "normalizedValue": 0.5553470253944397
+            },
+            {
+              "displayValue": "EL34",
+              "index": 99,
+              "name": "Crunch Amp Tubes",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "60 %",
+              "index": 100,
+              "name": "Lead Amp Gain",
+              "normalizedValue": 0.60000002384185791
+            },
+            {
+              "displayValue": "41 %",
+              "index": 101,
+              "name": "Lead Amp Tight",
+              "normalizedValue": 0.40999999642372131
+            },
+            {
+              "displayValue": "57 %",
+              "index": 102,
+              "name": "Lead Amp Bass",
+              "normalizedValue": 0.56999999284744263
+            },
+            {
+              "displayValue": "50 %",
+              "index": 103,
+              "name": "Lead Amp Middle",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "50 %",
+              "index": 104,
+              "name": "Lead Amp Treble",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "50 %",
+              "index": 105,
+              "name": "Lead Amp Master",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "50 %",
+              "index": 106,
+              "name": "Lead Amp Presence",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "79 %",
+              "index": 107,
+              "name": "Lead Amp Depth",
+              "normalizedValue": 0.79000002145767212
+            },
+            {
+              "displayValue": "60 %",
+              "index": 108,
+              "name": "Lead Amp Output",
+              "normalizedValue": 0.59755599498748779
+            },
+            {
+              "displayValue": "6L6",
+              "index": 109,
+              "name": "Lead Amp Tubes",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "On",
+              "index": 110,
+              "name": "Active Cab Section",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Crunch",
+              "index": 111,
+              "name": "Cab Type (Unlinked)",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "On",
+              "index": 112,
+              "name": "Cab L Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Dynamic 57",
+              "index": 113,
+              "name": "Clean Amp Cab L Mic",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Dynamic 57",
+              "index": 114,
+              "name": "Crunch Amp Cab L Mic",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Dynamic 57",
+              "index": 115,
+              "name": "Lead Amp Cab L Mic",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0.436",
+              "index": 116,
+              "name": "Cab L Position",
+              "normalizedValue": 0.43599998950958252
+            },
+            {
+              "displayValue": "0.000",
+              "index": 117,
+              "name": "Cab L Distance",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 118,
+              "name": "Cab L Level",
+              "normalizedValue": 0.49999883770942688
+            },
+            {
+              "displayValue": "C",
+              "index": 119,
+              "name": "Cab L Pan",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Off",
+              "index": 120,
+              "name": "Cab L Phase",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 121,
+              "name": "Room L Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "-28.5 dB",
+              "index": 122,
+              "name": "Room L Send",
+              "normalizedValue": 0.0010329601354897022
+            },
+            {
+              "displayValue": "On",
+              "index": 123,
+              "name": "Cab R Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Ribbon 121",
+              "index": 124,
+              "name": "Clean Amp Cab R Mic",
+              "normalizedValue": 0.83333331346511841
+            },
+            {
+              "displayValue": "Ribbon 121",
+              "index": 125,
+              "name": "Crunch Amp Cab R Mic",
+              "normalizedValue": 0.83333331346511841
+            },
+            {
+              "displayValue": "Ribbon 121",
+              "index": 126,
+              "name": "Lead Amp Cab R Mic",
+              "normalizedValue": 0.3333333432674408
+            },
+            {
+              "displayValue": "0.000",
+              "index": 127,
+              "name": "Cab R Position",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0.000",
+              "index": 128,
+              "name": "Cab R Distance",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 129,
+              "name": "Cab R Level",
+              "normalizedValue": 0.49999883770942688
+            },
+            {
+              "displayValue": "C",
+              "index": 130,
+              "name": "Cab R Pan",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Off",
+              "index": 131,
+              "name": "Cab R Phase",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 132,
+              "name": "Room R Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "-28.9 dB",
+              "index": 133,
+              "name": "Room R Send",
+              "normalizedValue": 0.00086662574904039502
+            },
+            {
+              "displayValue": "On",
+              "index": 134,
+              "name": "Active EQ Section",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "On",
+              "index": 135,
+              "name": "Clean EQ Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "20 Hz",
+              "index": 136,
+              "name": "Clean EQ HPF",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "79 Hz",
+              "index": 137,
+              "name": "Clean EQ Lo Freq",
+              "normalizedValue": 0.61599999666213989
+            },
+            {
+              "displayValue": "189 Hz",
+              "index": 138,
+              "name": "Clean EQ Lo-Mid Freq",
+              "normalizedValue": 0.3529999852180481
+            },
+            {
+              "displayValue": "4.6 kHz",
+              "index": 139,
+              "name": "Clean EQ Hi-Mid Freq",
+              "normalizedValue": 0.94499999284744263
+            },
+            {
+              "displayValue": "11.2 kHz",
+              "index": 140,
+              "name": "Clean EQ Hi Freq",
+              "normalizedValue": 0.72500002384185791
+            },
+            {
+              "displayValue": "20.0 kHz",
+              "index": 141,
+              "name": "Clean EQ LPF",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "-4.1 dB",
+              "index": 142,
+              "name": "Clean EQ Lo Gain",
+              "normalizedValue": 0.32916668057441711
+            },
+            {
+              "displayValue": "-5.1 dB",
+              "index": 143,
+              "name": "Clean EQ Lo-Mid Gain",
+              "normalizedValue": 0.28749999403953552
+            },
+            {
+              "displayValue": "+4.0 dB",
+              "index": 144,
+              "name": "Clean EQ Hi-Mid Gain",
+              "normalizedValue": 0.66666668653488159
+            },
+            {
+              "displayValue": "+5.4 dB",
+              "index": 145,
+              "name": "Clean EQ Hi Gain",
+              "normalizedValue": 0.72499996423721313
+            },
+            {
+              "displayValue": "On",
+              "index": 146,
+              "name": "Crunch EQ Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "20 Hz",
+              "index": 147,
+              "name": "Crunch EQ HPF",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "81 Hz",
+              "index": 148,
+              "name": "Crunch EQ Lo Freq",
+              "normalizedValue": 0.63300001621246338
+            },
+            {
+              "displayValue": "215 Hz",
+              "index": 149,
+              "name": "Crunch EQ Lo-Mid Freq",
+              "normalizedValue": 0.40700000524520874
+            },
+            {
+              "displayValue": "3.7 kHz",
+              "index": 150,
+              "name": "Crunch EQ Hi-MidFreq",
+              "normalizedValue": 0.84200000762939453
+            },
+            {
+              "displayValue": "7.7 kHz",
+              "index": 151,
+              "name": "Crunch EQ Hi Freq",
+              "normalizedValue": 0.60500001907348633
+            },
+            {
+              "displayValue": "20.0 kHz",
+              "index": 152,
+              "name": "Crunch EQ LPF",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "+3.6 dB",
+              "index": 153,
+              "name": "Crunch EQ Lo Gain",
+              "normalizedValue": 0.65000003576278687
+            },
+            {
+              "displayValue": "-3.1 dB",
+              "index": 154,
+              "name": "Crunch EQ Lo-Mid Gain",
+              "normalizedValue": 0.37083330750465393
+            },
+            {
+              "displayValue": "+1.5 dB",
+              "index": 155,
+              "name": "Crunch EQ Hi-Mid Gain",
+              "normalizedValue": 0.5625
+            },
+            {
+              "displayValue": "+1.9 dB",
+              "index": 156,
+              "name": "Crunch EQ Hi Gain",
+              "normalizedValue": 0.57916665077209473
+            },
+            {
+              "displayValue": "Off",
+              "index": 157,
+              "name": "Lead EQ Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "20 Hz",
+              "index": 158,
+              "name": "Lead EQ HPF",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "74 Hz",
+              "index": 159,
+              "name": "Lead EQ Lo Freq",
+              "normalizedValue": 0.58700001239776611
+            },
+            {
+              "displayValue": "313 Hz",
+              "index": 160,
+              "name": "Lead EQ Lo-Mid Freq",
+              "normalizedValue": 0.57300001382827759
+            },
+            {
+              "displayValue": "1.6 kHz",
+              "index": 161,
+              "name": "Lead EQ Hi-Mid Freq",
+              "normalizedValue": 0.56599998474121094
+            },
+            {
+              "displayValue": "8.4 kHz",
+              "index": 162,
+              "name": "Lead EQ Hi Freq",
+              "normalizedValue": 0.63700002431869507
+            },
+            {
+              "displayValue": "20.0 kHz",
+              "index": 163,
+              "name": "Lead EQ LPF",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "-1.3 dB",
+              "index": 164,
+              "name": "Lead EQ Lo Gain",
+              "normalizedValue": 0.44583332538604736
+            },
+            {
+              "displayValue": "+1.6 dB",
+              "index": 165,
+              "name": "Lead EQ Lo-Mid Gain",
+              "normalizedValue": 0.56666666269302368
+            },
+            {
+              "displayValue": "+1.7 dB",
+              "index": 166,
+              "name": "Lead EQ Hi-Mid Gain",
+              "normalizedValue": 0.57083332538604736
+            },
+            {
+              "displayValue": "+0.6 dB",
+              "index": 167,
+              "name": "Lead EQ Hi Gain",
+              "normalizedValue": 0.52500003576278687
+            },
+            {
+              "displayValue": "On",
+              "index": 168,
+              "name": "Active Post FX Section",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "29 %",
+              "index": 169,
+              "name": "Atlas Delay Mix",
+              "normalizedValue": 0.28999999165534973
+            },
+            {
+              "displayValue": "Tap",
+              "index": 170,
+              "name": "Atlas Delay Sync",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Pre",
+              "index": 171,
+              "name": "Atlas Delay Pre/Post",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Single",
+              "index": 172,
+              "name": "Atlas Delay Mode",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "15 %",
+              "index": 173,
+              "name": "Atlas Delay Feedback",
+              "normalizedValue": 0.15000000596046448
+            },
+            {
+              "displayValue": "152 Hz",
+              "index": 174,
+              "name": "Atlas Delay Low Cut",
+              "normalizedValue": 0.34399962425231934
+            },
+            {
+              "displayValue": "500.00 ms",
+              "index": 175,
+              "name": "Atlas Delay Time L",
+              "normalizedValue": 0.40000000596046448
+            },
+            {
+              "displayValue": "1/8D",
+              "index": 176,
+              "name": "Atlas Delay Sync Note L",
+              "normalizedValue": 0.60000002384185791
+            },
+            {
+              "displayValue": "49 %",
+              "index": 177,
+              "name": "Atlas Delay Cross Feedback",
+              "normalizedValue": 0.49000000953674316
+            },
+            {
+              "displayValue": "0 %",
+              "index": 178,
+              "name": "Atlas Delay Icicles",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "450.00 ms",
+              "index": 179,
+              "name": "Atlas Delay Time R",
+              "normalizedValue": 0.34999999403953552
+            },
+            {
+              "displayValue": "1/2",
+              "index": 180,
+              "name": "Atlas Delay Sync Note R",
+              "normalizedValue": 0.80000001192092896
+            },
+            {
+              "displayValue": "6.27 kHz",
+              "index": 181,
+              "name": "Atlas Delay High Cut",
+              "normalizedValue": 0.61799997091293335
+            },
+            {
+              "displayValue": "100.0 BPM",
+              "index": 182,
+              "name": "Atlas Delay Tempo",
+              "normalizedValue": 0.30000001192092896
+            },
+            {
+              "displayValue": "Off",
+              "index": 183,
+              "name": "Atlas Delay Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "21 %",
+              "index": 184,
+              "name": "Aeons Reverb Mix",
+              "normalizedValue": 0.20999999344348907
+            },
+            {
+              "displayValue": "38 %",
+              "index": 185,
+              "name": "Aeons Reverb Decay",
+              "normalizedValue": 0.37999999523162842
+            },
+            {
+              "displayValue": "40 Hz",
+              "index": 186,
+              "name": "Aeons Reverb Low Cut",
+              "normalizedValue": 0.16199991106987
+            },
+            {
+              "displayValue": "90 %",
+              "index": 187,
+              "name": "Aeons Reverb Freeze Volume",
+              "normalizedValue": 0.89999997615814209
+            },
+            {
+              "displayValue": "0 st",
+              "index": 188,
+              "name": "Aeons Reverb Freeze Pitch",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "4.36 kHz",
+              "index": 189,
+              "name": "Aeons Reverb High Cut",
+              "normalizedValue": 0.56400042772293091
+            },
+            {
+              "displayValue": "Off",
+              "index": 190,
+              "name": "Aeons Reverb Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 191,
+              "name": "Aeons Reverb Freeze",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 192,
+              "name": "Preset Previous",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 193,
+              "name": "Preset Next",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "normal",
+              "index": 194,
+              "name": "Bypass",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "100",
+              "index": 195,
+              "name": "Wet",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "normal",
+              "index": 196,
+              "name": "Delta",
+              "normalizedValue": 0
+            }
+          ],
+          "vendor": "Neural DSP"
+        },
+        {
+          "bypassStemPath": "audio/auditions/lead-guitar__without-vintageverb.mp3",
+          "id": "{82463398-BCCF-4B85-BAEF-D92296EAB83B}",
+          "name": "VST: ValhallaVintageVerb (Valhalla DSP, LLC)",
+          "parameters": [
+            {
+              "displayValue": "31.6 %",
+              "index": 0,
+              "name": "Mix",
+              "normalizedValue": 0.31600001454353333
+            },
+            {
+              "displayValue": "20.00 ms",
+              "index": 1,
+              "name": "PreDelay",
+              "normalizedValue": 0.25
+            },
+            {
+              "displayValue": "4.00 s",
+              "index": 2,
+              "name": "Decay",
+              "normalizedValue": 0.42048031091690063
+            },
+            {
+              "displayValue": "100.0 %",
+              "index": 3,
+              "name": "Size",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "50.0 %",
+              "index": 4,
+              "name": "Attack",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "1.50 X",
+              "index": 5,
+              "name": "BassMult",
+              "normalizedValue": 0.62303876876831055
+            },
+            {
+              "displayValue": "700 Hz",
+              "index": 6,
+              "name": "BassXover",
+              "normalizedValue": 0.44470110535621643
+            },
+            {
+              "displayValue": "-24.00 dB",
+              "index": 7,
+              "name": "HighShelf",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "6000 Hz",
+              "index": 8,
+              "name": "HighFreq",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "100.0 %",
+              "index": 9,
+              "name": "EarlyDiffusion",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "100.0 %",
+              "index": 10,
+              "name": "LateDiffusion",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "2.53 Hz",
+              "index": 11,
+              "name": "ModRate",
+              "normalizedValue": 0.2454545646905899
+            },
+            {
+              "displayValue": "38.0 %",
+              "index": 12,
+              "name": "ModDepth",
+              "normalizedValue": 0.37999999523162842
+            },
+            {
+              "displayValue": "8000 Hz",
+              "index": 13,
+              "name": "HighCut",
+              "normalizedValue": 0.59053885936737061
+            },
+            {
+              "displayValue": "10 Hz",
+              "index": 14,
+              "name": "LowCut",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "seventies",
+              "index": 15,
+              "name": "ColorMode",
+              "normalizedValue": 0.3333333432674408
+            },
+            {
+              "displayValue": "Room",
+              "index": 16,
+              "name": "ReverbMode",
+              "normalizedValue": 0.125
+            },
+            {
+              "displayValue": "normal",
+              "index": 17,
+              "name": "Bypass",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "100",
+              "index": 18,
+              "name": "Wet",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "normal",
+              "index": 19,
+              "name": "Delta",
+              "normalizedValue": 0
+            }
+          ],
+          "vendor": "Valhalla DSP, LLC"
+        }
+      ],
+      "solo": false,
+      "stemPath": "audio/lead-guitar.mp3",
+      "volumeDb": -3.3334054088525367,
+      "volumeLinear": 0.68128641571927995
+    },
+    {
+      "id": "{3F387E9C-49A5-4F64-A7A9-9E8CEEE48DA1}",
+      "items": [
+        {
+          "id": "{91E0D9FD-5FBF-46E3-8BAA-DE48ED9F6BB5}",
+          "length": 24,
+          "name": "stormrh L mixed 2.mp3",
+          "sourceFile": "C:\\Users\\mishk\\Desktop\\Media\\stormrh L mixed 2.mp3",
+          "start": 11
+        }
+      ],
+      "muted": false,
+      "name": "storm rh R",
+      "pan": 1,
+      "plugins": [
+        {
+          "bypassStemPath": "audio/auditions/rhythm-guitar-r__without-rabea.mp3",
+          "id": "{560B0A7C-9DC2-4D4F-A939-A5E0055E8EB3}",
+          "name": "VST: Archetype Rabea X (Neural DSP)",
+          "parameters": [
+            {
+              "displayValue": "0.0 dB",
+              "index": 0,
+              "name": "Input Gain",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 1,
+              "name": "Output Gain",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "On",
+              "index": 2,
+              "name": "Gate Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "-73.0 dB",
+              "index": 3,
+              "name": "Gate Threshold",
+              "normalizedValue": 0.2395833283662796
+            },
+            {
+              "displayValue": "0 st",
+              "index": 4,
+              "name": "Transpose",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Off",
+              "index": 5,
+              "name": "Doubler Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "6.00 ms",
+              "index": 6,
+              "name": "Doubler Spread",
+              "normalizedValue": 0.17647059261798859
+            },
+            {
+              "displayValue": "Off",
+              "index": 7,
+              "name": "Active Synth Section",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "100 %",
+              "index": 8,
+              "name": "Synth Mix",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "50 %",
+              "index": 9,
+              "name": "Synth Sensitivity",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "On",
+              "index": 10,
+              "name": "Synth Env Retrigger",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "440",
+              "index": 11,
+              "name": "Synth Tuning",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Post",
+              "index": 12,
+              "name": "Synth Pre Post",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "-60.6 dB",
+              "index": 13,
+              "name": "Synth Gate",
+              "normalizedValue": 0.24262499809265137
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 14,
+              "name": "Synth Output",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "0 ms",
+              "index": 15,
+              "name": "Synth Glide",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 16,
+              "name": "Synth Arp Enabled",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "C",
+              "index": 17,
+              "name": "Synth Arp Root",
+              "normalizedValue": 0.083333335816860199
+            },
+            {
+              "displayValue": "Minor",
+              "index": 18,
+              "name": "Synth Arp Mode",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "UP",
+              "index": 19,
+              "name": "Synth Arp Pattern",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0",
+              "index": 20,
+              "name": "Synth Arp Octave",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Off",
+              "index": 21,
+              "name": "Synth Arp Note 2",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 22,
+              "name": "Synth Arp Note 3",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Off",
+              "index": 23,
+              "name": "Synth Arp Note 4",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 24,
+              "name": "Synth Arp Note 5",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Off",
+              "index": 25,
+              "name": "Synth Arp Note 6",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 26,
+              "name": "Synth Arp Note 7",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 27,
+              "name": "Synth Arp Note 8",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "1/16",
+              "index": 28,
+              "name": "Synth Arp Sync Rate",
+              "normalizedValue": 0.64999997615814209
+            },
+            {
+              "displayValue": "Sync",
+              "index": 29,
+              "name": "Synth Arp Sync Mode",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0.20 Hz",
+              "index": 30,
+              "name": "Synth Arp Free Rate",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "A 1 ms",
+              "index": 31,
+              "name": "Synth Amplifier Decay/Attack",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "100 %",
+              "index": 32,
+              "name": "Synth Amplifier Sustain",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "On",
+              "index": 33,
+              "name": "Synth Osc 1 Enable",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "SAWTOOTH",
+              "index": 34,
+              "name": "Synth Osc 1 Waveform",
+              "normalizedValue": 0.3333333432674408
+            },
+            {
+              "displayValue": "-12",
+              "index": 35,
+              "name": "Synth Osc 1 Semitones",
+              "normalizedValue": 0.25
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 36,
+              "name": "Synth Osc 1 Level",
+              "normalizedValue": 0.80000001192092896
+            },
+            {
+              "displayValue": "0 %",
+              "index": 37,
+              "name": "Synth Osc 1 Detune",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "On",
+              "index": 38,
+              "name": "Synth Osc 2 Enable",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "SAWTOOTH",
+              "index": 39,
+              "name": "Synth Osc 2 Waveform",
+              "normalizedValue": 0.3333333432674408
+            },
+            {
+              "displayValue": "19",
+              "index": 40,
+              "name": "Synth Osc 2 Semitones",
+              "normalizedValue": 0.89583331346511841
+            },
+            {
+              "displayValue": "-2.5 dB",
+              "index": 41,
+              "name": "Synth Osc 2 Level",
+              "normalizedValue": 0.75833332538604736
+            },
+            {
+              "displayValue": "0 %",
+              "index": 42,
+              "name": "Synth Osc 2 Detune",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "On",
+              "index": 43,
+              "name": "Synth Osc 1 Unison Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "On",
+              "index": 44,
+              "name": "Synth Osc 2 Unison Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "5",
+              "index": 45,
+              "name": "Synth Osc Unisons",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "100 %",
+              "index": 46,
+              "name": "Synth Osc Unison Width",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "4 %",
+              "index": 47,
+              "name": "Synth Osc Unison Detune",
+              "normalizedValue": 0.14495591819286346
+            },
+            {
+              "displayValue": "On",
+              "index": 48,
+              "name": "Synth Filter Enable",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "4.67 kHz",
+              "index": 49,
+              "name": "Synth Filter Cutoff",
+              "normalizedValue": 0.64582264423370361
+            },
+            {
+              "displayValue": "0 %",
+              "index": 50,
+              "name": "Synth Filter Resonance",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "12 dB",
+              "index": 51,
+              "name": "Synth Filter Mode",
+              "normalizedValue": 0.3333333432674408
+            },
+            {
+              "displayValue": "0 %",
+              "index": 52,
+              "name": "Synth Filter Env Amount",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "A 1 ms",
+              "index": 53,
+              "name": "Synth Filter Decay/Attack",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "0 %",
+              "index": 54,
+              "name": "Synth Filter Drive",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 55,
+              "name": "Active Pre FX Section",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "68 %",
+              "index": 56,
+              "name": "Twin Blade Dual Compressor Dry",
+              "normalizedValue": 0.67900002002716064
+            },
+            {
+              "displayValue": "21 %",
+              "index": 57,
+              "name": "Twin Blade Dual Compressor In",
+              "normalizedValue": 0.21299999952316284
+            },
+            {
+              "displayValue": "30 %",
+              "index": 58,
+              "name": "Twin Blade Dual Compressor Out",
+              "normalizedValue": 0.30000001192092896
+            },
+            {
+              "displayValue": "11 %",
+              "index": 59,
+              "name": "Twin Blade Dual Compressor Att/R",
+              "normalizedValue": 0.10599999874830246
+            },
+            {
+              "displayValue": "68 %",
+              "index": 60,
+              "name": "Twin Blade Dual Compressor Thru",
+              "normalizedValue": 0.68400001525878906
+            },
+            {
+              "displayValue": "41 %",
+              "index": 61,
+              "name": "Twin Blade Dual Compressor Att/R",
+              "normalizedValue": 0.40799999237060547
+            },
+            {
+              "displayValue": "Off",
+              "index": 62,
+              "name": "Twin Blade Dual Compressor Activ",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Vintage",
+              "index": 63,
+              "name": "Chaos Bed Octaver Mode",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "100 %",
+              "index": 64,
+              "name": "Chaos Bed Octaver Direct Level",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "0 %",
+              "index": 65,
+              "name": "Chaos Bed Octaver Oct Up",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0 %",
+              "index": 66,
+              "name": "Chaos Bed Octaver Oct Down",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 67,
+              "name": "Chaos Bed Octaver Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "100 %",
+              "index": 68,
+              "name": "Colossus Fuzz Fuzz",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "47 %",
+              "index": 69,
+              "name": "Colossus Fuzz Level",
+              "normalizedValue": 0.46799999475479126
+            },
+            {
+              "displayValue": "Vintage",
+              "index": 70,
+              "name": "Colossus Fuzz Mode",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "84 %",
+              "index": 71,
+              "name": "Colossus Fuzz Bass",
+              "normalizedValue": 0.83700001239776611
+            },
+            {
+              "displayValue": "15 %",
+              "index": 72,
+              "name": "Colossus Fuzz Treble",
+              "normalizedValue": 0.15099999308586121
+            },
+            {
+              "displayValue": "Off",
+              "index": 73,
+              "name": "Colossus Fuzz Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0 %",
+              "index": 74,
+              "name": "Paragon Overdrive Drive",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "76 %",
+              "index": 75,
+              "name": "Paragon Overdrive Level",
+              "normalizedValue": 0.75900000333786011
+            },
+            {
+              "displayValue": "Modern",
+              "index": 76,
+              "name": "Paragon Overdrive Mode",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "55 %",
+              "index": 77,
+              "name": "Paragon Overdrive Bass",
+              "normalizedValue": 0.54500001668930054
+            },
+            {
+              "displayValue": "57 %",
+              "index": 78,
+              "name": "Paragon Overdrive Treble",
+              "normalizedValue": 0.5690000057220459
+            },
+            {
+              "displayValue": "On",
+              "index": 79,
+              "name": "Paragon Overdrive Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "On",
+              "index": 80,
+              "name": "Active Amp Section",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Off",
+              "index": 81,
+              "name": "Amp/Cab Linked",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Crunch",
+              "index": 82,
+              "name": "Amp Type",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "On",
+              "index": 83,
+              "name": "Clean Amp Mid Boost",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Off",
+              "index": 84,
+              "name": "Clean Amp Treble Boost",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "100 %",
+              "index": 85,
+              "name": "Clean Amp Volume",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "44 %",
+              "index": 86,
+              "name": "Clean Amp Bass",
+              "normalizedValue": 0.4440000057220459
+            },
+            {
+              "displayValue": "50 %",
+              "index": 87,
+              "name": "Clean Amp Middle",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "46 %",
+              "index": 88,
+              "name": "Clean Amp Treble",
+              "normalizedValue": 0.46299999952316284
+            },
+            {
+              "displayValue": "56 %",
+              "index": 89,
+              "name": "Clean Amp Output",
+              "normalizedValue": 0.56360697746276855
+            },
+            {
+              "displayValue": "On",
+              "index": 90,
+              "name": "Crunch Amp Mid Boost",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "On",
+              "index": 91,
+              "name": "Crunch Amp Treble Boost",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "41 %",
+              "index": 92,
+              "name": "Crunch Amp Gain",
+              "normalizedValue": 0.40999999642372131
+            },
+            {
+              "displayValue": "50 %",
+              "index": 93,
+              "name": "Crunch Amp Bass",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "40 %",
+              "index": 94,
+              "name": "Crunch Amp Middle",
+              "normalizedValue": 0.40000000596046448
+            },
+            {
+              "displayValue": "71 %",
+              "index": 95,
+              "name": "Crunch Amp Treble",
+              "normalizedValue": 0.70999997854232788
+            },
+            {
+              "displayValue": "67 %",
+              "index": 96,
+              "name": "Crunch Amp Master",
+              "normalizedValue": 0.67000001668930054
+            },
+            {
+              "displayValue": "62 %",
+              "index": 97,
+              "name": "Crunch Amp Depth",
+              "normalizedValue": 0.62000000476837158
+            },
+            {
+              "displayValue": "50 %",
+              "index": 98,
+              "name": "Crunch Amp Output",
+              "normalizedValue": 0.49999898672103882
+            },
+            {
+              "displayValue": "EL34",
+              "index": 99,
+              "name": "Crunch Amp Tubes",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "60 %",
+              "index": 100,
+              "name": "Lead Amp Gain",
+              "normalizedValue": 0.60000002384185791
+            },
+            {
+              "displayValue": "41 %",
+              "index": 101,
+              "name": "Lead Amp Tight",
+              "normalizedValue": 0.40999999642372131
+            },
+            {
+              "displayValue": "57 %",
+              "index": 102,
+              "name": "Lead Amp Bass",
+              "normalizedValue": 0.56999999284744263
+            },
+            {
+              "displayValue": "50 %",
+              "index": 103,
+              "name": "Lead Amp Middle",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "50 %",
+              "index": 104,
+              "name": "Lead Amp Treble",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "50 %",
+              "index": 105,
+              "name": "Lead Amp Master",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "50 %",
+              "index": 106,
+              "name": "Lead Amp Presence",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "79 %",
+              "index": 107,
+              "name": "Lead Amp Depth",
+              "normalizedValue": 0.79000002145767212
+            },
+            {
+              "displayValue": "60 %",
+              "index": 108,
+              "name": "Lead Amp Output",
+              "normalizedValue": 0.59755599498748779
+            },
+            {
+              "displayValue": "6L6",
+              "index": 109,
+              "name": "Lead Amp Tubes",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "On",
+              "index": 110,
+              "name": "Active Cab Section",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Crunch",
+              "index": 111,
+              "name": "Cab Type (Unlinked)",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "On",
+              "index": 112,
+              "name": "Cab L Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Condenser 414",
+              "index": 113,
+              "name": "Clean Amp Cab L Mic",
+              "normalizedValue": 0.25
+            },
+            {
+              "displayValue": "Dynamic 57",
+              "index": 114,
+              "name": "Crunch Amp Cab L Mic",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Dynamic 57",
+              "index": 115,
+              "name": "Lead Amp Cab L Mic",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0.295",
+              "index": 116,
+              "name": "Cab L Position",
+              "normalizedValue": 0.29499998688697815
+            },
+            {
+              "displayValue": "0.032",
+              "index": 117,
+              "name": "Cab L Distance",
+              "normalizedValue": 0.032000001519918442
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 118,
+              "name": "Cab L Level",
+              "normalizedValue": 0.49999883770942688
+            },
+            {
+              "displayValue": "C",
+              "index": 119,
+              "name": "Cab L Pan",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Off",
+              "index": 120,
+              "name": "Cab L Phase",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 121,
+              "name": "Room L Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "-24.8 dB",
+              "index": 122,
+              "name": "Room L Send",
+              "normalizedValue": 0.0041200830601155758
+            },
+            {
+              "displayValue": "On",
+              "index": 123,
+              "name": "Cab R Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Ribbon 121",
+              "index": 124,
+              "name": "Clean Amp Cab R Mic",
+              "normalizedValue": 0.83333331346511841
+            },
+            {
+              "displayValue": "Ribbon 121",
+              "index": 125,
+              "name": "Crunch Amp Cab R Mic",
+              "normalizedValue": 0.83333331346511841
+            },
+            {
+              "displayValue": "Ribbon 121",
+              "index": 126,
+              "name": "Lead Amp Cab R Mic",
+              "normalizedValue": 0.3333333432674408
+            },
+            {
+              "displayValue": "0.279",
+              "index": 127,
+              "name": "Cab R Position",
+              "normalizedValue": 0.27900001406669617
+            },
+            {
+              "displayValue": "0.068",
+              "index": 128,
+              "name": "Cab R Distance",
+              "normalizedValue": 0.068000003695487976
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 129,
+              "name": "Cab R Level",
+              "normalizedValue": 0.49999883770942688
+            },
+            {
+              "displayValue": "C",
+              "index": 130,
+              "name": "Cab R Pan",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Off",
+              "index": 131,
+              "name": "Cab R Phase",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 132,
+              "name": "Room R Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "-25.0 dB",
+              "index": 133,
+              "name": "Room R Send",
+              "normalizedValue": 0.0038581339176744223
+            },
+            {
+              "displayValue": "On",
+              "index": 134,
+              "name": "Active EQ Section",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Off",
+              "index": 135,
+              "name": "Clean EQ Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "20 Hz",
+              "index": 136,
+              "name": "Clean EQ HPF",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "92 Hz",
+              "index": 137,
+              "name": "Clean EQ Lo Freq",
+              "normalizedValue": 0.70099997520446777
+            },
+            {
+              "displayValue": "368 Hz",
+              "index": 138,
+              "name": "Clean EQ Lo-Mid Freq",
+              "normalizedValue": 0.63999998569488525
+            },
+            {
+              "displayValue": "1.6 kHz",
+              "index": 139,
+              "name": "Clean EQ Hi-Mid Freq",
+              "normalizedValue": 0.56699997186660767
+            },
+            {
+              "displayValue": "8.0 kHz",
+              "index": 140,
+              "name": "Clean EQ Hi Freq",
+              "normalizedValue": 0.62199997901916504
+            },
+            {
+              "displayValue": "20.0 kHz",
+              "index": 141,
+              "name": "Clean EQ LPF",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "+1.9 dB",
+              "index": 142,
+              "name": "Clean EQ Lo Gain",
+              "normalizedValue": 0.57916665077209473
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 143,
+              "name": "Clean EQ Lo-Mid Gain",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "+2.6 dB",
+              "index": 144,
+              "name": "Clean EQ Hi-Mid Gain",
+              "normalizedValue": 0.60833334922790527
+            },
+            {
+              "displayValue": "+1.2 dB",
+              "index": 145,
+              "name": "Clean EQ Hi Gain",
+              "normalizedValue": 0.55000001192092896
+            },
+            {
+              "displayValue": "On",
+              "index": 146,
+              "name": "Crunch EQ Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "20 Hz",
+              "index": 147,
+              "name": "Crunch EQ HPF",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "81 Hz",
+              "index": 148,
+              "name": "Crunch EQ Lo Freq",
+              "normalizedValue": 0.63300001621246338
+            },
+            {
+              "displayValue": "132 Hz",
+              "index": 149,
+              "name": "Crunch EQ Lo-Mid Freq",
+              "normalizedValue": 0.21500000357627869
+            },
+            {
+              "displayValue": "1.5 kHz",
+              "index": 150,
+              "name": "Crunch EQ Hi-MidFreq",
+              "normalizedValue": 0.54500001668930054
+            },
+            {
+              "displayValue": "6.6 kHz",
+              "index": 151,
+              "name": "Crunch EQ Hi Freq",
+              "normalizedValue": 0.5350000262260437
+            },
+            {
+              "displayValue": "20.0 kHz",
+              "index": 152,
+              "name": "Crunch EQ LPF",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 153,
+              "name": "Crunch EQ Lo Gain",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "-0.3 dB",
+              "index": 154,
+              "name": "Crunch EQ Lo-Mid Gain",
+              "normalizedValue": 0.48749998211860657
+            },
+            {
+              "displayValue": "+2.4 dB",
+              "index": 155,
+              "name": "Crunch EQ Hi-Mid Gain",
+              "normalizedValue": 0.59999996423721313
+            },
+            {
+              "displayValue": "+2.6 dB",
+              "index": 156,
+              "name": "Crunch EQ Hi Gain",
+              "normalizedValue": 0.60833334922790527
+            },
+            {
+              "displayValue": "Off",
+              "index": 157,
+              "name": "Lead EQ Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "20 Hz",
+              "index": 158,
+              "name": "Lead EQ HPF",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "74 Hz",
+              "index": 159,
+              "name": "Lead EQ Lo Freq",
+              "normalizedValue": 0.58700001239776611
+            },
+            {
+              "displayValue": "313 Hz",
+              "index": 160,
+              "name": "Lead EQ Lo-Mid Freq",
+              "normalizedValue": 0.57300001382827759
+            },
+            {
+              "displayValue": "1.6 kHz",
+              "index": 161,
+              "name": "Lead EQ Hi-Mid Freq",
+              "normalizedValue": 0.56599998474121094
+            },
+            {
+              "displayValue": "8.4 kHz",
+              "index": 162,
+              "name": "Lead EQ Hi Freq",
+              "normalizedValue": 0.63700002431869507
+            },
+            {
+              "displayValue": "20.0 kHz",
+              "index": 163,
+              "name": "Lead EQ LPF",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "-1.3 dB",
+              "index": 164,
+              "name": "Lead EQ Lo Gain",
+              "normalizedValue": 0.44583332538604736
+            },
+            {
+              "displayValue": "+1.6 dB",
+              "index": 165,
+              "name": "Lead EQ Lo-Mid Gain",
+              "normalizedValue": 0.56666666269302368
+            },
+            {
+              "displayValue": "+1.7 dB",
+              "index": 166,
+              "name": "Lead EQ Hi-Mid Gain",
+              "normalizedValue": 0.57083332538604736
+            },
+            {
+              "displayValue": "+0.6 dB",
+              "index": 167,
+              "name": "Lead EQ Hi Gain",
+              "normalizedValue": 0.52500003576278687
+            },
+            {
+              "displayValue": "Off",
+              "index": 168,
+              "name": "Active Post FX Section",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "21 %",
+              "index": 169,
+              "name": "Atlas Delay Mix",
+              "normalizedValue": 0.20999999344348907
+            },
+            {
+              "displayValue": "Tap",
+              "index": 170,
+              "name": "Atlas Delay Sync",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Pre",
+              "index": 171,
+              "name": "Atlas Delay Pre/Post",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Dual",
+              "index": 172,
+              "name": "Atlas Delay Mode",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "55 %",
+              "index": 173,
+              "name": "Atlas Delay Feedback",
+              "normalizedValue": 0.55000001192092896
+            },
+            {
+              "displayValue": "68 Hz",
+              "index": 174,
+              "name": "Atlas Delay Low Cut",
+              "normalizedValue": 0.18700002133846283
+            },
+            {
+              "displayValue": "500.00 ms",
+              "index": 175,
+              "name": "Atlas Delay Time L",
+              "normalizedValue": 0.40000000596046448
+            },
+            {
+              "displayValue": "1/32",
+              "index": 176,
+              "name": "Atlas Delay Sync Note L",
+              "normalizedValue": 0.20000000298023224
+            },
+            {
+              "displayValue": "49 %",
+              "index": 177,
+              "name": "Atlas Delay Cross Feedback",
+              "normalizedValue": 0.49000000953674316
+            },
+            {
+              "displayValue": "0 %",
+              "index": 178,
+              "name": "Atlas Delay Icicles",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "500.00 ms",
+              "index": 179,
+              "name": "Atlas Delay Time R",
+              "normalizedValue": 0.40000000596046448
+            },
+            {
+              "displayValue": "1/8",
+              "index": 180,
+              "name": "Atlas Delay Sync Note R",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "2.94 kHz",
+              "index": 181,
+              "name": "Atlas Delay High Cut",
+              "normalizedValue": 0.38999965786933899
+            },
+            {
+              "displayValue": "95.0 BPM",
+              "index": 182,
+              "name": "Atlas Delay Tempo",
+              "normalizedValue": 0.27500000596046448
+            },
+            {
+              "displayValue": "On",
+              "index": 183,
+              "name": "Atlas Delay Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "26 %",
+              "index": 184,
+              "name": "Aeons Reverb Mix",
+              "normalizedValue": 0.25999999046325684
+            },
+            {
+              "displayValue": "18 %",
+              "index": 185,
+              "name": "Aeons Reverb Decay",
+              "normalizedValue": 0.18000000715255737
+            },
+            {
+              "displayValue": "40 Hz",
+              "index": 186,
+              "name": "Aeons Reverb Low Cut",
+              "normalizedValue": 0.16199991106987
+            },
+            {
+              "displayValue": "50 %",
+              "index": 187,
+              "name": "Aeons Reverb Freeze Volume",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "0 st",
+              "index": 188,
+              "name": "Aeons Reverb Freeze Pitch",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "7.67 kHz",
+              "index": 189,
+              "name": "Aeons Reverb High Cut",
+              "normalizedValue": 0.78300023078918457
+            },
+            {
+              "displayValue": "Off",
+              "index": 190,
+              "name": "Aeons Reverb Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 191,
+              "name": "Aeons Reverb Freeze",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 192,
+              "name": "Preset Previous",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 193,
+              "name": "Preset Next",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "normal",
+              "index": 194,
+              "name": "Bypass",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "100",
+              "index": 195,
+              "name": "Wet",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "normal",
+              "index": 196,
+              "name": "Delta",
+              "normalizedValue": 0
+            }
+          ],
+          "vendor": "Neural DSP"
+        }
+      ],
+      "solo": false,
+      "stemPath": "audio/rhythm-guitar-r.mp3",
+      "volumeDb": -7.3511782022729735,
+      "volumeLinear": 0.42898399552230998
+    },
+    {
+      "id": "{37006A3F-1537-44A5-B5C5-95B3ED75318B}",
+      "items": [
+        {
+          "id": "{FF83B0A8-05F3-480E-9795-72E32CE9B947}",
+          "length": 24,
+          "name": "stormrh R mixed 2.mp3",
+          "sourceFile": "C:\\Users\\mishk\\Desktop\\Media\\stormrh R mixed 2.mp3",
+          "start": 11
+        }
+      ],
+      "muted": false,
+      "name": "storm rh L",
+      "pan": -1,
+      "plugins": [
+        {
+          "bypassStemPath": "audio/auditions/rhythm-guitar-l__without-rabea.mp3",
+          "id": "{53E31845-88FE-4BC1-BFB2-C829FE6A25CA}",
+          "name": "VST: Archetype Rabea X (Neural DSP)",
+          "parameters": [
+            {
+              "displayValue": "0.0 dB",
+              "index": 0,
+              "name": "Input Gain",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 1,
+              "name": "Output Gain",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "On",
+              "index": 2,
+              "name": "Gate Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "-73.0 dB",
+              "index": 3,
+              "name": "Gate Threshold",
+              "normalizedValue": 0.2395833283662796
+            },
+            {
+              "displayValue": "0 st",
+              "index": 4,
+              "name": "Transpose",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Off",
+              "index": 5,
+              "name": "Doubler Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "6.00 ms",
+              "index": 6,
+              "name": "Doubler Spread",
+              "normalizedValue": 0.17647059261798859
+            },
+            {
+              "displayValue": "Off",
+              "index": 7,
+              "name": "Active Synth Section",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "100 %",
+              "index": 8,
+              "name": "Synth Mix",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "50 %",
+              "index": 9,
+              "name": "Synth Sensitivity",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "On",
+              "index": 10,
+              "name": "Synth Env Retrigger",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "440",
+              "index": 11,
+              "name": "Synth Tuning",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Post",
+              "index": 12,
+              "name": "Synth Pre Post",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "-60.6 dB",
+              "index": 13,
+              "name": "Synth Gate",
+              "normalizedValue": 0.24262499809265137
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 14,
+              "name": "Synth Output",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "0 ms",
+              "index": 15,
+              "name": "Synth Glide",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 16,
+              "name": "Synth Arp Enabled",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "C",
+              "index": 17,
+              "name": "Synth Arp Root",
+              "normalizedValue": 0.083333335816860199
+            },
+            {
+              "displayValue": "Minor",
+              "index": 18,
+              "name": "Synth Arp Mode",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "UP",
+              "index": 19,
+              "name": "Synth Arp Pattern",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0",
+              "index": 20,
+              "name": "Synth Arp Octave",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Off",
+              "index": 21,
+              "name": "Synth Arp Note 2",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 22,
+              "name": "Synth Arp Note 3",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Off",
+              "index": 23,
+              "name": "Synth Arp Note 4",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 24,
+              "name": "Synth Arp Note 5",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Off",
+              "index": 25,
+              "name": "Synth Arp Note 6",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 26,
+              "name": "Synth Arp Note 7",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 27,
+              "name": "Synth Arp Note 8",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "1/16",
+              "index": 28,
+              "name": "Synth Arp Sync Rate",
+              "normalizedValue": 0.64999997615814209
+            },
+            {
+              "displayValue": "Sync",
+              "index": 29,
+              "name": "Synth Arp Sync Mode",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0.20 Hz",
+              "index": 30,
+              "name": "Synth Arp Free Rate",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "A 1 ms",
+              "index": 31,
+              "name": "Synth Amplifier Decay/Attack",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "100 %",
+              "index": 32,
+              "name": "Synth Amplifier Sustain",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "On",
+              "index": 33,
+              "name": "Synth Osc 1 Enable",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "SAWTOOTH",
+              "index": 34,
+              "name": "Synth Osc 1 Waveform",
+              "normalizedValue": 0.3333333432674408
+            },
+            {
+              "displayValue": "-12",
+              "index": 35,
+              "name": "Synth Osc 1 Semitones",
+              "normalizedValue": 0.25
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 36,
+              "name": "Synth Osc 1 Level",
+              "normalizedValue": 0.80000001192092896
+            },
+            {
+              "displayValue": "0 %",
+              "index": 37,
+              "name": "Synth Osc 1 Detune",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "On",
+              "index": 38,
+              "name": "Synth Osc 2 Enable",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "SAWTOOTH",
+              "index": 39,
+              "name": "Synth Osc 2 Waveform",
+              "normalizedValue": 0.3333333432674408
+            },
+            {
+              "displayValue": "19",
+              "index": 40,
+              "name": "Synth Osc 2 Semitones",
+              "normalizedValue": 0.89583331346511841
+            },
+            {
+              "displayValue": "-2.5 dB",
+              "index": 41,
+              "name": "Synth Osc 2 Level",
+              "normalizedValue": 0.75833332538604736
+            },
+            {
+              "displayValue": "0 %",
+              "index": 42,
+              "name": "Synth Osc 2 Detune",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "On",
+              "index": 43,
+              "name": "Synth Osc 1 Unison Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "On",
+              "index": 44,
+              "name": "Synth Osc 2 Unison Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "5",
+              "index": 45,
+              "name": "Synth Osc Unisons",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "100 %",
+              "index": 46,
+              "name": "Synth Osc Unison Width",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "4 %",
+              "index": 47,
+              "name": "Synth Osc Unison Detune",
+              "normalizedValue": 0.14495591819286346
+            },
+            {
+              "displayValue": "On",
+              "index": 48,
+              "name": "Synth Filter Enable",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "4.67 kHz",
+              "index": 49,
+              "name": "Synth Filter Cutoff",
+              "normalizedValue": 0.64582264423370361
+            },
+            {
+              "displayValue": "0 %",
+              "index": 50,
+              "name": "Synth Filter Resonance",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "12 dB",
+              "index": 51,
+              "name": "Synth Filter Mode",
+              "normalizedValue": 0.3333333432674408
+            },
+            {
+              "displayValue": "0 %",
+              "index": 52,
+              "name": "Synth Filter Env Amount",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "A 1 ms",
+              "index": 53,
+              "name": "Synth Filter Decay/Attack",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "0 %",
+              "index": 54,
+              "name": "Synth Filter Drive",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 55,
+              "name": "Active Pre FX Section",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "68 %",
+              "index": 56,
+              "name": "Twin Blade Dual Compressor Dry",
+              "normalizedValue": 0.67900002002716064
+            },
+            {
+              "displayValue": "21 %",
+              "index": 57,
+              "name": "Twin Blade Dual Compressor In",
+              "normalizedValue": 0.21299999952316284
+            },
+            {
+              "displayValue": "30 %",
+              "index": 58,
+              "name": "Twin Blade Dual Compressor Out",
+              "normalizedValue": 0.30000001192092896
+            },
+            {
+              "displayValue": "11 %",
+              "index": 59,
+              "name": "Twin Blade Dual Compressor Att/R",
+              "normalizedValue": 0.10599999874830246
+            },
+            {
+              "displayValue": "68 %",
+              "index": 60,
+              "name": "Twin Blade Dual Compressor Thru",
+              "normalizedValue": 0.68400001525878906
+            },
+            {
+              "displayValue": "41 %",
+              "index": 61,
+              "name": "Twin Blade Dual Compressor Att/R",
+              "normalizedValue": 0.40799999237060547
+            },
+            {
+              "displayValue": "Off",
+              "index": 62,
+              "name": "Twin Blade Dual Compressor Activ",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Vintage",
+              "index": 63,
+              "name": "Chaos Bed Octaver Mode",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "100 %",
+              "index": 64,
+              "name": "Chaos Bed Octaver Direct Level",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "0 %",
+              "index": 65,
+              "name": "Chaos Bed Octaver Oct Up",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0 %",
+              "index": 66,
+              "name": "Chaos Bed Octaver Oct Down",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 67,
+              "name": "Chaos Bed Octaver Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "100 %",
+              "index": 68,
+              "name": "Colossus Fuzz Fuzz",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "47 %",
+              "index": 69,
+              "name": "Colossus Fuzz Level",
+              "normalizedValue": 0.46799999475479126
+            },
+            {
+              "displayValue": "Vintage",
+              "index": 70,
+              "name": "Colossus Fuzz Mode",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "84 %",
+              "index": 71,
+              "name": "Colossus Fuzz Bass",
+              "normalizedValue": 0.83700001239776611
+            },
+            {
+              "displayValue": "15 %",
+              "index": 72,
+              "name": "Colossus Fuzz Treble",
+              "normalizedValue": 0.15099999308586121
+            },
+            {
+              "displayValue": "Off",
+              "index": 73,
+              "name": "Colossus Fuzz Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0 %",
+              "index": 74,
+              "name": "Paragon Overdrive Drive",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "76 %",
+              "index": 75,
+              "name": "Paragon Overdrive Level",
+              "normalizedValue": 0.75900000333786011
+            },
+            {
+              "displayValue": "Modern",
+              "index": 76,
+              "name": "Paragon Overdrive Mode",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "55 %",
+              "index": 77,
+              "name": "Paragon Overdrive Bass",
+              "normalizedValue": 0.54500001668930054
+            },
+            {
+              "displayValue": "57 %",
+              "index": 78,
+              "name": "Paragon Overdrive Treble",
+              "normalizedValue": 0.5690000057220459
+            },
+            {
+              "displayValue": "On",
+              "index": 79,
+              "name": "Paragon Overdrive Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "On",
+              "index": 80,
+              "name": "Active Amp Section",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Off",
+              "index": 81,
+              "name": "Amp/Cab Linked",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Crunch",
+              "index": 82,
+              "name": "Amp Type",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "On",
+              "index": 83,
+              "name": "Clean Amp Mid Boost",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Off",
+              "index": 84,
+              "name": "Clean Amp Treble Boost",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "100 %",
+              "index": 85,
+              "name": "Clean Amp Volume",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "44 %",
+              "index": 86,
+              "name": "Clean Amp Bass",
+              "normalizedValue": 0.4440000057220459
+            },
+            {
+              "displayValue": "50 %",
+              "index": 87,
+              "name": "Clean Amp Middle",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "46 %",
+              "index": 88,
+              "name": "Clean Amp Treble",
+              "normalizedValue": 0.46299999952316284
+            },
+            {
+              "displayValue": "56 %",
+              "index": 89,
+              "name": "Clean Amp Output",
+              "normalizedValue": 0.56360697746276855
+            },
+            {
+              "displayValue": "On",
+              "index": 90,
+              "name": "Crunch Amp Mid Boost",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "On",
+              "index": 91,
+              "name": "Crunch Amp Treble Boost",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "41 %",
+              "index": 92,
+              "name": "Crunch Amp Gain",
+              "normalizedValue": 0.40999999642372131
+            },
+            {
+              "displayValue": "50 %",
+              "index": 93,
+              "name": "Crunch Amp Bass",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "40 %",
+              "index": 94,
+              "name": "Crunch Amp Middle",
+              "normalizedValue": 0.40000000596046448
+            },
+            {
+              "displayValue": "71 %",
+              "index": 95,
+              "name": "Crunch Amp Treble",
+              "normalizedValue": 0.70999997854232788
+            },
+            {
+              "displayValue": "67 %",
+              "index": 96,
+              "name": "Crunch Amp Master",
+              "normalizedValue": 0.67000001668930054
+            },
+            {
+              "displayValue": "62 %",
+              "index": 97,
+              "name": "Crunch Amp Depth",
+              "normalizedValue": 0.62000000476837158
+            },
+            {
+              "displayValue": "50 %",
+              "index": 98,
+              "name": "Crunch Amp Output",
+              "normalizedValue": 0.49999898672103882
+            },
+            {
+              "displayValue": "EL34",
+              "index": 99,
+              "name": "Crunch Amp Tubes",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "60 %",
+              "index": 100,
+              "name": "Lead Amp Gain",
+              "normalizedValue": 0.60000002384185791
+            },
+            {
+              "displayValue": "41 %",
+              "index": 101,
+              "name": "Lead Amp Tight",
+              "normalizedValue": 0.40999999642372131
+            },
+            {
+              "displayValue": "57 %",
+              "index": 102,
+              "name": "Lead Amp Bass",
+              "normalizedValue": 0.56999999284744263
+            },
+            {
+              "displayValue": "50 %",
+              "index": 103,
+              "name": "Lead Amp Middle",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "50 %",
+              "index": 104,
+              "name": "Lead Amp Treble",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "50 %",
+              "index": 105,
+              "name": "Lead Amp Master",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "50 %",
+              "index": 106,
+              "name": "Lead Amp Presence",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "79 %",
+              "index": 107,
+              "name": "Lead Amp Depth",
+              "normalizedValue": 0.79000002145767212
+            },
+            {
+              "displayValue": "60 %",
+              "index": 108,
+              "name": "Lead Amp Output",
+              "normalizedValue": 0.59755599498748779
+            },
+            {
+              "displayValue": "6L6",
+              "index": 109,
+              "name": "Lead Amp Tubes",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "On",
+              "index": 110,
+              "name": "Active Cab Section",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Crunch",
+              "index": 111,
+              "name": "Cab Type (Unlinked)",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "On",
+              "index": 112,
+              "name": "Cab L Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Condenser 414",
+              "index": 113,
+              "name": "Clean Amp Cab L Mic",
+              "normalizedValue": 0.25
+            },
+            {
+              "displayValue": "Dynamic 57",
+              "index": 114,
+              "name": "Crunch Amp Cab L Mic",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Dynamic 57",
+              "index": 115,
+              "name": "Lead Amp Cab L Mic",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "0.295",
+              "index": 116,
+              "name": "Cab L Position",
+              "normalizedValue": 0.29499998688697815
+            },
+            {
+              "displayValue": "0.032",
+              "index": 117,
+              "name": "Cab L Distance",
+              "normalizedValue": 0.032000001519918442
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 118,
+              "name": "Cab L Level",
+              "normalizedValue": 0.49999883770942688
+            },
+            {
+              "displayValue": "C",
+              "index": 119,
+              "name": "Cab L Pan",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Off",
+              "index": 120,
+              "name": "Cab L Phase",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 121,
+              "name": "Room L Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "-24.8 dB",
+              "index": 122,
+              "name": "Room L Send",
+              "normalizedValue": 0.0041200830601155758
+            },
+            {
+              "displayValue": "On",
+              "index": 123,
+              "name": "Cab R Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Ribbon 121",
+              "index": 124,
+              "name": "Clean Amp Cab R Mic",
+              "normalizedValue": 0.83333331346511841
+            },
+            {
+              "displayValue": "Ribbon 121",
+              "index": 125,
+              "name": "Crunch Amp Cab R Mic",
+              "normalizedValue": 0.83333331346511841
+            },
+            {
+              "displayValue": "Ribbon 121",
+              "index": 126,
+              "name": "Lead Amp Cab R Mic",
+              "normalizedValue": 0.3333333432674408
+            },
+            {
+              "displayValue": "0.279",
+              "index": 127,
+              "name": "Cab R Position",
+              "normalizedValue": 0.27900001406669617
+            },
+            {
+              "displayValue": "0.068",
+              "index": 128,
+              "name": "Cab R Distance",
+              "normalizedValue": 0.068000003695487976
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 129,
+              "name": "Cab R Level",
+              "normalizedValue": 0.49999883770942688
+            },
+            {
+              "displayValue": "C",
+              "index": 130,
+              "name": "Cab R Pan",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "Off",
+              "index": 131,
+              "name": "Cab R Phase",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "On",
+              "index": 132,
+              "name": "Room R Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "-25.0 dB",
+              "index": 133,
+              "name": "Room R Send",
+              "normalizedValue": 0.0038581339176744223
+            },
+            {
+              "displayValue": "On",
+              "index": 134,
+              "name": "Active EQ Section",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Off",
+              "index": 135,
+              "name": "Clean EQ Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "20 Hz",
+              "index": 136,
+              "name": "Clean EQ HPF",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "92 Hz",
+              "index": 137,
+              "name": "Clean EQ Lo Freq",
+              "normalizedValue": 0.70099997520446777
+            },
+            {
+              "displayValue": "368 Hz",
+              "index": 138,
+              "name": "Clean EQ Lo-Mid Freq",
+              "normalizedValue": 0.63999998569488525
+            },
+            {
+              "displayValue": "1.6 kHz",
+              "index": 139,
+              "name": "Clean EQ Hi-Mid Freq",
+              "normalizedValue": 0.56699997186660767
+            },
+            {
+              "displayValue": "8.0 kHz",
+              "index": 140,
+              "name": "Clean EQ Hi Freq",
+              "normalizedValue": 0.62199997901916504
+            },
+            {
+              "displayValue": "20.0 kHz",
+              "index": 141,
+              "name": "Clean EQ LPF",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "+1.9 dB",
+              "index": 142,
+              "name": "Clean EQ Lo Gain",
+              "normalizedValue": 0.57916665077209473
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 143,
+              "name": "Clean EQ Lo-Mid Gain",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "+2.6 dB",
+              "index": 144,
+              "name": "Clean EQ Hi-Mid Gain",
+              "normalizedValue": 0.60833334922790527
+            },
+            {
+              "displayValue": "+1.2 dB",
+              "index": 145,
+              "name": "Clean EQ Hi Gain",
+              "normalizedValue": 0.55000001192092896
+            },
+            {
+              "displayValue": "On",
+              "index": 146,
+              "name": "Crunch EQ Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "20 Hz",
+              "index": 147,
+              "name": "Crunch EQ HPF",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "81 Hz",
+              "index": 148,
+              "name": "Crunch EQ Lo Freq",
+              "normalizedValue": 0.63300001621246338
+            },
+            {
+              "displayValue": "132 Hz",
+              "index": 149,
+              "name": "Crunch EQ Lo-Mid Freq",
+              "normalizedValue": 0.21500000357627869
+            },
+            {
+              "displayValue": "1.5 kHz",
+              "index": 150,
+              "name": "Crunch EQ Hi-MidFreq",
+              "normalizedValue": 0.54500001668930054
+            },
+            {
+              "displayValue": "6.6 kHz",
+              "index": 151,
+              "name": "Crunch EQ Hi Freq",
+              "normalizedValue": 0.5350000262260437
+            },
+            {
+              "displayValue": "20.0 kHz",
+              "index": 152,
+              "name": "Crunch EQ LPF",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "0.0 dB",
+              "index": 153,
+              "name": "Crunch EQ Lo Gain",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "-0.3 dB",
+              "index": 154,
+              "name": "Crunch EQ Lo-Mid Gain",
+              "normalizedValue": 0.48749998211860657
+            },
+            {
+              "displayValue": "+2.4 dB",
+              "index": 155,
+              "name": "Crunch EQ Hi-Mid Gain",
+              "normalizedValue": 0.59999996423721313
+            },
+            {
+              "displayValue": "+2.6 dB",
+              "index": 156,
+              "name": "Crunch EQ Hi Gain",
+              "normalizedValue": 0.60833334922790527
+            },
+            {
+              "displayValue": "Off",
+              "index": 157,
+              "name": "Lead EQ Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "20 Hz",
+              "index": 158,
+              "name": "Lead EQ HPF",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "74 Hz",
+              "index": 159,
+              "name": "Lead EQ Lo Freq",
+              "normalizedValue": 0.58700001239776611
+            },
+            {
+              "displayValue": "313 Hz",
+              "index": 160,
+              "name": "Lead EQ Lo-Mid Freq",
+              "normalizedValue": 0.57300001382827759
+            },
+            {
+              "displayValue": "1.6 kHz",
+              "index": 161,
+              "name": "Lead EQ Hi-Mid Freq",
+              "normalizedValue": 0.56599998474121094
+            },
+            {
+              "displayValue": "8.4 kHz",
+              "index": 162,
+              "name": "Lead EQ Hi Freq",
+              "normalizedValue": 0.63700002431869507
+            },
+            {
+              "displayValue": "20.0 kHz",
+              "index": 163,
+              "name": "Lead EQ LPF",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "-1.3 dB",
+              "index": 164,
+              "name": "Lead EQ Lo Gain",
+              "normalizedValue": 0.44583332538604736
+            },
+            {
+              "displayValue": "+1.6 dB",
+              "index": 165,
+              "name": "Lead EQ Lo-Mid Gain",
+              "normalizedValue": 0.56666666269302368
+            },
+            {
+              "displayValue": "+1.7 dB",
+              "index": 166,
+              "name": "Lead EQ Hi-Mid Gain",
+              "normalizedValue": 0.57083332538604736
+            },
+            {
+              "displayValue": "+0.6 dB",
+              "index": 167,
+              "name": "Lead EQ Hi Gain",
+              "normalizedValue": 0.52500003576278687
+            },
+            {
+              "displayValue": "Off",
+              "index": 168,
+              "name": "Active Post FX Section",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "21 %",
+              "index": 169,
+              "name": "Atlas Delay Mix",
+              "normalizedValue": 0.20999999344348907
+            },
+            {
+              "displayValue": "Tap",
+              "index": 170,
+              "name": "Atlas Delay Sync",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "Pre",
+              "index": 171,
+              "name": "Atlas Delay Pre/Post",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Dual",
+              "index": 172,
+              "name": "Atlas Delay Mode",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "55 %",
+              "index": 173,
+              "name": "Atlas Delay Feedback",
+              "normalizedValue": 0.55000001192092896
+            },
+            {
+              "displayValue": "68 Hz",
+              "index": 174,
+              "name": "Atlas Delay Low Cut",
+              "normalizedValue": 0.18700002133846283
+            },
+            {
+              "displayValue": "500.00 ms",
+              "index": 175,
+              "name": "Atlas Delay Time L",
+              "normalizedValue": 0.40000000596046448
+            },
+            {
+              "displayValue": "1/32",
+              "index": 176,
+              "name": "Atlas Delay Sync Note L",
+              "normalizedValue": 0.20000000298023224
+            },
+            {
+              "displayValue": "49 %",
+              "index": 177,
+              "name": "Atlas Delay Cross Feedback",
+              "normalizedValue": 0.49000000953674316
+            },
+            {
+              "displayValue": "0 %",
+              "index": 178,
+              "name": "Atlas Delay Icicles",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "500.00 ms",
+              "index": 179,
+              "name": "Atlas Delay Time R",
+              "normalizedValue": 0.40000000596046448
+            },
+            {
+              "displayValue": "1/8",
+              "index": 180,
+              "name": "Atlas Delay Sync Note R",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "2.94 kHz",
+              "index": 181,
+              "name": "Atlas Delay High Cut",
+              "normalizedValue": 0.38999965786933899
+            },
+            {
+              "displayValue": "95.0 BPM",
+              "index": 182,
+              "name": "Atlas Delay Tempo",
+              "normalizedValue": 0.27500000596046448
+            },
+            {
+              "displayValue": "On",
+              "index": 183,
+              "name": "Atlas Delay Active",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "26 %",
+              "index": 184,
+              "name": "Aeons Reverb Mix",
+              "normalizedValue": 0.25999999046325684
+            },
+            {
+              "displayValue": "18 %",
+              "index": 185,
+              "name": "Aeons Reverb Decay",
+              "normalizedValue": 0.18000000715255737
+            },
+            {
+              "displayValue": "40 Hz",
+              "index": 186,
+              "name": "Aeons Reverb Low Cut",
+              "normalizedValue": 0.16199991106987
+            },
+            {
+              "displayValue": "50 %",
+              "index": 187,
+              "name": "Aeons Reverb Freeze Volume",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "0 st",
+              "index": 188,
+              "name": "Aeons Reverb Freeze Pitch",
+              "normalizedValue": 0.5
+            },
+            {
+              "displayValue": "7.67 kHz",
+              "index": 189,
+              "name": "Aeons Reverb High Cut",
+              "normalizedValue": 0.78300023078918457
+            },
+            {
+              "displayValue": "Off",
+              "index": 190,
+              "name": "Aeons Reverb Active",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 191,
+              "name": "Aeons Reverb Freeze",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 192,
+              "name": "Preset Previous",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "Off",
+              "index": 193,
+              "name": "Preset Next",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "normal",
+              "index": 194,
+              "name": "Bypass",
+              "normalizedValue": 0
+            },
+            {
+              "displayValue": "100",
+              "index": 195,
+              "name": "Wet",
+              "normalizedValue": 1
+            },
+            {
+              "displayValue": "normal",
+              "index": 196,
+              "name": "Delta",
+              "normalizedValue": 0
+            }
+          ],
+          "vendor": "Neural DSP"
+        }
+      ],
+      "solo": false,
+      "stemPath": "audio/rhythm-guitar-l.mp3",
+      "volumeDb": -2.1721482514879171,
+      "volumeLinear": 0.77874018757664998
+    },
+    {
+      "id": "{3449E455-1CA6-4995-914B-7E9F35A334DE}",
+      "items": [
+        {
+          "id": "{C687FFBA-2747-4EE9-A239-1E20FA43D209}",
+          "length": 5,
+          "name": "storm voc.mp3",
+          "sourceFile": "C:\\Users\\mishk\\Downloads\\storm voc.mp3",
+          "start": 35
+        }
+      ],
+      "muted": false,
+      "name": "storm voc",
+      "pan": 0,
+      "plugins": [],
+      "solo": false,
+      "stemPath": "audio/vocals.mp3",
+      "volumeDb": -3.2845253980513425,
+      "volumeLinear": 0.6851311761969
+    }
+  ]
+}

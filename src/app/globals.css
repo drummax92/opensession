@@ -1,26 +1,47 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* OpenSession theme. Components use these via classes like bg-[var(--os-bg)]. */
+:root,
+:root[data-theme="dark"] {
+  --os-bg: #0d1117;
+  --os-panel: #161b22;
+  --os-selected: #1c2128;
+  --os-selected-accent: #1f2d45;
+  --os-subtle: #21262d;
+  --os-border: #30363d;
+  --os-text: #e6edf3;
+  --os-muted: #8b949e;
+  --os-faint: #6e7681;
+  --os-brand: #f2ec6a;
+  color-scheme: dark;
 }
 
+:root[data-theme="light"] {
+  --os-bg: #ffffff;
+  --os-panel: #f6f8fa;
+  --os-selected: #eaeef2;
+  --os-selected-accent: #ddf4ff;
+  --os-subtle: #eff2f5;
+  --os-border: #d0d7de;
+  --os-text: #1f2328;
+  --os-muted: #59636e;
+  --os-faint: #818b98;
+  --os-brand: #b5a800;
+  color-scheme: light;
+}
+
+/* Text size preference: everything sized in rem scales with this. */
+:root { font-size: 16px; }
+:root[data-font="small"] { font-size: 14px; }
+:root[data-font="large"] { font-size: 18px; }
+
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--os-bg);
+  color: var(--os-text);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
