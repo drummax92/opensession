@@ -6,6 +6,8 @@ import ts from "typescript";
 const root = new URL("../../../../", import.meta.url);
 const routes = new Map([
   ["/", [new URL("index.html", import.meta.url), "text/html"]],
+  ["/session-loader.js", [new URL("../load-session.ts", import.meta.url), "text/javascript"]],
+  ["/demo/stormhacks/session.json", [new URL("public/demo/stormhacks/session.json", root), "application/json"]],
   ["/engine.js", [new URL("../synchronized-stems.ts", import.meta.url), "text/javascript"]],
   ...["auditions/lead-guitar__without-vintageverb", "auditions/lead-guitar__without-rabea", "auditions/rhythm-guitar-l__without-rabea", "auditions/rhythm-guitar-r__without-rabea", "drums", "bass", "lead-guitar", "rhythm-guitar-l", "rhythm-guitar-r", "vocals"].map((name) => [
     `/demo/stormhacks/audio/${name}.mp3`,
@@ -21,7 +23,7 @@ createServer(async (request, response) => {
     if (route[1] === "text/javascript") {
       body = ts.transpileModule(body.toString(), {
         compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.ES2020 },
-      }).outputText;
+      }).outputText.replace('"./synchronized-stems"', '"/engine.js"');
     }
     response.writeHead(200, { "Content-Type": route[1], "Cache-Control": "no-store" }).end(body);
   } catch (error) {

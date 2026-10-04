@@ -253,3 +253,62 @@ test('invalid audition does not alter playback; replacement ends naturally once'
   assert.equal(transport.isPlaying, true);
   transport.dispose();
 });
+
+const loaderSource = await readFile(new URL('../load-session.ts', import.meta.url), 'utf8');
+const engineUrl = `data:text/javascript;base64,${Buffer.from(code).toString('base64')}`;
+const loaderCode = ts.transpileModule(loaderSource, {
+  compilerOptions: { module: ts.ModuleKind.ES2020, target: ts.ScriptTarget.ES2020 },
+}).outputText.replace('"./synchronized-stems"', JSON.stringify(engineUrl));
+const { loadSessionAudio, stemUrl } = await import(`data:text/javascript;base64,${Buffer.from(loaderCode).toString('base64')}`);
+
+function manifestFixture() {
+  return {
+    schemaVersion: '0.1', id: 'test', slug: 'test', title: 'Test', owner: 'OpenSession', genres: [],
+    duration: 10, daw: { name: 'REAPER' },
+    tracks: [
+      { id: '{DRUMS}', name: 'Drums', stemPath: 'audio/drums.mp3', volumeLinear: 0.5, pan: -1, muted: false, solo: false, items: [], plugins: [] },
+      { id: '{LEAD}', name: 'Lead', stemPath: 'audio/lead.mp3', volumeLinear: 0.3, pan: 1, muted: false, solo: false, items: [],
+        plugins: [{ id: '{VERB}', name: 'Verb', bypassStemPath: 'audio/auditions/lead-dry.mp3', parameters: [] }] },
+    ],
+  };
+}
+
+test('manifest loader uses canonical IDs and paths, project duration, unity gain for baked stems', async () => {
+  const original = globalThis.fetch;
+  const urls = [];
+  try {
+    globalThis.fetch = async url => { urls.push(url); return {ok: true, arrayBuffer: async () => new ArrayBuffer(1)}; };
+    const context = fakeContext();
+    context.decodeAudioData = async () => ({length: 480000, duration: 10.025});
+    const loaded = await loadSessionAudio(context, manifestFixture());
+    assert.deepEqual(urls, ['/demo/stormhacks/audio/drums.mp3', '/demo/stormhacks/audio/lead.mp3', '/demo/stormhacks/audio/auditions/lead-dry.mp3']);
+    assert.equal(loaded.transport.duration, 10);
+    assert.ok(loaded.availablePluginIdsByTrack.get('{LEAD}').has('{VERB}'));
+    assert.equal(loaded.warnings.length, 0);
+    await loaded.transport.play();
+    assert.deepEqual(context.sources.map(s => s.destination.gain.value), [1, 1]);
+    loaded.transport.togglePluginBypass('{LEAD}', '{VERB}');
+    assert.equal(loaded.transport.bypassedPluginByTrack.get('{LEAD}'), '{VERB}');
+    loaded.transport.dispose();
+  } finally { globalThis.fetch = original; }
+});
+
+test('optional audition failure keeps normal playback; abort and invalid paths are rejected', async () => {
+  const original = globalThis.fetch;
+  try {
+    globalThis.fetch = async url => ({ok: !url.includes('auditions'), status: 404, arrayBuffer: async () => new ArrayBuffer(1)});
+    const context = fakeContext();
+    context.decodeAudioData = async () => ({length: 480000, duration: 10});
+    const project = manifestFixture(); project.tracks[0].muted = true; project.tracks[1].solo = true;
+    const loaded = await loadSessionAudio(context, project);
+    assert.equal(loaded.warnings.length, 1);
+    assert.equal(loaded.availablePluginIdsByTrack.get('{LEAD}').size, 0);
+    await loaded.transport.play();
+    assert.deepEqual(context.sources.map(s => s.destination.gain.value), [0, 1]);
+    loaded.transport.dispose();
+    const abort = new AbortController(); abort.abort();
+    await assert.rejects(loadSessionAudio(context, project, '/demo/stormhacks', abort.signal), {name: 'AbortError'});
+    assert.throws(() => stemUrl('/demo/stormhacks', '../secret'), /Invalid/);
+    assert.throws(() => stemUrl('/demo/stormhacks', 'C:\\recording.mp3'), /Invalid/);
+  } finally { globalThis.fetch = original; }
+});

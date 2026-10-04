@@ -2,9 +2,10 @@
 export async function loadStaticStems(
   context: AudioContext,
   urls: readonly string[],
+  signal?: AbortSignal,
 ): Promise<AudioBuffer[]> {
   return Promise.all(urls.map(async (url) => {
-    const response = await fetch(url);
+    const response = await fetch(url, { signal });
     if (!response.ok) throw new Error(`Stem ${url}: HTTP ${response.status}`);
     try {
       return await context.decodeAudioData(await response.arrayBuffer());
@@ -137,17 +138,18 @@ export class StemTransport {
   private readonly auditions = new Map<string, Map<string, AudioBuffer>>();
   private readonly bypassed = new Map<string, string>();
 
-  constructor(context: AudioContext, buffers: readonly AudioBuffer[], trackIds = buffers.map((_, index) => String(index))) {
+  constructor(context: AudioContext, buffers: readonly AudioBuffer[], trackIds = buffers.map((_, index) => String(index)), projectDuration = Math.max(...buffers.map(buffer => buffer.duration))) {
     if (!buffers.length || buffers.some(buffer => !Number.isFinite(buffer.duration) || buffer.duration <= 0)) {
       throw new Error("Load non-empty stems before creating the transport.");
     }
     if (trackIds.length !== buffers.length || new Set(trackIds).size !== trackIds.length) {
       throw new Error("Track IDs must be unique and match the buffer count.");
     }
+    if (!Number.isFinite(projectDuration) || projectDuration <= 0) throw new Error("Invalid project duration.");
     this.trackIds = [...trackIds];
     this.context = context;
     this.buffers = [...buffers];
-    this.duration = Math.max(...buffers.map(buffer => buffer.duration));
+    this.duration = projectDuration;
   }
 
   get mutedTrackIds(): ReadonlySet<string> { return new Set(this.muted); }
@@ -227,6 +229,10 @@ export class StemTransport {
     } finally {
       if (revision === this.revision) this.pending = false;
     }
+  }
+
+  togglePlay(): void | Promise<void> {
+    if (this.playback || this.pending) this.pause(); else return this.play();
   }
 
   pause(): void {

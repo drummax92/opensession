@@ -9,8 +9,9 @@
   td, th { padding: 6px 14px; text-align: left; }
   button { padding: 12px; margin: 6px; } pre { white-space: pre-wrap; }
 </style>
-<h1>Milestone 5–7: plugin A/B</h1>
+<h1>Milestone 8: exporter session + player API</h1>
 <p>Local engineering test. Start at low headphone volume.</p>
+<button id="exporter">Load exporter session.json</button>
 <button id="real">Load all 6 stems</button>
 <button id="synthetic">Load synthetic pulses (not demo audio)</button>
 <button id="play" disabled>Play / Resume</button>
@@ -24,15 +25,17 @@
 <script type="module">
   import { loadStaticStems, startSynchronizedStems, StemTransport } from '/engine.js';
   const stemNames = ['drums', 'bass', 'lead-guitar', 'rhythm-guitar-l', 'rhythm-guitar-r', 'vocals'];
+  import { loadSessionAudio } from '/session-loader.js';
   const $ = (id) => document.getElementById(id);
   let context, transport, loading = false, dragging = false;
   const log = (message) => { $('status').textContent = message; };
-  const auditionSpecs = [
+  const defaultAuditionSpecs = [
     ['lead-guitar', 'vintageverb', 'VintageVerb'],
     ['lead-guitar', 'rabea', 'Rabea'],
     ['rhythm-guitar-l', 'rabea', 'Rabea'],
     ['rhythm-guitar-r', 'rabea', 'Rabea'],
   ];
+  let auditionSpecs = defaultAuditionSpecs;
   let availableAuditions = new Set();
   let trackRows = [];
   function renderTracks(ids, labels) {
@@ -104,8 +107,9 @@
     return buffer;
   }
   async function load(synthetic) {
+    auditionSpecs = defaultAuditionSpecs;
     loading = true;
-    $('real').disabled = $('synthetic').disabled = true;
+    $('exporter').disabled = $('real').disabled = $('synthetic').disabled = true;
     transport?.dispose(); transport = undefined;
     renderTracks([], []);
     availableAuditions = new Set();
@@ -136,8 +140,31 @@
       log(`${synthetic ? 'SYNTHETIC TEST ONLY' : 'All 6 stems'} ready.\n${details}\n${synthetic ? '' : `A/B ready: ${availableAuditions.size}/4`}\n${warnings.join('\n')}`);
       refresh();
     } catch (error) { log(error.message); }
-    finally { loading = false; $('real').disabled = $('synthetic').disabled = false; refresh(); }
+    finally { loading = false; $('exporter').disabled = $('real').disabled = $('synthetic').disabled = false; refresh(); }
   }
+  $('exporter').onclick = async () => {
+    loading = true;
+    $('exporter').disabled = $('real').disabled = $('synthetic').disabled = true;
+    transport?.dispose(); transport = undefined;
+    renderTracks([], []); availableAuditions = new Set(); refresh();
+    log('Loading actual exporter manifest and audio…');
+    try {
+      await unlock();
+      const response = await fetch('/demo/stormhacks/session.json');
+      if (!response.ok) throw new Error(`session.json: HTTP ${response.status}`);
+      const project = await response.json();
+      const loaded = await loadSessionAudio(context, project);
+      transport = loaded.transport;
+      auditionSpecs = project.tracks.flatMap(track => track.plugins.filter(plugin => plugin.bypassStemPath)
+        .map(plugin => [track.id, plugin.id, plugin.name]));
+      for (const [track, plugins] of loaded.availablePluginIdsByTrack) {
+        for (const plugin of plugins) availableAuditions.add(`${track}/${plugin}`);
+      }
+      renderTracks(project.tracks.map(track => track.id), project.tracks.map(track => track.name));
+      log(`${project.title} — exporter session loaded.\nTracks: ${project.tracks.length}; duration: ${project.duration.toFixed(5)}s\nA/B ready: ${availableAuditions.size}/${auditionSpecs.length}\nVolume/pan are already baked into audio.\n${loaded.warnings.join('\n')}`);
+    } catch (error) { log(error.message); }
+    finally { loading = false; $('exporter').disabled = $('real').disabled = $('synthetic').disabled = false; refresh(); }
+  };
   $('real').onclick = () => load(false);
   $('synthetic').onclick = () => load(true);
   $('play').onclick = async () => {
