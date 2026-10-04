@@ -3,7 +3,7 @@ import { useState } from "react";
 import type { OpenSessionPlugin } from "@/types/session";
 import { PowerIcon } from "./Icons";
 
-const INITIAL_COUNT = 8;
+const INITIAL_COUNT = 6;
 
 interface Props {
   plugin: OpenSessionPlugin;
@@ -52,7 +52,7 @@ export default function PluginDetails({ plugin, bypassed, onToggleBypass }: Prop
         </div>
         <ul className="divide-y divide-[#21262d] rounded-md border border-[#30363d]">
           {params.map((pr) => (
-            <li key={pr.index} className="px-2.5 py-1.5">
+            <li key={pr.index} className="px-2.5 py-1">
               <div className="flex justify-between gap-2 text-xs">
                 <span className="truncate text-[#e6edf3]">{pr.name}</span>
                 <span className="font-mono tabular-nums text-[#8b949e]">

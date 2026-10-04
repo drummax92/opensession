@@ -9,6 +9,9 @@ export default function SiteNav() {
       <Link href="/" className="text-sm text-[#8b949e] hover:text-[#e6edf3]">
         Explore
       </Link>
+      <Link href="/upload" className="text-sm text-[#8b949e] hover:text-[#e6edf3]">
+        Upload
+      </Link>
     </nav>
   );
 }

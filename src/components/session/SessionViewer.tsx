@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 import type { OpenSessionProject } from "@/types/session";
 import Inspector from "./Inspector";
@@ -52,7 +53,7 @@ export default function SessionViewer({ project, player }: Props) {
     <div className="flex h-screen flex-col bg-[#0d1117] text-[#e6edf3]">
       <header className="flex items-baseline gap-3 border-b border-[#30363d] px-4 py-2.5">
         <span className="text-sm text-[#8b949e]">
-          {project.owner} / <span className="font-semibold text-[#e6edf3]">{project.slug}</span>
+          <Link href="/" className="hover:text-[#e6edf3] hover:underline">{project.owner}</Link> / <span className="font-semibold text-[#e6edf3]">{project.slug}</span>
         </span>
         <h1 className="sr-only">{project.title}</h1>
         <span className="text-xs text-[#8b949e]">

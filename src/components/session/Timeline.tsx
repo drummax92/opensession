@@ -42,7 +42,7 @@ export default function Timeline({
             className="absolute top-0 h-full border-l border-[#30363d] pl-1 font-mono text-[10px] leading-8 text-[#8b949e]"
             style={{ left: `${(t / duration) * 100}%` }}
           >
-            {formatTime(t)}
+            {t / duration < 0.95 ? formatTime(t) : null}
           </div>
         ))}
       </div>

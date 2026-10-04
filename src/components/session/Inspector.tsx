@@ -58,16 +58,15 @@ export default function Inspector({
       )}
 
       {track && (
-        <div className="space-y-5">
+        <div className="space-y-4">
           <div>
             <h2 className="flex items-center gap-2 text-base font-semibold text-[#e6edf3]">
               <span className="h-3 w-1 rounded-full" style={{ backgroundColor: trackColor(idx) }} />
               {track.name}
             </h2>
-            <dl className="mt-2 divide-y divide-[#21262d] border-y border-[#21262d]">
-              <Row k="Volume" v={formatDb(track)} />
-              <Row k="Pan" v={formatPan(track.pan)} />
-            </dl>
+              <p className="mt-1 font-mono text-xs tabular-nums text-[#8b949e]">
+              Volume {formatDb(track)} · Pan {formatPan(track.pan)}
+              </p>
           </div>
 
           <div>
