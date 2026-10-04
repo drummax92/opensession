@@ -26,3 +26,15 @@ export const PowerIcon = () => (
     <path d="M18.4 6.6a9 9 0 1 1-12.8 0" />
   </svg>
 );
+export const PencilIcon = () => (
+  <svg {...base}>
+    <path d="M17 3a2.85 2.85 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+    <path d="m15 5 4 4" />
+  </svg>
+);
+export const EyeIcon = () => (
+  <svg {...base}>
+    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+);

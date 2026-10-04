@@ -5,7 +5,7 @@ import { formatTime, trackColor } from "@/components/session/format";
 import { projectHref } from "@/lib/projects";
 import MiniTimeline from "./MiniTimeline";
 import Modal from "./Modal";
-import { detectedSetup, setupChipClass } from "./setup";
+import { setupChipClass } from "./setup";
 import { tagChipClass, type TagColor } from "./tagColors";
 
 interface Props {
@@ -13,6 +13,7 @@ interface Props {
   description: string;
   genres: string[];
   tagColors: Record<string, TagColor>;
+  /** Setup labels exactly as shown on the card. */
   setup: string[];
   coverUrl?: string;
   onClose: () => void;
@@ -77,7 +78,7 @@ export default function ProjectDetailsDialog({ project, description, genres, tag
       <section>
         <h3 className={heading}>Setup</h3>
         <div className="flex flex-wrap gap-1.5">
-          {[...detectedSetup(project), ...setup].map((d) => (
+          {setup.map((d) => (
             <span key={d} className={setupChipClass}>{d}</span>
           ))}
         </div>

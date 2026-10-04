@@ -9,4 +9,4 @@ export type TagColor = keyof typeof TAG_COLORS;
 export const TAG_COLOR_KEYS = Object.keys(TAG_COLORS) as TagColor[];
 
 export const tagChipClass = (color: TagColor = "default") =>
-  `rounded-full border px-2 py-0.5 text-[11px] ${TAG_COLORS[color].chip}`;
+  `rounded-full border px-2.5 py-0.5 text-xs ${TAG_COLORS[color].chip}`;

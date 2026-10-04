@@ -13,6 +13,8 @@ interface Props {
     genres: string[];
     tagColors: Record<string, TagColor>;
     setup: string[];
+    hiddenSetup: string[];
+    setupNames: Record<string, string>;
     coverUrl?: string;
   };
   canReset: boolean;
@@ -52,8 +54,31 @@ export default function EditProjectDialog({ title, detectedSetup, initial, canRe
   const [tagInput, setTagInput] = useState("");
   const [setup, setSetup] = useState(initial.setup);
   const [setupInput, setSetupInput] = useState("");
+  const [hidden, setHidden] = useState(initial.hiddenSetup);
+  const [names, setNames] = useState(initial.setupNames);
   const [cover, setCover] = useState(initial.coverUrl);
   const [error, setError] = useState<string | null>(null);
+  const [confirm, setConfirm] = useState<"discard" | "reset" | null>(null);
+
+  const snapshot = (o: object) => JSON.stringify(o);
+  const dirty =
+    snapshot({ description, tags, colors, setup, hidden, names, cover }) !==
+    snapshot({
+      description: initial.description,
+      tags: initial.genres,
+      colors: initial.tagColors,
+      setup: initial.setup,
+      hidden: initial.hiddenSetup,
+      names: initial.setupNames,
+      cover: initial.coverUrl,
+    });
+
+  /** Close via ×, Escape, backdrop or Cancel: ask first if there are unsaved changes. */
+  const requestClose = () => {
+    if (confirm) setConfirm(null);
+    else if (dirty) setConfirm("discard");
+    else onClose();
+  };
 
   const addTag = () => {
     const t = tagInput.trim().slice(0, 24);
@@ -63,7 +88,8 @@ export default function EditProjectDialog({ title, detectedSetup, initial, canRe
 
   const addSetup = () => {
     const t = setupInput.trim().slice(0, 32);
-    const taken = [...detectedSetup, ...setup].some((x) => x.toLowerCase() === t.toLowerCase());
+    const shown = detectedSetup.map((d) => names[d]?.trim() || d);
+    const taken = [...detectedSetup, ...shown, ...setup].some((x) => x.toLowerCase() === t.toLowerCase());
     if (t && !taken) setSetup([...setup, t]);
     setSetupInput("");
   };
@@ -87,6 +113,10 @@ export default function EditProjectDialog({ title, detectedSetup, initial, canRe
       genres: tags,
       tagColors: keptColors,
       setup,
+      hiddenSetup: hidden.filter((d) => detectedSetup.includes(d)),
+      setupNames: Object.fromEntries(
+        Object.entries(names).filter(([d, n]) => detectedSetup.includes(d) && n.trim() && n.trim() !== d),
+      ),
       coverDataUrl: cover?.startsWith("data:") ? cover : undefined,
     });
     if (ok) onClose();
@@ -97,36 +127,58 @@ export default function EditProjectDialog({ title, detectedSetup, initial, canRe
     <Modal
       title={`Edit ${title}`}
       subtitle="Changes are saved in this browser only."
-      onClose={onClose}
+      onClose={requestClose}
       footer={
-        <div className="flex items-center justify-between">
-          {canReset ? (
-            <button
-              type="button"
-              onClick={() => {
-                onReset();
-                onClose();
-              }}
-              className="text-xs text-[#8b949e] hover:text-[#e6edf3] hover:underline"
-            >
-              Reset to original
-            </button>
-          ) : (
-            <span />
-          )}
-          <div className="flex gap-2">
-            <button type="button" onClick={onClose} className={secondary}>
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={save}
-              className="rounded-md bg-[#238636] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-[#2ea043]"
-            >
-              Save
-            </button>
+        confirm ? (
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-[#e6edf3]">
+              {confirm === "discard"
+                ? "Discard your unsaved changes?"
+                : "Reset everything to the original? Your description, tags, setup labels and cover will be removed."}
+            </p>
+            <div className="flex gap-2">
+              <button type="button" autoFocus onClick={() => setConfirm(null)} className={secondary}>
+                {confirm === "discard" ? "Keep editing" : "Cancel"}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (confirm === "reset") onReset();
+                  onClose();
+                }}
+                className="rounded-md bg-[#da3633] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-[#f85149]"
+              >
+                {confirm === "discard" ? "Discard" : "Reset"}
+              </button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex items-center justify-between">
+            {canReset ? (
+              <button
+                type="button"
+                onClick={() => setConfirm("reset")}
+                className="text-xs text-[#8b949e] hover:text-[#e6edf3] hover:underline"
+              >
+                Reset to original
+              </button>
+            ) : (
+              <span />
+            )}
+            <div className="flex gap-2">
+              <button type="button" onClick={requestClose} className={secondary}>
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={save}
+                className="rounded-md bg-[#238636] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-[#2ea043]"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        )
       }
     >
       <label className="block space-y-1.5">
@@ -198,13 +250,38 @@ export default function EditProjectDialog({ title, detectedSetup, initial, canRe
 
       <div className="space-y-2">
         <span className={label}>Setup</span>
-        <p className="text-xs text-[#6e7681]">What you used to make it. Items marked “from session” are read from the project.</p>
+        <p className="text-xs text-[#6e7681]">
+          Labels read from the session can be renamed or hidden on the card. The session page always shows the real names.
+        </p>
+        <ul className="space-y-1.5">
+          {detectedSetup.map((d) => {
+            const isHidden = hidden.includes(d);
+            return (
+              <li key={d} className="flex items-center gap-2">
+                <input
+                  value={names[d] ?? d}
+                  onChange={(e) => setNames({ ...names, [d]: e.target.value })}
+                  aria-label={`Label for ${d}`}
+                  disabled={isHidden}
+                  className={`${input} py-1 font-mono text-xs disabled:opacity-40`}
+                />
+                <button
+                  type="button"
+                  aria-pressed={isHidden}
+                  onClick={() => setHidden(isHidden ? hidden.filter((x) => x !== d) : [...hidden, d])}
+                  className={`w-16 shrink-0 rounded-md border px-2 py-1 text-xs transition ${
+                    isHidden
+                      ? "border-[#d29922]/60 text-[#d29922]"
+                      : "border-[#30363d] text-[#8b949e] hover:border-[#8b949e]"
+                  }`}
+                >
+                  {isHidden ? "Hidden" : "Hide"}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
         <div className="flex flex-wrap gap-1.5">
-          {detectedSetup.map((d) => (
-            <span key={d} className={`${setupChipClass} opacity-70`} title="Read from the session, can’t be removed">
-              {d} <span className="text-[#6e7681]">· from session</span>
-            </span>
-          ))}
           {setup.map((d) => (
             <span key={d} className={`${setupChipClass} flex items-center gap-1 pr-0.5`}>
               {d}

@@ -2,14 +2,17 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { OpenSessionProject } from "@/types/session";
-import { formatTime } from "@/components/session/format";
 import { projectHref } from "@/lib/projects";
+import { EyeIcon, PencilIcon } from "@/components/session/Icons";
 import { useProjectOverrides } from "@/lib/projectOverrides";
 import EditProjectDialog from "./EditProjectDialog";
 import MiniTimeline from "./MiniTimeline";
 import ProjectDetailsDialog from "./ProjectDetailsDialog";
-import { detectedSetup, setupChipClass } from "./setup";
+import { detectedSetup, setupChipClass, visibleSetup } from "./setup";
 import { tagChipClass } from "./tagColors";
+
+const iconBtn =
+  "flex h-8 w-8 items-center justify-center rounded-md border border-[#30363d] bg-[#21262d] text-[#8b949e] transition hover:border-[#8b949e] hover:text-[#e6edf3] focus-visible:outline-2 focus-visible:outline-[#2f81f7]";
 
 export default function ProjectCard({ project }: { project: OpenSessionProject }) {
   const { merged, save, reset, hasOverrides } = useProjectOverrides(project);
@@ -35,30 +38,33 @@ export default function ProjectCard({ project }: { project: OpenSessionProject }
               {project.title}
             </h2>
             <p className="truncate text-xs text-[#8b949e]">
-              {project.owner} / {project.slug} · {project.tracks.length} tracks · {formatTime(project.duration)}
+              {project.owner} / {project.slug}
             </p>
           </Link>
-          <button
-            type="button"
-            onClick={() => setDialog("edit")}
-            aria-label={`Edit ${project.title} details`}
-            className="shrink-0 rounded-md border border-[#30363d] bg-[#21262d] px-2 py-1 text-xs text-[#8b949e] transition hover:border-[#8b949e] hover:text-[#e6edf3] focus-visible:outline-2 focus-visible:outline-[#2f81f7]"
-          >
-            Edit
-          </button>
-        </div>
-
-        {merged.description && (
-          <div>
-            <p className="line-clamp-2 text-sm text-[#8b949e]">{merged.description}</p>
+          <div className="flex shrink-0 gap-1.5">
             <button
               type="button"
               onClick={() => setDialog("details")}
-              className="mt-1 text-xs text-[#2f81f7] hover:underline"
+              aria-label={`Preview ${project.title}`}
+              title="Preview project"
+              className={iconBtn}
             >
-              Project details
+              <EyeIcon />
+            </button>
+            <button
+              type="button"
+              onClick={() => setDialog("edit")}
+              aria-label={`Edit ${project.title}`}
+              title="Edit project"
+              className={iconBtn}
+            >
+              <PencilIcon />
             </button>
           </div>
+        </div>
+
+        {merged.description && (
+          <p className="line-clamp-2 text-sm text-[#8b949e]">{merged.description}</p>
         )}
 
         {merged.genres.length > 0 && (
@@ -70,8 +76,8 @@ export default function ProjectCard({ project }: { project: OpenSessionProject }
         )}
 
         <div className="flex flex-wrap items-center gap-1 border-t border-[#21262d] pt-2.5">
-          <span className="mr-1 text-[10px] font-semibold uppercase tracking-wide text-[#6e7681]">Setup</span>
-          {[...detected, ...merged.setup].map((d) => (
+          <span className="mr-1 text-[11px] font-semibold uppercase tracking-wide text-[#6e7681]">Setup</span>
+          {visibleSetup(detected, merged).map((d) => (
             <span key={d} className={setupChipClass}>{d}</span>
           ))}
         </div>
@@ -83,7 +89,7 @@ export default function ProjectCard({ project }: { project: OpenSessionProject }
           description={merged.description}
           genres={merged.genres}
           tagColors={merged.tagColors}
-          setup={merged.setup}
+          setup={visibleSetup(detected, merged)}
           coverUrl={merged.coverUrl}
           onClose={() => setDialog(null)}
         />

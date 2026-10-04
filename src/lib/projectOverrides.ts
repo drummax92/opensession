@@ -13,6 +13,10 @@ export interface ProjectOverrides {
   tagColors?: Record<string, TagColor>;
   /** Extra setup labels the user adds (gear, software). */
   setup?: string[];
+  /** Session-detected setup labels the user chose to hide. */
+  hiddenSetup?: string[];
+  /** Display names for session-detected setup labels (original -> shown). */
+  setupNames?: Record<string, string>;
   coverDataUrl?: string;
 }
 
@@ -74,6 +78,8 @@ export function useProjectOverrides(project: OpenSessionProject) {
     genres: overrides.genres ?? project.genres,
     tagColors: overrides.tagColors ?? {},
     setup: overrides.setup ?? [],
+    hiddenSetup: overrides.hiddenSetup ?? [],
+    setupNames: overrides.setupNames ?? {},
     coverUrl: overrides.coverDataUrl ?? project.coverUrl,
   };
 
