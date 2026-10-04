@@ -86,7 +86,7 @@ export async function loadSessionAudio(
       }
     }
     signal?.throwIfAborted();
-    return { transport, warnings, availablePluginIdsByTrack };
+    return { transport, warnings, availablePluginIdsByTrack, normalBuffers: buffers };
   } catch (error) {
     transport.dispose();
     throw error;

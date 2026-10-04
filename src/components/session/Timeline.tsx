@@ -1,4 +1,5 @@
 "use client";
+import ClipWaveform from "./ClipWaveform";
 import type { OpenSessionProject } from "@/types/session";
 import { formatTime, trackColor } from "./format";
 
@@ -10,6 +11,7 @@ interface Props {
   selectedTrackId: string | null;
   isAudible: (trackId: string) => boolean;
   currentTime: number;
+  waveformsByTrack: Record<string, { peaks: readonly number[]; duration: number }>;
   onSelectTrack: (trackId: string) => void;
   onSeek: (t: number) => void;
 }
@@ -19,6 +21,7 @@ export default function Timeline({
   selectedTrackId,
   isAudible,
   currentTime,
+  waveformsByTrack,
   onSelectTrack,
   onSeek,
 }: Props) {
@@ -70,16 +73,24 @@ export default function Timeline({
               <div
                 key={item.id}
                 title={`${item.name ?? track.name} · ${item.start.toFixed(2)}s → ${(item.start + item.length).toFixed(2)}s`}
-                className="absolute bottom-2 top-2 overflow-hidden rounded-[3px] border px-1.5 text-[0.625rem] font-medium leading-6 text-[var(--os-text)]"
+                className="absolute bottom-1.5 top-1.5 overflow-hidden rounded-md border shadow-sm transition-[filter] hover:brightness-125"
                 style={{
                   left: `${(item.start / duration) * 100}%`,
                   width: `${(item.length / duration) * 100}%`,
-                  backgroundColor: `${trackColor(i)}${audible ? "40" : "1a"}`,
+                  background: `linear-gradient(180deg, ${trackColor(i)}30, ${trackColor(i)}0d)`,
+                  color: trackColor(i),
                   borderColor: trackColor(i),
                   opacity: audible ? 1 : 0.5,
                 }}
               >
-                <span className="block truncate">{item.name ?? track.name}</span>
+                <span className="relative z-[1] block truncate border-b border-black/10 bg-black/15 px-1.5 text-[9px] font-semibold leading-[14px] text-[var(--os-text)]">
+                  {item.name ?? track.name}
+                </span>
+                {waveformsByTrack[track.id] && <ClipWaveform
+                  peaks={waveformsByTrack[track.id].peaks}
+                  stemDuration={waveformsByTrack[track.id].duration}
+                  start={item.start} length={item.length}
+                />}
               </div>
             ))}
           </div>

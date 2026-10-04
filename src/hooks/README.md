@@ -77,3 +77,12 @@ package review above. Browser acceptance is required for the extra render.
 listener controls, not a reapplication of exported volumeLinear. Mute/Solo gate
 the multiplier; seek/resume and A/B retain it. UI percentages reset to 100 on click.
 Values last for the mounted session and reset on reload/project replacement.
+
+## Rendered-stem waveforms
+
+`waveformsByTrack` contains 2048 peak bins and decoded duration per normal stem.
+Both channels contribute by maximum absolute sample, preserving opposite-polarity
+stereo signals and brief transients. Computed once per load; memoized clip SVGs
+crop by project time. Display-only amplitude scaling improves quiet-detail visibility.
+These show the rendered track mix in an item's time range, not isolated source-file
+samples (overlapping items share that mix). Volume/A-B do not recompute the waveform.

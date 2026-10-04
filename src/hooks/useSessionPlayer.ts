@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { OpenSessionProject } from "../types/session";
 import { loadSessionAudio } from "../lib/audio/load-session";
+import { buildWaveform } from "../lib/audio/waveform";
 import type { StemTransport } from "../lib/audio/synchronized-stems";
 
 function initialState(project: OpenSessionProject) {
@@ -12,6 +13,7 @@ function initialState(project: OpenSessionProject) {
     error: null as string | null, warnings: [] as string[],
     mutedTrackIds: new Set(project.tracks.filter(track => track.muted).map(track => track.id)),
     soloTrackIds: new Set(project.tracks.filter(track => track.solo).map(track => track.id)),
+    waveformsByTrack: {} as Record<string, { peaks: readonly number[]; duration: number }>,
     trackVolumeById: Object.fromEntries(project.tracks.map(track => [track.id, 1])),
     bypassedPluginByTrack: {} as Record<string, string | null>,
     bypassedPluginIdsByTrack: {} as Record<string, readonly string[]>,
@@ -39,9 +41,17 @@ export function useSessionPlayer(project: OpenSessionProject, baseUrl = "/demo/s
         const loaded = await loadSessionAudio(context, project, baseUrl, abort.signal, audioFiles);
         transport = loaded.transport;
         if (abort.signal.aborted) { transport.dispose(); return; }
+        const waveformsByTrack: Record<string, { peaks: readonly number[]; duration: number }> = {};
+        for (let i = 0; i < project.tracks.length; i++) {
+          // Yield between tracks so long imported packages do not freeze the page.
+          await new Promise(resolve => setTimeout(resolve, 0));
+          if (abort.signal.aborted) return;
+          const buffer = loaded.normalBuffers[i];
+          waveformsByTrack[project.tracks[i].id] = { peaks: buildWaveform(buffer), duration: buffer.duration };
+        }
         active.current = { project, transport };
         setState(previous => ({ ...previous, isLoading: false, isReady: true,
-          warnings: loaded.warnings, availablePluginIdsByTrack: loaded.availablePluginIdsByTrack }));
+          waveformsByTrack, warnings: loaded.warnings, availablePluginIdsByTrack: loaded.availablePluginIdsByTrack }));
         const tick = () => {
           if (abort.signal.aborted || !transport) return;
           const currentTime = transport.currentTime, isPlaying = transport.isPlaying;
@@ -73,7 +83,8 @@ export function useSessionPlayer(project: OpenSessionProject, baseUrl = "/demo/s
       if (active.current !== player) return;
       const t = player.transport;
       setState(previous => ({ ...previous, currentTime: t.currentTime, isPlaying: t.isPlaying,
-        trackVolumeById: Object.fromEntries(t.trackVolumeById),
+        waveformsByTrack: {} as Record<string, { peaks: readonly number[]; duration: number }>,
+    trackVolumeById: Object.fromEntries(t.trackVolumeById),
         mutedTrackIds: new Set(t.mutedTrackIds), soloTrackIds: new Set(t.soloTrackIds),
         bypassedPluginByTrack: Object.fromEntries(t.bypassedPluginByTrack),
         bypassedPluginIdsByTrack: Object.fromEntries(t.bypassedPluginIdsByTrack), error: null }));
