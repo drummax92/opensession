@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OpenSession — two-stem synchronization proof</title>
+<style>
+  body { font: 17px system-ui; max-width: 850px; margin: 48px auto; padding: 20px; }
+  button { padding: 12px; margin: 6px; } pre { white-space: pre-wrap; }
+</style>
+<h1>Milestone 1: two synchronized stems</h1>
+<p>Local engineering test. Start at low headphone volume.</p>
+<button id="real">Load Drums + Bass</button>
+<button id="synthetic">Load synthetic pulses (not demo audio)</button>
+<button id="play" disabled>Play from zero</button>
+<button id="stop" disabled>Stop</button>
+<button id="verify">Verify sample alignment offline</button>
+<pre id="status" role="status">Load both stems before playing.</pre>
+<script type="module">
+  import { loadStaticStems, startSynchronizedStems } from '/engine.js';
+  const $ = (id) => document.getElementById(id);
+  let context, buffers, playback;
+  const log = (message) => { $('status').textContent = message; };
+  async function unlock() {
+    context ??= new AudioContext();
+    await context.resume();
+    if (context.state !== 'running') throw new Error('Audio context not running. Click again.');
+  }
+  function stop() { playback?.stop(); playback = undefined; }
+  function pulses(ctx, channel) {
+    const buffer = ctx.createBuffer(2, ctx.sampleRate * 8, ctx.sampleRate);
+    const data = buffer.getChannelData(channel);
+    for (let second = 0; second < 8; second++) {
+      for (let i = 0; i < ctx.sampleRate * 0.03; i++) {
+        data[second * ctx.sampleRate + i] = 0.15 * Math.sin(2 * Math.PI * 440 * i / ctx.sampleRate)
+          * Math.exp(-i / (ctx.sampleRate * 0.005));
+      }
+    }
+    return buffer;
+  }
+  async function load(synthetic) {
+    $('real').disabled = $('synthetic').disabled = $('play').disabled = true;
+    stop(); buffers = undefined;
+    log('Loading both buffers…');
+    try {
+      await unlock();
+      const loaded = synthetic ? [pulses(context, 0), pulses(context, 1)] : await loadStaticStems(context, [
+        '/demo/stormhacks/audio/drums.mp3', '/demo/stormhacks/audio/bass.mp3',
+      ]);
+      const durations = loaded.map((buffer) => buffer.duration);
+      if (Math.abs(durations[0] - durations[1]) > 0.05) {
+        throw new Error(`Stem lengths differ: ${durations.join(', ')}s. Export the same time range.`);
+      }
+      buffers = loaded;
+      log(`${synthetic ? 'SYNTHETIC TEST ONLY' : 'Drums + Bass'} ready. Durations: ${durations.map(d => d.toFixed(4)).join(', ')}s.`);
+      $('play').disabled = false;
+    } catch (error) { log(error.message); }
+    finally { $('real').disabled = $('synthetic').disabled = false; }
+  }
+  $('real').onclick = () => load(false);
+  $('synthetic').onclick = () => load(true);
+  $('play').onclick = async () => {
+    $('play').disabled = true;
+    try {
+      await unlock();
+      stop();
+      playback = startSynchronizedStems(context, buffers);
+      $('stop').disabled = false;
+      log(`Both sources scheduled at ${playback.startAt.toFixed(6)}s, offset 0. Play again restarts BOTH with fresh sources.`);
+    } catch (error) { log(error.message); }
+    finally { $('play').disabled = !buffers; }
+  };
+  $('stop').onclick = () => { stop(); log('Stopped. Play starts both from zero.'); };
+  $('verify').onclick = async () => {
+    $('verify').disabled = true;
+    try {
+      const ctx = new OfflineAudioContext(2, 48000, 48000);
+      const pair = [0, 1].map(channel => {
+        const buffer = ctx.createBuffer(2, 24000, 48000);
+        buffer.getChannelData(channel)[0] = 0.25;
+        buffer.getChannelData(channel)[12000] = 0.25;
+        return buffer;
+      });
+      startSynchronizedStems(ctx, pair);
+      const rendered = await ctx.startRendering();
+      const left = rendered.getChannelData(0), right = rendered.getChannelData(1);
+      const first = left.findIndex(value => Math.abs(value) > 0.01);
+      const matches = left.every((value, index) => value === right[index]);
+      if (!matches || first !== 2400 || left[14400] !== 0.25) throw new Error('FAIL: rendered samples differ or start time is wrong.');
+      log('PASS: native Web Audio rendered both stems at sample 2400 (50ms), aligned again at sample 14400. Left/right output is sample-identical. Real stem listening check still required.');
+    } catch (error) { log(error.message); }
+    finally { $('verify').disabled = false; }
+  };
+  window.addEventListener('pagehide', () => { stop(); void context?.close(); });
+</script>
+</html>
