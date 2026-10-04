@@ -62,12 +62,17 @@ All rendered stems should start at project time 0 and use the same project durat
 
 ## Plugin A/B Rule
 
-A track can be in one of two states:
-
-- normal
-- exactly one plugin audition-bypassed
-
-Do not support multiple simultaneous bypasses on one track in the hackathon MVP.
+Technical-lead approved extension (2026-10-04): tracks may declare optional
+`bypassVariants: [{ bypassedPluginIds: string[], stemPath: string }]` for exact
+sets of two or more bypassed FX. Paths reference full-length, project-zero renders.
+The normal stem represents no bypasses; plugin.bypassStemPath represents one.
+Schema version remains 0.1: this additive field is optional. Old packages retain
+single-bypass behavior. New readers must not infer a combination from two singles.
+If a declared combination is missing or invalid, keep the current sound/state and
+show an error; normal playback and available single auditions still work.
+Lead both-OFF path: audio/auditions/lead-guitar__without-rabea-and-vintageverb.mp3.
+The exporter currently produces singles only; use the manual package helper below
+until its owner adds combined renders. Never label an older render as a current one.
 
 Primary judge demo:
 

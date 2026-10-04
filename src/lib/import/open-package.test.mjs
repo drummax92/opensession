@@ -34,3 +34,13 @@ test('malformed metadata and remote or traversal audio paths rejected',async()=>
  const bad=structuredClone(project);mutate(bad);await assert.rejects(openPackage(files(false,bad)));
  }
 });
+test('optional combined renders resolve locally and reject invalid plugin sets',async()=>{
+ const p=structuredClone(project), lead=p.tracks.find(t=>t.plugins.length===2);
+ lead.bypassVariants=[{bypassedPluginIds:lead.plugins.map(p=>p.id),stemPath:'audio/auditions/both.mp3'}];
+ const result=await openPackage([...files(false,p),new File(['both'],'both.mp3')]);
+ assert.ok(result.audioFiles.has('audio/auditions/both.mp3'));
+ for(const ids of [['unknown','unknown'],[lead.plugins[0].id],['unknown',lead.plugins[0].id]]){
+ lead.bypassVariants[0].bypassedPluginIds=ids;
+ await assert.rejects(openPackage(files(false,p)),/Invalid bypass plugin IDs/);
+ }
+});

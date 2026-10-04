@@ -13,6 +13,7 @@ function initialState(project: OpenSessionProject) {
     mutedTrackIds: new Set(project.tracks.filter(track => track.muted).map(track => track.id)),
     soloTrackIds: new Set(project.tracks.filter(track => track.solo).map(track => track.id)),
     bypassedPluginByTrack: {} as Record<string, string | null>,
+    bypassedPluginIdsByTrack: {} as Record<string, readonly string[]>,
     availablePluginIdsByTrack: new Map<string, Set<string>>(),
   };
 }
@@ -72,7 +73,8 @@ export function useSessionPlayer(project: OpenSessionProject, baseUrl = "/demo/s
       const t = player.transport;
       setState(previous => ({ ...previous, currentTime: t.currentTime, isPlaying: t.isPlaying,
         mutedTrackIds: new Set(t.mutedTrackIds), soloTrackIds: new Set(t.soloTrackIds),
-        bypassedPluginByTrack: Object.fromEntries(t.bypassedPluginByTrack), error: null }));
+        bypassedPluginByTrack: Object.fromEntries(t.bypassedPluginByTrack),
+        bypassedPluginIdsByTrack: Object.fromEntries(t.bypassedPluginIdsByTrack), error: null }));
     };
     const fail = (error: unknown) => {
       if (active.current === player) setState(previous => ({ ...previous,

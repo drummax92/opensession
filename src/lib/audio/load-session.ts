@@ -60,6 +60,7 @@ export async function loadSessionAudio(
       if (track.solo) transport.toggleSolo(track.id);
       const available = new Set<string>();
       availablePluginIdsByTrack.set(track.id, available);
+      if (track.bypassVariants?.length) transport.enableCombinations(track.id);
       for (const plugin of track.plugins) {
         if (!plugin.bypassStemPath) continue;
         try {
@@ -70,6 +71,17 @@ export async function loadSessionAudio(
         } catch (error) {
           signal?.throwIfAborted();
           warnings.push(`${track.name} / ${plugin.name}: ${error instanceof Error ? error.message : String(error)}`);
+        }
+      }
+      for (const variant of track.bypassVariants ?? []) {
+        try {
+          if (variant.bypassedPluginIds.some(id => !track.plugins.some(plugin => plugin.id === id))) throw new Error("Unknown plugin in bypass combination");
+          const buffer = await decode(variant.stemPath);
+          signal?.throwIfAborted();
+          transport.registerBypassVariant(track.id, variant.bypassedPluginIds, buffer);
+        } catch (error) {
+          signal?.throwIfAborted();
+          warnings.push(`${track.name} / FX combination: ${error instanceof Error ? error.message : String(error)}`);
         }
       }
     }

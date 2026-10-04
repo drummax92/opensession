@@ -4,11 +4,11 @@ import type { OpenSessionTrack } from "@/types/session";
 interface Props {
   track: OpenSessionTrack;
   selectedPluginId: string | null;
-  bypassedPluginId: string | null;
+  bypassedPluginIds: readonly string[];
   onSelectPlugin: (pluginId: string) => void;
 }
 
-export default function FxChain({ track, selectedPluginId, bypassedPluginId, onSelectPlugin }: Props) {
+export default function FxChain({ track, selectedPluginId, bypassedPluginIds, onSelectPlugin }: Props) {
   if (track.plugins.length === 0) {
     return <p className="text-sm text-[var(--os-muted)]">No effects on this track</p>;
   }
@@ -16,7 +16,7 @@ export default function FxChain({ track, selectedPluginId, bypassedPluginId, onS
     <ol className="space-y-1">
       {track.plugins.map((pl, i) => {
         const selected = pl.id === selectedPluginId;
-        const bypassed = pl.id === bypassedPluginId;
+        const bypassed = bypassedPluginIds.includes(pl.id);
         return (
           <li key={pl.id}>
             <button

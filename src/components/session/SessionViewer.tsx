@@ -18,7 +18,7 @@ interface Props {
 export default function SessionViewer({ project, audioFiles }: Props) {
   const p = useSessionPlayer(project, "/demo/stormhacks", audioFiles);
   const [selection, setSelection] = useState<Selection>(null);
-  const muted = p.mutedTrackIds, solo = p.soloTrackIds, bypass = p.bypassedPluginByTrack;
+  const muted = p.mutedTrackIds, solo = p.soloTrackIds, bypass = p.bypassedPluginIdsByTrack;
   const toggleMute = p.toggleMute, toggleSolo = p.toggleSolo, toggleBypass = p.togglePluginBypass;
   const isAudible = (id: string) => !muted.has(id) && (solo.size === 0 || solo.has(id));
 

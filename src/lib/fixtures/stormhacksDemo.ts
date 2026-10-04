@@ -15,6 +15,9 @@ export const stormhacksDemo: OpenSessionProject = {
   tracks: labels.map(([path, name]) => {
     const track = exported.tracks.find(track => track.stemPath === path);
     if (!track) throw new Error(`Missing demo track: ${path}`);
-    return { ...track, name };
+    return { ...track, name, ...(path === "audio/lead-guitar.mp3" ? {
+      bypassVariants: [{ bypassedPluginIds: track.plugins.map(plugin => plugin.id),
+        stemPath: "audio/auditions/lead-guitar__without-rabea-and-vintageverb.mp3" }],
+    } : {}) };
   }),
 };

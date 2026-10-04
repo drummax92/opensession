@@ -65,6 +65,18 @@ export function validateProject(value: unknown): asserts value is OpenSessionPro
         if (param.displayValue !== undefined && typeof param.displayValue !== "string") throw new Error("Invalid displayValue");
       }
     }
+    if (t.bypassVariants !== undefined) {
+      array(t.bypassVariants, "bypassVariants");
+      const keys = new Set<string>();
+      for (const value of t.bypassVariants) {
+        const variant = record(value, "bypass variant"); path(variant.stemPath);
+        array(variant.bypassedPluginIds, "bypassedPluginIds");
+        const ids = variant.bypassedPluginIds;
+        if (ids.length < 2 || new Set(ids).size !== ids.length || ids.some(id => typeof id !== "string" || !pluginIds.has(id))) throw new Error("Invalid bypass plugin IDs");
+        const key = JSON.stringify([...ids].sort());
+        if (keys.has(key)) throw new Error("Duplicate bypass combination"); keys.add(key);
+      }
+    }
     if (t.volumeDb !== undefined) number(t.volumeDb, "volumeDb");
   }
   for (const key of ["description", "key", "coverUrl"]) if (p[key] !== undefined && typeof p[key] !== "string") throw new Error(`Invalid ${key}`);
@@ -109,6 +121,10 @@ export async function openPackage(files: readonly File[]) {
       if (!plugin.bypassStemPath) continue;
       const alternate = resolve(plugin.bypassStemPath);
       if (alternate) audioFiles.set(plugin.bypassStemPath, alternate);
+    }
+    for (const variant of track.bypassVariants ?? []) {
+      const alternate = resolve(variant.stemPath);
+      if (alternate) audioFiles.set(variant.stemPath, alternate);
     }
   }
   return { project, audioFiles };

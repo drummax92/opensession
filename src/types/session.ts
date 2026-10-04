@@ -39,6 +39,9 @@ export interface OpenSessionTrack {
 
   stemPath: string;
 
+  /** Optional renders for exact sets of two or more bypassed plugins. */
+  bypassVariants?: { bypassedPluginIds: string[]; stemPath: string }[];
+
   items: OpenSessionItem[];
   plugins: OpenSessionPlugin[];
 }

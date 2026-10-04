@@ -9,7 +9,7 @@ interface Props {
   project: OpenSessionProject;
   selection: Selection;
   canAudition: (trackId: string, pluginId: string) => boolean;
-  bypassByTrack: Record<string, string | null>;
+  bypassByTrack: Record<string, readonly string[]>;
   onSelectPlugin: (trackId: string, pluginId: string) => void;
   onClearSelection: () => void;
   onTogglePluginBypass: (trackId: string, pluginId: string) => void;
@@ -76,7 +76,7 @@ export default function Inspector({
             <FxChain
               track={track}
               selectedPluginId={plugin?.id ?? null}
-              bypassedPluginId={bypassByTrack[track.id] ?? null}
+              bypassedPluginIds={bypassByTrack[track.id] ?? []}
               onSelectPlugin={(pid) => onSelectPlugin(track.id, pid)}
             />
           </div>
@@ -86,7 +86,7 @@ export default function Inspector({
               key={`${track.id}:${plugin.id}`}
               plugin={plugin}
               available={canAudition(track.id, plugin.id)}
-              bypassed={bypassByTrack[track.id] === plugin.id}
+              bypassed={!!bypassByTrack[track.id]?.includes(plugin.id)}
               onToggleBypass={() => onTogglePluginBypass(track.id, plugin.id)}
             />
           )}

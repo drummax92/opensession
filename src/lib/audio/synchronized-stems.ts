@@ -136,7 +136,9 @@ export class StemTransport {
   private readonly muted = new Set<string>();
   private readonly soloed = new Set<string>();
   private readonly auditions = new Map<string, Map<string, AudioBuffer>>();
-  private readonly bypassed = new Map<string, string>();
+  private readonly bypassed = new Map<string, string[]>();
+  private readonly combinationTracks = new Set<string>();
+  private variantKey(ids: readonly string[]): string { return JSON.stringify([...ids].sort()); }
 
   constructor(context: AudioContext, buffers: readonly AudioBuffer[], trackIds = buffers.map((_, index) => String(index)), projectDuration = Math.max(...buffers.map(buffer => buffer.duration))) {
     if (!buffers.length || buffers.some(buffer => !Number.isFinite(buffer.duration) || buffer.duration <= 0)) {
@@ -155,9 +157,24 @@ export class StemTransport {
   get mutedTrackIds(): ReadonlySet<string> { return new Set(this.muted); }
   get soloTrackIds(): ReadonlySet<string> { return new Set(this.soloed); }
 
-  get bypassedPluginByTrack(): ReadonlyMap<string, string> { return new Map(this.bypassed); }
+  /** Legacy single-selection view; use bypassedPluginIdsByTrack for the full state. */
+  get bypassedPluginByTrack(): ReadonlyMap<string, string> {
+    return new Map([...this.bypassed].filter(([, ids]) => ids.length === 1).map(([id, ids]) => [id, ids[0]]));
+  }
+  get bypassedPluginIdsByTrack(): ReadonlyMap<string, readonly string[]> {
+    return new Map([...this.bypassed].map(([id, ids]) => [id, [...ids]]));
+  }
+  enableCombinations(trackId: string): void {
+    if (!this.trackIds.includes(trackId)) throw new Error(`Unknown track: ${trackId}`);
+    this.combinationTracks.add(trackId);
+  }
+  registerBypassVariant(trackId: string, ids: readonly string[], buffer: AudioBuffer): void {
+    if (ids.length < 2 || new Set(ids).size !== ids.length) throw new Error("Invalid bypass combination");
+    this.registerAudition(trackId, ids[0], buffer, ids);
+    this.enableCombinations(trackId);
+  }
 
-  registerAudition(trackId: string, pluginId: string, buffer: AudioBuffer): void {
+  registerAudition(trackId: string, pluginId: string, buffer: AudioBuffer, ids: readonly string[] = [pluginId]): void {
     if (this.disposed) throw new Error("Transport has been disposed.");
     const index = this.trackIds.indexOf(trackId);
     if (index < 0) throw new Error(`Unknown track: ${trackId}`);
@@ -166,23 +183,27 @@ export class StemTransport {
     }
     let plugins = this.auditions.get(trackId);
     if (!plugins) { plugins = new Map(); this.auditions.set(trackId, plugins); }
-    plugins.set(pluginId, buffer);
+    plugins.set(this.variantKey(ids), buffer);
   }
 
   togglePluginBypass(trackId: string, pluginId: string): void {
     if (this.disposed) throw new Error("Transport has been disposed.");
-    const alternate = this.auditions.get(trackId)?.get(pluginId);
-    if (!alternate) throw new Error(`Audition unavailable: ${trackId} / ${pluginId}`);
-    const restore = this.bypassed.get(trackId) === pluginId;
+    const variants = this.auditions.get(trackId);
+    if (!variants?.has(this.variantKey([pluginId]))) throw new Error(`Audition unavailable: ${trackId} / ${pluginId}`);
+    const current = this.bypassed.get(trackId) ?? [];
+    const next = current.includes(pluginId) ? current.filter(id => id !== pluginId)
+      : this.combinationTracks.has(trackId) ? [...current, pluginId] : [pluginId];
     const index = this.trackIds.indexOf(trackId);
-    this.playback?.replaceBuffer(index, restore ? this.buffers[index] : alternate);
-    if (restore) this.bypassed.delete(trackId); else this.bypassed.set(trackId, pluginId);
+    const buffer = next.length ? variants.get(this.variantKey(next)) : this.buffers[index];
+    if (!buffer) throw new Error("This FX combination needs its own rendered stem. Current effects are unchanged.");
+    this.playback?.replaceBuffer(index, buffer);
+    if (next.length) this.bypassed.set(trackId, next); else this.bypassed.delete(trackId);
   }
 
   private selectedBuffers(): AudioBuffer[] {
     return this.trackIds.map((id, index) => {
-      const plugin = this.bypassed.get(id);
-      return (plugin ? this.auditions.get(id)?.get(plugin) : undefined) ?? this.buffers[index];
+      const ids = this.bypassed.get(id);
+      return (ids ? this.auditions.get(id)?.get(this.variantKey(ids)) : undefined) ?? this.buffers[index];
     });
   }
 

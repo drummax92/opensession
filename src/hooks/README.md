@@ -52,3 +52,20 @@ teammate UI integration still require browser acceptance in Milestone 9.
 The isolated proof at port 3001 now offers **Load exporter session.json** and uses
 the same manifest loader as the hook. Place the entire package under
 `public/demo/stormhacks/`; test real GUID-based mute/solo/A-B before UI integration.
+
+## Approved combined-bypass extension (2026-10-04)
+
+Use `bypassedPluginIdsByTrack: Record<string, readonly string[]>` for UI badges.
+The old singular record is retained for single-bypass consumers and omits combined
+selections. Optional track.bypassVariants declares exact rendered combinations;
+old packages without it preserve their single-bypass behavior. A declared missing
+combination leaves sound and state unchanged and exposes an error.
+
+Manual render fallback (preserves a backup of session.json, refuses audio overwrite):
+`node src/lib/import/scripts/add-lead-combination.mjs PACKAGE_FOLDER BOTH_OFF_MP3`
+The source must be a current full-duration render from project time zero, with both
+Lead FX disabled, and the same baked volume/pan as the other stems. The helper
+adds canonical plugin GUIDs automatically. Copy its resulting MP3 into the bundled
+demo auditions folder as well; the demo manifest already declares that path.
+The current accepted package duration is 40 seconds, superseding the earlier
+package review above. Browser acceptance is required for the extra render.

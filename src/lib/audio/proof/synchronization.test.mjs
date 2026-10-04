@@ -326,3 +326,53 @@ test('local package audio decodes selected Files without any network fallback', 
     await assert.rejects(loadSessionAudio(context,project,'/unused',undefined,files),/Missing local audio/);
   } finally {globalThis.fetch=original;}
 });
+
+test('combined bypass keeps both flags, switches only one source, survives seek and resume', async () => {
+  const { context, transport } = transportFixture();
+  const amp = {length:480000,duration:10}, verb = {...amp}, both = {...amp};
+  transport.registerAudition('1','amp',amp); transport.registerAudition('1','verb',verb);
+  transport.registerBypassVariant('1',['verb','amp'],both);
+  await transport.play();
+  const other = context.sources[0];
+  transport.togglePluginBypass('1','amp'); transport.togglePluginBypass('1','verb');
+  assert.deepEqual([...transport.bypassedPluginIdsByTrack.get('1')].sort(), ['amp','verb']);
+  assert.equal(context.sources.at(-1).buffer,both); assert.ok(!other.stopped);
+  await transport.seek(5); transport.pause(); await transport.play();
+  assert.equal(context.sources.at(-1).buffer,both);
+  transport.togglePluginBypass('1','amp'); assert.equal(context.sources.at(-1).buffer,verb);
+  transport.togglePluginBypass('1','verb'); assert.equal(transport.bypassedPluginIdsByTrack.size,0);
+  transport.dispose(); assert.ok(context.nodes.every(node => node.disconnected));
+});
+
+test('missing declared combination keeps the current sound and flags', () => {
+  const { transport } = transportFixture();
+  const buffer = {length:480000,duration:10};
+  transport.registerAudition('1','amp',buffer); transport.registerAudition('1','verb',buffer);
+  transport.enableCombinations('1'); transport.togglePluginBypass('1','amp');
+  assert.throws(() => transport.togglePluginBypass('1','verb'), /own rendered stem/);
+  assert.deepEqual(transport.bypassedPluginIdsByTrack.get('1'),['amp']);
+  assert.throws(() => transport.registerBypassVariant('1',['amp','amp'],buffer), /Invalid/);
+});
+
+test('local loader registers combined renders and degrades safely if absent or wrong length', async () => {
+ const project=manifestFixture(), lead=project.tracks[1];
+ lead.plugins.push({id:'amp',name:'Amp',bypassStemPath:'audio/amp.mp3',parameters:[]});
+ lead.bypassVariants=[{bypassedPluginIds:['amp','{VERB}'],stemPath:'audio/both.mp3'}];
+ for(const mode of ['ok','missing','short']) {
+  const context=fakeContext();
+  context.decodeAudioData=async bytes=>({length:480000,duration:new Uint8Array(bytes)[0]===2?9:10});
+  const files=new Map(['audio/drums.mp3','audio/lead.mp3','audio/auditions/lead-dry.mp3','audio/amp.mp3'].map(p=>[p,new File([new Uint8Array([1])],p)]));
+  if(mode!=='missing') files.set('audio/both.mp3',new File([new Uint8Array([mode==='short'?2:1])],'both.mp3'));
+  const loaded=await loadSessionAudio(context,project,'/unused',undefined,files);
+  loaded.transport.togglePluginBypass('{LEAD}','amp');
+  if(mode==='ok') {
+   loaded.transport.togglePluginBypass('{LEAD}','{VERB}');
+   assert.equal(loaded.transport.bypassedPluginIdsByTrack.get('{LEAD}').length,2);
+   assert.equal(loaded.warnings.length,0);
+  } else {
+   assert.equal(loaded.warnings.length,1);
+   assert.throws(()=>loaded.transport.togglePluginBypass('{LEAD}','{VERB}'),/own rendered stem/);
+  }
+  loaded.transport.dispose();
+ }
+});
