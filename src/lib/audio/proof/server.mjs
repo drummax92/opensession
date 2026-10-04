@@ -7,7 +7,7 @@ const root = new URL("../../../../", import.meta.url);
 const routes = new Map([
   ["/", [new URL("index.html", import.meta.url), "text/html"]],
   ["/engine.js", [new URL("../synchronized-stems.ts", import.meta.url), "text/javascript"]],
-  ...["drums", "bass"].map((name) => [
+  ...["drums", "bass", "lead-guitar", "rhythm-guitar-l", "rhythm-guitar-r", "vocals"].map((name) => [
     `/demo/stormhacks/audio/${name}.mp3`,
     [new URL(`public/demo/stormhacks/audio/${name}.mp3`, root), "audio/mpeg"],
   ]),

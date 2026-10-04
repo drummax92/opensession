@@ -2,14 +2,14 @@
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>OpenSession — two-stem synchronization proof</title>
+<title>OpenSession — six-stem synchronization proof</title>
 <style>
   body { font: 17px system-ui; max-width: 850px; margin: 48px auto; padding: 20px; }
   button { padding: 12px; margin: 6px; } pre { white-space: pre-wrap; }
 </style>
-<h1>Milestone 2: playback transport</h1>
+<h1>Milestone 3: six synchronized stems</h1>
 <p>Local engineering test. Start at low headphone volume.</p>
-<button id="real">Load Drums + Bass</button>
+<button id="real">Load all 6 stems</button>
 <button id="synthetic">Load synthetic pulses (not demo audio)</button>
 <button id="play" disabled>Play / Resume</button>
 <button id="pause" disabled>Pause</button>
@@ -17,9 +17,10 @@
 <button id="verify">Verify sample alignment offline</button>
 <p><output id="time">0.000 / 0.000 s</output></p>
 <input id="seek" aria-label="Seek position" type="range" min="0" max="0" step="0.01" value="0" disabled style="width:100%">
-<pre id="status" role="status">Load both stems before playing.</pre>
+<pre id="status" role="status">Load all six stems before playing.</pre>
 <script type="module">
   import { loadStaticStems, startSynchronizedStems, StemTransport } from '/engine.js';
+  const stemNames = ['drums', 'bass', 'lead-guitar', 'rhythm-guitar-l', 'rhythm-guitar-r', 'vocals'];
   const $ = (id) => document.getElementById(id);
   let context, transport, loading = false, dragging = false;
   const log = (message) => { $('status').textContent = message; };
@@ -55,18 +56,18 @@
     $('real').disabled = $('synthetic').disabled = true;
     transport?.dispose(); transport = undefined;
     refresh();
-    log('Loading both buffers…');
+    log(synthetic ? 'Loading test pulses…' : 'Loading and decoding all 6 stems…');
     try {
       await unlock();
-      const loaded = synthetic ? [pulses(context, 0), pulses(context, 1)] : await loadStaticStems(context, [
-        '/demo/stormhacks/audio/drums.mp3', '/demo/stormhacks/audio/bass.mp3',
-      ]);
+      const loaded = synthetic ? [pulses(context, 0), pulses(context, 1)] : await loadStaticStems(context, stemNames.map(name => `/demo/stormhacks/audio/${name}.mp3`));
       const durations = loaded.map((buffer) => buffer.duration);
-      if (Math.abs(durations[0] - durations[1]) > 0.05) {
-        throw new Error(`Stem lengths differ: ${durations.join(', ')}s. Export the same time range.`);
+      const labels = synthetic ? ['Test left', 'Test right'] : stemNames;
+      const details = durations.map((duration, index) => `${labels[index]}: ${duration.toFixed(4)} s`).join('\n');
+      if (Math.max(...durations) - Math.min(...durations) > 0.05) {
+        throw new Error(`Stem lengths differ by more than 50ms. Export the same time range.\n${details}`);
       }
       transport = new StemTransport(context, loaded);
-      log(`${synthetic ? 'SYNTHETIC TEST ONLY' : 'Drums + Bass'} ready. Durations: ${durations.map(d => d.toFixed(4)).join(', ')}s.`);
+      log(`${synthetic ? 'SYNTHETIC TEST ONLY' : 'All 6 stems'} ready.\n${details}`);
       refresh();
     } catch (error) { log(error.message); }
     finally { loading = false; $('real').disabled = $('synthetic').disabled = false; refresh(); }
@@ -90,9 +91,9 @@
   $('verify').onclick = async () => {
     $('verify').disabled = true;
     try {
-      const ctx = new OfflineAudioContext(2, 48000, 48000);
-      const pair = [0, 1].map(channel => {
-        const buffer = ctx.createBuffer(2, 24000, 48000);
+      const ctx = new OfflineAudioContext(6, 48000, 48000);
+      const pair = [0, 1, 2, 3, 4, 5].map(channel => {
+        const buffer = ctx.createBuffer(6, 24000, 48000);
         buffer.getChannelData(channel)[0] = 0.25;
         buffer.getChannelData(channel)[12000] = 0.25;
         return buffer;
@@ -101,17 +102,19 @@
       const rendered = await ctx.startRendering();
       const left = rendered.getChannelData(0), right = rendered.getChannelData(1);
       const first = left.findIndex(value => Math.abs(value) > 0.01);
-      const matches = left.every((value, index) => value === right[index]);
+      const matches = [right, ...[2, 3, 4, 5].map(channel => rendered.getChannelData(channel))]
+        .every(data => left.every((value, index) => value === data[index]));
       if (!matches || first !== 2400 || left[14400] !== 0.25) throw new Error('FAIL: rendered samples differ or start time is wrong.');
-      const seekContext = new OfflineAudioContext(2, 48000, 48000);
+      const seekContext = new OfflineAudioContext(6, 48000, 48000);
       startSynchronizedStems(seekContext, pair, 0.25, 0.25);
       const seekRendered = await seekContext.startRendering();
       const seekLeft = seekRendered.getChannelData(0), seekRight = seekRendered.getChannelData(1);
       if (seekLeft.findIndex(value => Math.abs(value) > 0.01) !== 2400 ||
-          !seekLeft.every((value, index) => value === seekRight[index])) {
+          ![seekRight, ...[2, 3, 4, 5].map(channel => seekRendered.getChannelData(channel))]
+            .every(data => seekLeft.every((value, index) => value === data[index]))) {
         throw new Error('FAIL: non-zero offset is not sample-aligned.');
       }
-      log('PASS: native Web Audio sample alignment at offset 0 and offset 0.250s. Both stems start at sample 2400 (50ms). Real transport listening check still required.');
+      log('PASS: native Web Audio sample alignment at offset 0 and offset 0.250s. All 6 stems start at sample 2400 (50ms). Real transport listening check still required.');
     } catch (error) { log(error.message); }
     finally { $('verify').disabled = false; }
   };

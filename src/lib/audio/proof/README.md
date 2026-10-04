@@ -1,4 +1,4 @@
-# Milestone 2: synchronized transport
+# Milestone 3: six synchronized stems
 
 Run from the repository root on `feature/audio-integration`:
 
@@ -21,8 +21,12 @@ Place the team's original full-length exports at:
 
 - `public/demo/stormhacks/audio/drums.mp3`
 - `public/demo/stormhacks/audio/bass.mp3`
+- `public/demo/stormhacks/audio/lead-guitar.mp3`
+- `public/demo/stormhacks/audio/rhythm-guitar-l.mp3`
+- `public/demo/stormhacks/audio/rhythm-guitar-r.mp3`
+- `public/demo/stormhacks/audio/vocals.mp3`
 
-Both exports must start at project zero, retain leading silence, and use the
+All six exports must start at project zero, retain leading silence, and use the
 same project end (approximately 41.3518 seconds). Do not trim independently.
 The files are not included in this milestone. Missing files must show an error;
 the test never silently substitutes generated audio.
@@ -30,8 +34,8 @@ the test never silently substitutes generated audio.
 ## Browser acceptance procedure
 
 1. Click **Verify sample alignment offline**. Expect PASS for offsets zero and
-   0.250 seconds. Both stereo-isolated test buffers must align at the sample level.
-2. Click **Load Drums + Bass** (or explicitly select synthetic diagnostic pulses).
+   0.250 seconds. All six channel-isolated test buffers must align at the sample level.
+2. Click **Load all 6 stems** (or explicitly select synthetic diagnostic pulses).
 3. Click **Play / Resume**. Time should increase smoothly; both stems stay aligned.
 4. Around 5 seconds click **Pause**. Audio and the time readout must stop. Wait
    several seconds, then Play / Resume: both continue from the paused position.
@@ -48,7 +52,9 @@ Node tests use an advancing fake clock to cover pause/resume/seek, clamping,
 replay, duplicate Play, cancellation of pending resume, and graph cleanup.
 Browser offline checks use native Web Audio; real listening checks are still
 required. The user confirmed Milestone 1 real Drums + Bass playback and repeat
-runs. Milestone 2 awaits the above user acceptance procedure.
+runs. Milestone 2 was confirmed working by the user. Milestone 3 awaits the above
+procedure with all six real stems. Confirm every named duration is listed, the
+full arrangement matches REAPER, and playback works twice consecutively.
 
 ## Code entry points
 
