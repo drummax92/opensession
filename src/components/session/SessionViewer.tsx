@@ -60,7 +60,6 @@ export default function SessionViewer({ project, player }: Props) {
           {project.daw.name} · {project.tracks.length} tracks · {project.duration.toFixed(2)}s
         </span>
         <span className="ml-auto hidden text-xs text-[var(--os-muted)] lg:inline">
-          Pakimoni Pikachu Chu Chu.
         </span>
       </header>
 
