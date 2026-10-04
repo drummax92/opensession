@@ -49,7 +49,7 @@ local aliases = {
   ["vocals"]="vocals", ["storm voc"]="vocals"
 }
 local warnings, plans, jobs = {}, {}, {}
-local stats = {items=0, fx=0, parameters=0, normal=0, auditions=0}
+local stats = {items=0, fx=0, parameters=0, normal=0, auditions=0, dry=0}
 local function warn(s) warnings[#warnings + 1] = s end
 local function available(path)
   local f = io.open(path, "rb")
@@ -143,6 +143,22 @@ local function read_plugins(track, stem, folder)
   if stem=="lead-guitar" and not targets.vintageverb then warn("Lead Guitar VintageVerb audition target not found.") end
   if (stem=="lead-guitar" or stem=="rhythm-guitar-l" or stem=="rhythm-guitar-r") and not targets.rabea then warn(stem .. ": Rabea audition target not found.") end
   return plugins
+end
+-- Restore every targeted enabled state even if the render callback fails.
+local function with_bypassed_fx(track, indices, callback)
+  local original={}
+  for _,index in ipairs(indices) do original[index]=reaper.TrackFX_GetEnabled(track,index) end
+  local ok,err=xpcall(function()
+    for _,index in ipairs(indices) do reaper.TrackFX_SetEnabled(track,index,false) end
+    callback()
+  end,debug.traceback)
+  local restore_errors={}
+  for _,index in ipairs(indices) do
+    local restored,why=pcall(reaper.TrackFX_SetEnabled,track,index,original[index])
+    if not restored then restore_errors[#restore_errors+1]=tostring(why) end
+  end
+  assert(#restore_errors==0,"FX restoration failed: " .. table.concat(restore_errors,"; "))
+  return ok,err
 end
 local function render_audio(project, folder, duration, normal_jobs)
   assert(reaper.GetPlayStateEx(project)==0, "Stop playback/recording before exporting audio. Metadata is retained.")
@@ -269,6 +285,9 @@ local function render_audio(project, folder, duration, normal_jobs)
     os.remove(backup)
     rendered=rendered+1
     if job.plugin then job.plugin.bypassStemPath=job.path;stats.auditions=stats.auditions+1
+    elseif job.dry then
+      job.entry.bypassVariants=array({{bypassedPluginIds=array(job.pluginIds),stemPath=job.path}})
+      stats.dry=stats.dry+1
     else stats.normal=stats.normal+1 end
   end
   local ok,err=xpcall(function()
@@ -286,13 +305,16 @@ local function render_audio(project, folder, duration, normal_jobs)
     end
     for _,job in ipairs(jobs) do
       sequence=sequence+1
-      local enabled=reaper.TrackFX_GetEnabled(job.track,job.fx)
-      local success,why=xpcall(function()
-        assert(enabled,"Target FX was already bypassed; audition omitted")
-        reaper.TrackFX_SetEnabled(job.track,job.fx,false)
-        render_one(job,sequence)
-      end,debug.traceback)
-      reaper.TrackFX_SetEnabled(job.track,job.fx,enabled)
+      local indices={}
+      if job.dry then
+        indices=job.indices
+      else indices[1]=job.fx end
+      local success,why
+      if not job.dry and not reaper.TrackFX_GetEnabled(job.track,job.fx) then
+        success,why=false,"Target FX was already bypassed; audition omitted"
+      else
+        success,why=with_bypassed_fx(job.track,indices,function() render_one(job,sequence) end)
+      end
       if not success then warn("Audition render failed: " .. job.path .. " | " .. tostring(why)) end
     end
   end,debug.traceback)
@@ -338,6 +360,27 @@ local function main()
     if entry.volumeLinear>0 then entry.volumeDb=20*math.log(entry.volumeLinear,10) end
     entry.plugins=read_plugins(track,stem,folder)
     normal_jobs[#normal_jobs+1]={track=track,path=entry.stemPath}
+    if stem=="lead-guitar" then
+      local rabea,vintageverb
+      local ambiguous=false
+      for index,plugin in ipairs(entry.plugins) do
+        local lower=plugin.name:lower()
+        if lower:find("rabea",1,true) then
+          if rabea then ambiguous=true end
+          rabea={index=index-1,id=plugin.id}
+        end
+        if lower:find("vintageverb",1,true) then
+          if vintageverb then ambiguous=true end
+          vintageverb={index=index-1,id=plugin.id}
+        end
+      end
+      if rabea and vintageverb and not ambiguous then
+        local path="audio/auditions/lead-guitar__without-rabea-and-vintageverb.mp3"
+        jobs[#jobs+1]={track=track,path=path,dry=true,entry=entry,
+          indices={rabea.index,vintageverb.index},pluginIds={rabea.id,vintageverb.id}}
+        plans[#plans+1]=path .. " | lead-guitar | bypass ONLY Rabea and VintageVerb together"
+      else warn("Combined lead variant omitted: need exactly one Rabea and one VintageVerb.") end
+    end
     for _,item in ipairs(entry.items) do
       if item.start<0 then warn(name .. ": item starts before zero.") end
     end
@@ -356,6 +399,8 @@ local function main()
     .. "\nTracks: " .. #manifest.tracks .. "\nItems: " .. stats.items .. "\nFX: " .. stats.fx
     .. "\nParameters: " .. stats.parameters .. "\nNormal audio files present: " .. stats.normal
     .. "\nAudition audio files present: " .. stats.auditions
+    .. "\nDry lead audio files generated: " .. stats.dry
+    .. "\nCombined lead path: audio/auditions/lead-guitar__without-rabea-and-vintageverb.mp3; linked in track.bypassVariants after successful rendering"
     .. "\nAudio generated by this run: " .. rendered
     .. "\nOnly the target track is unmuted/selected per job; render controls read back before rendering."
     .. "\nNew MP3 files decoded and duration checked (0.15 second encoder tolerance)."
@@ -368,7 +413,7 @@ local function main()
   write(folder .. "/EXPORT_REPORT.txt",report)
   reaper.ShowMessageBox("OpenSession metadata exported\nTracks: " .. #manifest.tracks
     .. " | Items: " .. stats.items .. " | FX: " .. stats.fx .. " | Parameters: " .. stats.parameters
-    .. "\nAudio present: " .. stats.normal .. " normal, " .. stats.auditions .. " auditions"
+    .. "\nAudio present: " .. stats.normal .. " normal, " .. stats.auditions .. " auditions, " .. stats.dry .. " dry lead"
     .. "\nAudio rendered: " .. rendered .. " | Warnings: " .. #warnings
     .. "\n\n" .. folder .. "\n\nSee EXPORT_REPORT.txt for details.","OpenSession exporter",0)
 end
