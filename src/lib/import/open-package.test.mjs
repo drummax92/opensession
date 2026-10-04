@@ -5,7 +5,7 @@ import ts from 'typescript';
 const code=ts.transpileModule(await readFile(new URL('./open-package.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ES2020,target:ts.ScriptTarget.ES2020}}).outputText;
 const {openPackage}=await import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
 const project=JSON.parse(await readFile(new URL('../fixtures/exported-session.json',import.meta.url),'utf8'));
-const paths=project.tracks.flatMap(t=>[t.stemPath,...t.plugins.filter(p=>p.bypassStemPath).map(p=>p.bypassStemPath)]);
+const paths=project.tracks.flatMap(t=>[t.stemPath,...t.plugins.filter(p=>p.bypassStemPath).map(p=>p.bypassStemPath),...(t.bypassVariants??[]).map(v=>v.stemPath)]);
 function files(folder=false, value=project) {
  const all=[new File([JSON.stringify(value)],'session.json'),...paths.map(p=>new File(['audio'],p.split('/').at(-1)))];
  if(folder) all.forEach((f,i)=>Object.defineProperty(f,'webkitRelativePath',{value:'StormHacks-Demo.opensession/'+(i?paths[i-1]:'session.json')}));
@@ -14,14 +14,14 @@ function files(folder=false, value=project) {
 test('actual exporter package resolves nested folder and flat multi-file selections',async()=>{
  for(const folder of [true,false]){
  const result=await openPackage(files(folder));
- assert.equal(result.project.duration,40);assert.equal(result.project.tracks.length,6);assert.equal(result.audioFiles.size,10);
+ assert.equal(result.project.duration,40);assert.equal(result.project.tracks.length,6);assert.equal(result.audioFiles.size,11);
  assert.equal(result.project.tracks[0].items[0].start,11);
  }
 });
 test('missing normal stem fails clearly; missing audition is left for nonfatal loader warning',async()=>{
  await assert.rejects(openPackage(files().filter(f=>f.name!=='bass.mp3')),/Missing stem: audio\/bass.mp3/);
  const result=await openPackage(files().filter(f=>f.name!=='lead-guitar__without-rabea.mp3'));
- assert.equal(result.audioFiles.size,9);
+ assert.equal(result.audioFiles.size,10);
 });
 test('bad JSON, ambiguous manifests and duplicate filenames rejected',async()=>{
  await assert.rejects(openPackage([new File(['{'],'session.json')]),/valid JSON/);

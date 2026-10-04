@@ -86,7 +86,7 @@ export default function UploadShell({ onImport }: Props) {
             </li>
             <li className={audio.length > 0 ? "text-[#3fb950]" : "text-[#d29922]"}>
               {audio.length > 0 ? "✓" : "!"} {audio.length} audio file{audio.length === 1 ? "" : "s"}{" "}
-              <span className="text-[var(--os-muted)]">(a full demo has 10)</span>
+              <span className="text-[var(--os-muted)]">(a full demo has 11)</span>
             </li>
           </ul>
           <ul className="mt-3 max-h-40 overflow-y-auto border-t border-[var(--os-subtle)] pt-2 font-mono text-[0.6875rem] text-[var(--os-muted)]">

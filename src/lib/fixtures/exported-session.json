@@ -53,6 +53,15 @@
       "volumeLinear": 0.93685447523010001
     },
     {
+      "bypassVariants": [
+        {
+          "bypassedPluginIds": [
+            "{22B06590-9551-497A-9488-71102F8F1D9C}",
+            "{82463398-BCCF-4B85-BAEF-D92296EAB83B}"
+          ],
+          "stemPath": "audio/auditions/lead-guitar__without-rabea-and-vintageverb.mp3"
+        }
+      ],
       "id": "{7AC251B2-AC8E-4F26-BA55-081F84BCF7A8}",
       "items": [
         {
