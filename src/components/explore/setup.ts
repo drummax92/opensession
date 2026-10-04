@@ -6,7 +6,7 @@ export const detectedSetup = (p: OpenSessionProject) => [
 ];
 
 export const setupChipClass =
-  "rounded border border-[#30363d] bg-[#0d1117] px-2 py-0.5 font-mono text-xs text-[#8b949e]";
+  "rounded border border-[var(--os-border)] bg-[var(--os-bg)] px-2 py-0.5 font-mono text-xs text-[var(--os-muted)]";
 
 /** Labels to show on the card: detected ones (minus hidden, with renames) + user-added ones. */
 export const visibleSetup = (

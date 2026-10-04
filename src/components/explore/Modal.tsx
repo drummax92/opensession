@@ -26,24 +26,24 @@ export default function Modal({ title, subtitle, onClose, children, footer, wide
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className={`flex max-h-[85vh] w-full ${wide ? "max-w-2xl" : "max-w-lg"} flex-col rounded-md border border-[#30363d] bg-[#161b22] text-[#e6edf3] shadow-2xl`}
+        className={`flex max-h-[85vh] w-full ${wide ? "max-w-2xl" : "max-w-lg"} flex-col rounded-md border border-[var(--os-border)] bg-[var(--os-panel)] text-[var(--os-text)] shadow-2xl`}
       >
-        <div className="flex items-start justify-between gap-4 border-b border-[#30363d] px-5 py-4">
+        <div className="flex items-start justify-between gap-4 border-b border-[var(--os-border)] px-5 py-4">
           <div>
             <h2 className="text-base font-semibold">{title}</h2>
-            {subtitle && <p className="text-xs text-[#8b949e]">{subtitle}</p>}
+            {subtitle && <p className="text-xs text-[var(--os-muted)]">{subtitle}</p>}
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="rounded px-1.5 text-lg leading-none text-[#8b949e] hover:bg-[#30363d] hover:text-[#e6edf3]"
+            className="rounded px-1.5 text-lg leading-none text-[var(--os-muted)] hover:bg-[var(--os-border)] hover:text-[var(--os-text)]"
           >
             ×
           </button>
         </div>
         <div className="space-y-5 overflow-y-auto px-5 py-4">{children}</div>
-        {footer && <div className="border-t border-[#30363d] px-5 py-3">{footer}</div>}
+        {footer && <div className="border-t border-[var(--os-border)] px-5 py-3">{footer}</div>}
       </div>
     </div>
   );

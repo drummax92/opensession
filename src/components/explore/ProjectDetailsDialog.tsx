@@ -19,7 +19,7 @@ interface Props {
   onClose: () => void;
 }
 
-const heading = "mb-2 text-xs font-semibold text-[#8b949e]";
+const heading = "mb-2 text-xs font-semibold text-[var(--os-muted)]";
 
 export default function ProjectDetailsDialog({ project, description, genres, tagColors, setup, coverUrl, onClose }: Props) {
   const facts: [string, string][] = [
@@ -52,16 +52,16 @@ export default function ProjectDetailsDialog({ project, description, genres, tag
         <img
           src={coverUrl}
           alt={`${project.title} cover`}
-          className="max-h-80 w-full rounded-md border border-[#30363d] bg-[#0d1117] object-contain"
+          className="max-h-80 w-full rounded-md border border-[var(--os-border)] bg-[var(--os-bg)] object-contain"
         />
       ) : (
-        <MiniTimeline project={project} className="h-36 rounded-md border border-[#30363d] py-4" />
+        <MiniTimeline project={project} className="h-36 rounded-md border border-[var(--os-border)] py-4" />
       )}
 
       {description && (
         <section>
           <h3 className={heading}>Description</h3>
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-[#e6edf3]">{description}</p>
+          <p className="whitespace-pre-wrap text-sm leading-relaxed text-[var(--os-text)]">{description}</p>
         </section>
       )}
 
@@ -71,7 +71,7 @@ export default function ProjectDetailsDialog({ project, description, genres, tag
           {genres.map((g) => (
             <span key={g} className={tagChipClass(tagColors[g])}>{g}</span>
           ))}
-          {genres.length === 0 && <span className="text-xs text-[#6e7681]">No tags</span>}
+          {genres.length === 0 && <span className="text-xs text-[var(--os-faint)]">No tags</span>}
         </div>
       </section>
 
@@ -88,8 +88,8 @@ export default function ProjectDetailsDialog({ project, description, genres, tag
         <h3 className={heading}>Session</h3>
         <dl className="grid grid-cols-2 gap-x-6 sm:grid-cols-3">
           {facts.map(([k, v]) => (
-            <div key={k} className="border-b border-[#21262d] py-1.5">
-              <dt className="text-xs text-[#8b949e]">{k}</dt>
+            <div key={k} className="border-b border-[var(--os-subtle)] py-1.5">
+              <dt className="text-xs text-[var(--os-muted)]">{k}</dt>
               <dd className="font-mono text-sm tabular-nums">{v}</dd>
             </div>
           ))}
@@ -98,7 +98,7 @@ export default function ProjectDetailsDialog({ project, description, genres, tag
 
       <section>
         <h3 className={heading}>Tracks</h3>
-        <ul className="divide-y divide-[#21262d] rounded-md border border-[#30363d]">
+        <ul className="divide-y divide-[var(--os-subtle)] rounded-md border border-[var(--os-border)]">
           {project.tracks.map((t, i) => {
             const first = Math.min(...t.items.map((it) => it.start));
             const last = Math.max(...t.items.map((it) => it.start + it.length));
@@ -107,11 +107,11 @@ export default function ProjectDetailsDialog({ project, description, genres, tag
                 <span className="h-6 w-1 shrink-0 rounded-full" style={{ backgroundColor: trackColor(i) }} />
                 <div className="min-w-0 flex-1">
                   <div className="text-sm">{t.name}</div>
-                  <div className="truncate text-xs text-[#8b949e]">
+                  <div className="truncate text-xs text-[var(--os-muted)]">
                     {t.plugins.length ? t.plugins.map((p) => p.name).join(" → ") : "No effects"}
                   </div>
                 </div>
-                <div className="shrink-0 text-right font-mono text-xs tabular-nums text-[#8b949e]">
+                <div className="shrink-0 text-right font-mono text-xs tabular-nums text-[var(--os-muted)]">
                   {t.items.length ? (
                     <>
                       <div>

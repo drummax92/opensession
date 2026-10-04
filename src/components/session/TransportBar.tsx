@@ -22,7 +22,7 @@ export default function TransportBar({
   onSeek,
 }: Props) {
   return (
-    <div className="flex h-12 items-center gap-4 border-b border-[#30363d] bg-[#161b22] px-4">
+    <div className="flex h-12 items-center gap-4 border-b border-[var(--os-border)] bg-[var(--os-panel)] px-4">
       <button
         type="button"
         disabled={!isReady}
@@ -32,9 +32,9 @@ export default function TransportBar({
       >
         {isPlaying ? <PauseIcon /> : <PlayIcon />}
       </button>
-      <span className="w-28 font-mono text-sm tabular-nums text-[#e6edf3]">
+      <span className="w-28 font-mono text-sm tabular-nums text-[var(--os-text)]">
         {formatTime(currentTime)}
-        <span className="text-[#8b949e]"> / {formatTime(duration)}</span>
+        <span className="text-[var(--os-muted)]"> / {formatTime(duration)}</span>
       </span>
       <input
         type="range"

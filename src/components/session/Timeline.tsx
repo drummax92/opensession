@@ -30,7 +30,7 @@ export default function Timeline({
     <div className="relative min-w-[560px]">
       {/* ruler — click to seek */}
       <div
-        className={`relative ${RULER_H} cursor-pointer border-b border-[#30363d] bg-[#161b22]`}
+        className={`relative ${RULER_H} cursor-pointer border-b border-[var(--os-border)] bg-[var(--os-panel)]`}
         onClick={(e) => {
           const r = e.currentTarget.getBoundingClientRect();
           onSeek(((e.clientX - r.left) / r.width) * duration);
@@ -39,7 +39,7 @@ export default function Timeline({
         {ticks.map((t) => (
           <div
             key={t}
-            className="absolute top-0 h-full border-l border-[#30363d] pl-1 font-mono text-[10px] leading-8 text-[#8b949e]"
+            className="absolute top-0 h-full border-l border-[var(--os-border)] pl-1 font-mono text-[0.625rem] leading-8 text-[var(--os-muted)]"
             style={{ left: `${(t / duration) * 100}%` }}
           >
             {t / duration < 0.95 ? formatTime(t) : null}
@@ -55,14 +55,14 @@ export default function Timeline({
           <div
             key={track.id}
             onClick={() => onSelectTrack(track.id)}
-            className={`relative ${ROW_H} cursor-pointer border-b border-[#30363d] ${
-              selected ? "bg-[#1c2128]" : "bg-[#0d1117]"
+            className={`relative ${ROW_H} cursor-pointer border-b border-[var(--os-border)] ${
+              selected ? "bg-[var(--os-selected)]" : "bg-[var(--os-bg)]"
             }`}
           >
             {ticks.map((t) => (
               <div
                 key={t}
-                className="absolute top-0 h-full border-l border-[#21262d]"
+                className="absolute top-0 h-full border-l border-[var(--os-subtle)]"
                 style={{ left: `${(t / duration) * 100}%` }}
               />
             ))}
@@ -70,7 +70,7 @@ export default function Timeline({
               <div
                 key={item.id}
                 title={`${item.name ?? track.name} · ${item.start.toFixed(2)}s → ${(item.start + item.length).toFixed(2)}s`}
-                className="absolute bottom-2 top-2 overflow-hidden rounded-[3px] border px-1.5 text-[10px] font-medium leading-6 text-[#e6edf3]"
+                className="absolute bottom-2 top-2 overflow-hidden rounded-[3px] border px-1.5 text-[0.625rem] font-medium leading-6 text-[var(--os-text)]"
                 style={{
                   left: `${(item.start / duration) * 100}%`,
                   width: `${(item.length / duration) * 100}%`,

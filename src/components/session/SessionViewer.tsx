@@ -50,16 +50,16 @@ export default function SessionViewer({ project, player }: Props) {
   const isAudible = (id: string) => (solo.size > 0 ? solo.has(id) : !muted.has(id));
 
   return (
-    <div className="flex h-screen flex-col bg-[#0d1117] text-[#e6edf3]">
-      <header className="flex items-baseline gap-3 border-b border-[#30363d] px-4 py-2.5">
-        <span className="text-sm text-[#8b949e]">
-          <Link href="/" className="hover:text-[#e6edf3] hover:underline">{project.owner}</Link> / <span className="font-semibold text-[#e6edf3]">{project.slug}</span>
+    <div className="flex h-full flex-col bg-[var(--os-bg)] text-[var(--os-text)]">
+      <header className="flex items-baseline gap-3 border-b border-[var(--os-border)] px-4 py-2.5">
+        <span className="text-sm text-[var(--os-muted)]">
+          <Link href="/" className="hover:text-[var(--os-text)] hover:underline">{project.owner}</Link> / <span className="font-semibold text-[var(--os-text)]">{project.slug}</span>
         </span>
         <h1 className="sr-only">{project.title}</h1>
-        <span className="text-xs text-[#8b949e]">
+        <span className="text-xs text-[var(--os-muted)]">
           {project.daw.name} · {project.tracks.length} tracks · {project.duration.toFixed(2)}s
         </span>
-        <span className="ml-auto hidden text-xs text-[#8b949e] lg:inline">
+        <span className="ml-auto hidden text-xs text-[var(--os-muted)] lg:inline">
           Pakimoni Pikachu Chu Chu.
         </span>
       </header>
@@ -75,8 +75,8 @@ export default function SessionViewer({ project, player }: Props) {
       />
 
       <div className="flex min-h-0 flex-1">
-        <aside className="w-64 shrink-0 border-r border-[#30363d]">
-          <div className={`${RULER_H} border-b border-[#30363d] bg-[#161b22] px-3 text-xs leading-8 text-[#8b949e]`}>
+        <aside className="w-64 shrink-0 border-r border-[var(--os-border)]">
+          <div className={`${RULER_H} border-b border-[var(--os-border)] bg-[var(--os-panel)] px-3 text-xs leading-8 text-[var(--os-muted)]`}>
             Tracks
           </div>
           {project.tracks.map((t, i) => (
@@ -106,7 +106,7 @@ export default function SessionViewer({ project, player }: Props) {
           />
         </main>
 
-        <aside className="w-80 shrink-0 border-l border-[#30363d] bg-[#0d1117]">
+        <aside className="w-80 shrink-0 border-l border-[var(--os-border)] bg-[var(--os-bg)]">
           <Inspector
             project={project}
             selection={selection}

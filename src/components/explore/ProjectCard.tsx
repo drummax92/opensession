@@ -12,7 +12,7 @@ import { detectedSetup, setupChipClass, visibleSetup } from "./setup";
 import { tagChipClass } from "./tagColors";
 
 const iconBtn =
-  "flex h-8 w-8 items-center justify-center rounded-md border border-[#30363d] bg-[#21262d] text-[#8b949e] transition hover:border-[#8b949e] hover:text-[#e6edf3] focus-visible:outline-2 focus-visible:outline-[#2f81f7]";
+  "flex h-8 w-8 items-center justify-center rounded-md border border-[var(--os-border)] bg-[var(--os-subtle)] text-[var(--os-muted)] transition hover:border-[var(--os-muted)] hover:text-[var(--os-text)] focus-visible:outline-2 focus-visible:outline-[#2f81f7]";
 
 export default function ProjectCard({ project }: { project: OpenSessionProject }) {
   const { merged, save, reset, hasOverrides } = useProjectOverrides(project);
@@ -21,23 +21,23 @@ export default function ProjectCard({ project }: { project: OpenSessionProject }
   const detected = detectedSetup(project);
 
   return (
-    <div className="group overflow-hidden rounded-md border border-[#30363d] bg-[#161b22] transition hover:border-[#8b949e]">
+    <div className="group overflow-hidden rounded-md border border-[var(--os-border)] bg-[var(--os-panel)] transition hover:border-[var(--os-muted)]">
       <Link href={href} tabIndex={-1} aria-hidden className="block">
         {merged.coverUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={merged.coverUrl} alt="" className="h-28 w-full border-b border-[#30363d] object-cover" />
+          <img src={merged.coverUrl} alt="" className="h-28 w-full border-b border-[var(--os-border)] object-cover" />
         ) : (
-          <MiniTimeline project={project} className="h-28 border-b border-[#30363d]" />
+          <MiniTimeline project={project} className="h-28 border-b border-[var(--os-border)]" />
         )}
       </Link>
 
       <div className="space-y-2 p-4">
         <div className="flex items-start justify-between gap-3">
           <Link href={href} className="min-w-0 focus-visible:outline-2 focus-visible:outline-[#2f81f7]">
-            <h2 className="truncate text-base font-semibold text-[#e6edf3] group-hover:text-[#2f81f7]">
+            <h2 className="truncate text-base font-semibold text-[var(--os-text)] group-hover:text-[#2f81f7]">
               {project.title}
             </h2>
-            <p className="truncate text-xs text-[#8b949e]">
+            <p className="truncate text-xs text-[var(--os-muted)]">
               {project.owner} / {project.slug}
             </p>
           </Link>
@@ -64,7 +64,7 @@ export default function ProjectCard({ project }: { project: OpenSessionProject }
         </div>
 
         {merged.description && (
-          <p className="line-clamp-2 text-sm text-[#8b949e]">{merged.description}</p>
+          <p className="line-clamp-2 text-sm text-[var(--os-muted)]">{merged.description}</p>
         )}
 
         {merged.genres.length > 0 && (
@@ -75,8 +75,8 @@ export default function ProjectCard({ project }: { project: OpenSessionProject }
           </div>
         )}
 
-        <div className="flex flex-wrap items-center gap-1 border-t border-[#21262d] pt-2.5">
-          <span className="mr-1 text-[11px] font-semibold uppercase tracking-wide text-[#6e7681]">Setup</span>
+        <div className="flex flex-wrap items-center gap-1 border-t border-[var(--os-subtle)] pt-2.5">
+          <span className="mr-1 text-[0.6875rem] font-semibold uppercase tracking-wide text-[var(--os-faint)]">Setup</span>
           {visibleSetup(detected, merged).map((d) => (
             <span key={d} className={setupChipClass}>{d}</span>
           ))}

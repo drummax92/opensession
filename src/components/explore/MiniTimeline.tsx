@@ -4,9 +4,9 @@ import { trackColor } from "@/components/session/format";
 /** The real clip layout, miniaturised. Used as the default cover. */
 export default function MiniTimeline({ project, className = "" }: { project: OpenSessionProject; className?: string }) {
   return (
-    <div className={`flex flex-col justify-center gap-[3px] bg-[#0d1117] px-3 ${className}`} aria-hidden>
+    <div className={`flex flex-col justify-center gap-[3px] bg-[var(--os-bg)] px-3 ${className}`} aria-hidden>
       {project.tracks.map((t, i) => (
-        <div key={t.id} className="relative h-2 rounded-sm bg-[#161b22]">
+        <div key={t.id} className="relative h-2 rounded-sm bg-[var(--os-panel)]">
           {t.items.map((item) => (
             <div
               key={item.id}

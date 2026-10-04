@@ -16,8 +16,8 @@ interface Props {
 
 const Row = ({ k, v }: { k: string; v: string }) => (
   <div className="flex justify-between py-1 text-sm">
-    <dt className="text-[#8b949e]">{k}</dt>
-    <dd className="font-mono tabular-nums text-[#e6edf3]">{v}</dd>
+    <dt className="text-[var(--os-muted)]">{k}</dt>
+    <dd className="font-mono tabular-nums text-[var(--os-text)]">{v}</dd>
   </div>
 );
 
@@ -35,8 +35,8 @@ export default function Inspector({
 
   return (
     <div className="h-full overflow-y-auto p-4">
-      <div className="mb-3 flex items-center gap-1 text-xs text-[#8b949e]">
-        <button type="button" onClick={onClearSelection} className="hover:text-[#e6edf3] hover:underline">
+      <div className="mb-3 flex items-center gap-1 text-xs text-[var(--os-muted)]">
+        <button type="button" onClick={onClearSelection} className="hover:text-[var(--os-text)] hover:underline">
           Project
         </button>
         {track && <span>/ {track.name}</span>}
@@ -45,32 +45,32 @@ export default function Inspector({
 
       {!track && (
         <div>
-          <h2 className="text-base font-semibold text-[#e6edf3]">{project.title}</h2>
-          {project.description && <p className="mt-1 text-xs text-[#8b949e]">{project.description}</p>}
-          <dl className="mt-3 divide-y divide-[#21262d] border-y border-[#21262d]">
+          <h2 className="text-base font-semibold text-[var(--os-text)]">{project.title}</h2>
+          {project.description && <p className="mt-1 text-xs text-[var(--os-muted)]">{project.description}</p>}
+          <dl className="mt-3 divide-y divide-[var(--os-subtle)] border-y border-[var(--os-subtle)]">
             <Row k="Owner" v={project.owner} />
             <Row k="DAW" v={project.daw.name} />
             <Row k="Duration" v={`${project.duration.toFixed(2)}s (${formatTime(project.duration)})`} />
             <Row k="Tracks" v={String(project.tracks.length)} />
           </dl>
-          <p className="mt-4 text-xs text-[#8b949e]">Select a track to inspect its effects.</p>
+          <p className="mt-4 text-xs text-[var(--os-muted)]">Select a track to inspect its effects.</p>
         </div>
       )}
 
       {track && (
         <div className="space-y-4">
           <div>
-            <h2 className="flex items-center gap-2 text-base font-semibold text-[#e6edf3]">
+            <h2 className="flex items-center gap-2 text-base font-semibold text-[var(--os-text)]">
               <span className="h-3 w-1 rounded-full" style={{ backgroundColor: trackColor(idx) }} />
               {track.name}
             </h2>
-              <p className="mt-1 font-mono text-xs tabular-nums text-[#8b949e]">
+              <p className="mt-1 font-mono text-xs tabular-nums text-[var(--os-muted)]">
               Volume {formatDb(track)} · Pan {formatPan(track.pan)}
               </p>
           </div>
 
           <div>
-            <h3 className="mb-2 text-xs font-semibold text-[#8b949e]">FX chain</h3>
+            <h3 className="mb-2 text-xs font-semibold text-[var(--os-muted)]">FX chain</h3>
             <FxChain
               track={track}
               selectedPluginId={plugin?.id ?? null}

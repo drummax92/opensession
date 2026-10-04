@@ -19,8 +19,8 @@ export default function PluginDetails({ plugin, bypassed, onToggleBypass }: Prop
   return (
     <section className="space-y-3">
       <div>
-        <h3 className="text-sm font-semibold text-[#e6edf3]">{plugin.name}</h3>
-        <p className="text-xs text-[#8b949e]">
+        <h3 className="text-sm font-semibold text-[var(--os-text)]">{plugin.name}</h3>
+        <p className="text-xs text-[var(--os-muted)]">
           {plugin.vendor ?? "Unknown vendor"}
           {plugin.preset ? ` · Preset: ${plugin.preset}` : ""}
         </p>
@@ -46,21 +46,21 @@ export default function PluginDetails({ plugin, bypassed, onToggleBypass }: Prop
       )}
 
       <div>
-        <div className="mb-1 flex justify-between text-[11px] text-[#8b949e]">
+        <div className="mb-1 flex justify-between text-[0.6875rem] text-[var(--os-muted)]">
           <span>Parameter</span>
           <span>Value</span>
         </div>
-        <ul className="divide-y divide-[#21262d] rounded-md border border-[#30363d]">
+        <ul className="divide-y divide-[var(--os-subtle)] rounded-md border border-[var(--os-border)]">
           {params.map((pr) => (
             <li key={pr.index} className="px-2.5 py-1">
               <div className="flex justify-between gap-2 text-xs">
-                <span className="truncate text-[#e6edf3]">{pr.name}</span>
-                <span className="font-mono tabular-nums text-[#8b949e]">
+                <span className="truncate text-[var(--os-text)]">{pr.name}</span>
+                <span className="font-mono tabular-nums text-[var(--os-muted)]">
                   {pr.displayValue ?? (pr.normalizedValue != null ? pr.normalizedValue.toFixed(2) : "—")}
                 </span>
               </div>
               {pr.normalizedValue != null && (
-                <div className="mt-1 h-0.5 rounded bg-[#21262d]">
+                <div className="mt-1 h-0.5 rounded bg-[var(--os-subtle)]">
                   <div
                     className="h-full rounded bg-[#2f81f7]"
                     style={{ width: `${Math.min(1, Math.max(0, pr.normalizedValue)) * 100}%` }}
