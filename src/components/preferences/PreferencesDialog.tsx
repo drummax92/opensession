@@ -42,7 +42,7 @@ function Segmented<T extends string>({
 
 export default function PreferencesDialog({ onClose }: { onClose: () => void }) {
   const { prefs, update } = usePreferences();
-  const { background, setBackground } = useBackground();
+  const { background, mode, setBackground, resetToDefault, setNone } = useBackground();
   const [bgError, setBgError] = useState<string | null>(null);
 
   const pickBackground = async (file: File | undefined) => {
@@ -104,7 +104,12 @@ export default function PreferencesDialog({ onClose }: { onClose: () => void }) 
       />
 
       <div className="space-y-2">
-        <span className="text-xs font-semibold text-[var(--os-muted)]">Background</span>
+        <span className="text-xs font-semibold text-[var(--os-muted)]">
+          Background{" "}
+          <span className="font-normal text-[var(--os-faint)]">
+            · {mode === "default" ? "OpenSession default" : mode === "custom" ? "your image" : "none"}
+          </span>
+        </span>
         <div className="flex items-center gap-3">
           {background ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -118,11 +123,18 @@ export default function PreferencesDialog({ onClose }: { onClose: () => void }) 
             Choose image
             <input type="file" accept="image/*" className="hidden" onChange={(e) => pickBackground(e.target.files?.[0])} />
           </label>
-          {background && (
-            <button type="button" onClick={() => setBackground(null)} className="text-xs text-[#f85149] hover:underline">
-              Remove
-            </button>
-          )}
+          <div className="flex flex-col items-start gap-1">
+            {mode !== "default" && (
+              <button type="button" onClick={resetToDefault} className="text-xs text-[#2f81f7] hover:underline">
+                Use default
+              </button>
+            )}
+            {mode !== "none" && (
+              <button type="button" onClick={setNone} className="text-xs text-[#f85149] hover:underline">
+                No background
+              </button>
+            )}
+          </div>
         </div>
         {background && (
           <label className="block space-y-1">

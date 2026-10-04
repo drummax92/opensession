@@ -29,7 +29,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {/* Apply saved theme + text size before first paint (no flash). */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var p=JSON.parse(localStorage.getItem("opensession:prefs")||"{}");var d=document.documentElement;d.dataset.theme=p.theme||"dark";d.dataset.font=p.fontSize||"default";d.dataset.bg=localStorage.getItem("opensession:background")?"on":"off";}catch(e){}`,
+            __html: `try{var p=JSON.parse(localStorage.getItem("opensession:prefs")||"{}");var d=document.documentElement;d.dataset.theme=p.theme||"dark";d.dataset.font=p.fontSize||"default";d.dataset.bg=localStorage.getItem("opensession:background")==='"none"'?"off":"on";}catch(e){}`,
           }}
         />
       </head>

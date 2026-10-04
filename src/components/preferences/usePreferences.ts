@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useMemo } from "react";
 import { removeStored, useStored, writeStored } from "@/components/storage";
+import defaultBackground from "./default-bg.jpg";
 
 export type Theme = "dark" | "light";
 export type FontSize = "small" | "default" | "large";
@@ -38,13 +39,31 @@ export function usePreferences() {
   return { prefs, update };
 }
 
+export type BackgroundMode = "default" | "custom" | "none";
+
+/**
+ * Background picture. Nothing saved = the OpenSession default image;
+ * "none" = no picture; anything else = your own image (data URL).
+ */
 export function useBackground() {
-  const background = useStored(BACKGROUND_KEY, NO_BG);
-  /** Returns false if the image was too large to store. */
-  const setBackground = useCallback((dataUrl: string | null) => {
-    const ok = dataUrl ? writeStored(BACKGROUND_KEY, dataUrl) : (removeStored(BACKGROUND_KEY), true);
-    document.documentElement.dataset.bg = dataUrl && ok ? "on" : "off";
+  const stored = useStored(BACKGROUND_KEY, NO_BG);
+  const mode: BackgroundMode = stored === null ? "default" : stored === "none" ? "none" : "custom";
+  const background = mode === "default" ? defaultBackground.src : mode === "none" ? null : stored;
+
+  /** Use your own image. Returns false if it was too large to store. */
+  const setBackground = useCallback((dataUrl: string) => {
+    const ok = writeStored(BACKGROUND_KEY, dataUrl);
+    if (ok) document.documentElement.dataset.bg = "on";
     return ok;
   }, []);
-  return { background, setBackground };
+  const resetToDefault = useCallback(() => {
+    removeStored(BACKGROUND_KEY);
+    document.documentElement.dataset.bg = "on";
+  }, []);
+  const setNone = useCallback(() => {
+    writeStored(BACKGROUND_KEY, "none");
+    document.documentElement.dataset.bg = "off";
+  }, []);
+
+  return { background, mode, setBackground, resetToDefault, setNone };
 }
